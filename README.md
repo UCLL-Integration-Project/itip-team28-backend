@@ -17,4 +17,12 @@ spring.jpa.hibernate.ddl-auto=create
 
 # Force Spring Boot to always run schema/data SQL scripts
 spring.sql.init.mode=always
+
+# Cors localhost
+cors.allowed-origins=http://localhost:8080
+
+# JWT
+jwt.secret-key=d2ViNC1ub3Qtc28tc2VjcmV0LWFjY2Vzcy1zZWNyZXQ=
+jwt.token.issuer=backend_itip
+jwt.token.lifetime=8h
 ```
