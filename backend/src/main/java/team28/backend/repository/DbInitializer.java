@@ -1,5 +1,6 @@
 package team28.backend.repository;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
@@ -10,8 +11,10 @@ import team28.backend.model.User;
 public class DbInitializer {
 
     private final UserRepository UserRepository;
+    private final PasswordEncoder PasswordEncoder;
 
-    public DbInitializer(UserRepository UserRepository) {
+    public DbInitializer(PasswordEncoder PasswordEncoder, UserRepository UserRepository) {
+        this.PasswordEncoder = PasswordEncoder;
         this.UserRepository = UserRepository;
     }
 
@@ -24,6 +27,8 @@ public class DbInitializer {
         clearAll();
 
         final var user = UserRepository
-                .save(new User("test", "test@example.com", "test", Role.USER));
+                .save(new User("test", "test@example.com", PasswordEncoder.encode("test"), Role.USER));
+        final var user2 = UserRepository
+                .save(new User("test2", "test@example.com", PasswordEncoder.encode("test"), Role.MANAGER));
     }
 }

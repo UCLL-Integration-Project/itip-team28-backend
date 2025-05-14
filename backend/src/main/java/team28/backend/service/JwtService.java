@@ -39,6 +39,6 @@ public class JwtService {
     }
 
     public String generateToken(User user) {
-        return generateToken(user.GetUsername(), user.GetRole());
+        return generateToken(user.getUsername(), user.getRole());
     }
 }

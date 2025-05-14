@@ -33,7 +33,7 @@ public class UserService {
     }
 
     public User CreateUser(User user) {
-        boolean ExistingUser = UserRepository.existsByUsername(user.GetUsername());
+        boolean ExistingUser = UserRepository.existsByUsername(user.getUsername());
 
         if (ExistingUser) {
             throw new ServiceException("User already exists");
@@ -49,8 +49,8 @@ public class UserService {
             throw new ServiceException("User not found");
         }
 
-        User UpdatedUser = new User(user.GetUsername(), user.GetEmail(),
-                user.GetPassword(), user.GetRole());
+        User UpdatedUser = new User(user.getUsername(), user.getEmail(),
+                user.getPassword(), user.getRole());
         return UserRepository.save(UpdatedUser);
     }
 
@@ -72,9 +72,9 @@ public class UserService {
         return new AuthenticationResponse(
                 "Authentication successful.",
                 token,
-                user.GetUsername(),
-                user.GetRole(),
-                user.GetId());
+                user.getUsername(),
+                user.getRole(),
+                user.getId());
     }
 
     public User Signup(UserInput UserInput) {
