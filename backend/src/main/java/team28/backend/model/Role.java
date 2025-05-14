@@ -8,9 +8,7 @@ import java.util.Locale;
 
 public enum Role {
     ADMIN,
-    STUDENT,
-    LECTURER,
-    GUEST;
+    USER;
 
     public GrantedAuthority toGrantedAuthority() {
         return new SimpleGrantedAuthority("ROLE_" + name());
