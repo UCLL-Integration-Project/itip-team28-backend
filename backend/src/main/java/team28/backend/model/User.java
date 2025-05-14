@@ -1,4 +1,5 @@
 package team28.backend.model;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
@@ -10,27 +11,23 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message="Name cannot be empty.")
-    private String name;
-
-    @NotNull(message="Lastname cannot be empty.")
-    private String lastname;
-
-    @NotNull(message="Username cannot be empty.")
+    @NotNull(message = "Username cannot be empty.")
     private String username;
 
-    @Email(message="Email is not valid")
-    @NotNull(message="Email cannot be empty.")
+    @Email(message = " E mail is not valid")
+    @NotNull(message = "Email cannot be empty.")
     private String email;
 
-    @NotNull(message="Password cannot be empty.")
+    @NotNull(message = "Password cannot be empty.")
     @JsonIgnore
     private String password;
 
@@ -38,11 +35,10 @@ public class User {
     @NotNull
     private Role role;
 
-    protected User() {}
+    protected User() {
+    }
 
-    public User(String name, String lastname, String username, String email, String password, Role role){
-        this.name = name;
-        this.lastname = lastname;
+    public User(String username, String email, String password, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -55,22 +51,6 @@ public class User {
 
     public void SetId(Long id) {
         this.id = id;
-    }
-
-    public String GetName() {
-        return name;
-    }
-
-    public void SetName(String name) {
-        this.name = name;
-    }
-
-    public String GetLastname() {
-        return lastname;
-    }
-
-    public void SetLastname(String lastname) {
-        this.lastname = lastname;
     }
 
     public String GetUsername() {
@@ -105,9 +85,4 @@ public class User {
         this.role = role;
     }
 
-    @JsonIgnore
-    public String GetFullName() {
-        return name + " " + lastname;
-    }
 }
-

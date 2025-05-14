@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService UserService;
-    
+
     public UserController(UserService UserService) {
         this.UserService = UserService;
     }
@@ -37,13 +36,12 @@ public class UserController {
     public User CreateUser(@RequestBody User user) {
         return UserService.CreateUser(user);
     }
-        
 
     @PutMapping
     public User UpdateUser(@RequestBody User UpdatedUser, @RequestBody Long id) {
         return UserService.UpdateUser(id, UpdatedUser);
     }
-    
+
     @DeleteMapping
     public String DeleteUser(@RequestBody Long id) {
         UserService.DeleteUser(id);
@@ -51,13 +49,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest authenticationRequest) {
-        return UserService.Login(authenticationRequest.username(), authenticationRequest.password());
+    public AuthenticationResponse login(@RequestBody AuthenticationRequest AuthenticationRequest) {
+        return UserService.Login(AuthenticationRequest.username(),
+                AuthenticationRequest.password());
     }
 
     @PostMapping("/signup")
-    public User Signup(@Valid @RequestBody UserInput userInput) {
-        return UserService.Signup(userInput);
+    public User Signup(@Valid @RequestBody UserInput UserInput) {
+        return UserService.Signup(UserInput);
     }
 
 }
