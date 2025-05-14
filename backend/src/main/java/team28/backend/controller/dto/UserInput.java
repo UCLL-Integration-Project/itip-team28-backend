@@ -5,17 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import team28.backend.model.Role;
 
-public record UserInput (
-    @NotBlank
-    String name,
-    @NotBlank
-    String lastname,
-    @NotBlank
-    String username,
-    @Email
-    @NotNull(message="Email cannot be empty.")
-    String email,
-    @NotBlank
-    String password,
-    Role role
-){}
+public record UserInput(
+        @NotBlank String username,
+        @Email @NotNull(message = "Email cannot be empty.") String email,
+        @NotBlank String password,
+        Role role) {
+}

@@ -1,4 +1,5 @@
 package team28.service;
+
 import team28.backend.exceptions.ServiceException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +35,7 @@ import org.springframework.security.core.Authentication;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-	@Mock
+    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
@@ -59,12 +60,12 @@ public class UserServiceTest {
     private UserDetailsImpl userDetails;
 
     @BeforeEach
-    void setUp(){
-        user = new User("John", "Doe", "johndoe", "johnDoe@email.com", "password123", Role.USER);
+    void setUp() {
+        user = new User("johndoe", "johnDoe@email.com", "password123", Role.USER);
         user.SetId(1L);
     }
 
-    @Test 
+    @Test
     void getAllUsers_success() {
         List<User> users = List.of(user);
         when(userRepository.findAll()).thenReturn(users);
@@ -76,8 +77,7 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findAll();
     }
 
-
-    @Test 
+    @Test
     void createUser_succes() {
         when(userRepository.existsByUsername("johndoe")).thenReturn(false);
         when(userRepository.save(user)).thenReturn(user);
@@ -90,8 +90,8 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(user);
     }
 
-    @Test 
-    void createUser_userAlreadyExists_throwsException(){
+    @Test
+    void createUser_userAlreadyExists_throwsException() {
         when(userRepository.existsByUsername("johndoe")).thenReturn(true);
 
         ServiceException exception = assertThrows(ServiceException.class, () -> {
@@ -102,7 +102,7 @@ public class UserServiceTest {
         verify(userRepository, never()).save(user);
     }
 
-    @Test 
+    @Test
     void updateUser_success() {
         when(userRepository.existsById(1L)).thenReturn(true);
         when(userRepository.save(any(User.class))).thenReturn(user);
@@ -151,13 +151,14 @@ public class UserServiceTest {
         verify(userRepository, never()).deleteById(1L);
     }
 
-    @Test 
+    @Test
     void login_success() {
         String username = "johndoe";
         String password = "password";
         String token = "jwtToken";
 
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userDetails);
         when(userDetails.user()).thenReturn(user);
         when(jwtService.generateToken(user)).thenReturn(token);
@@ -174,7 +175,7 @@ public class UserServiceTest {
 
     @Test
     void signup_success() {
-        UserInput userInput = new UserInput("john", "doe", "johndoe", "john.doe@example.com", "password", Role.USER);
+        UserInput userInput = new UserInput("johndoe", "john.doe@example.com", "password", Role.USER);
         when(userRepository.existsByUsername("johndoe")).thenReturn(false);
         when(passwordEncoder.encode("password")).thenReturn("hashedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
@@ -188,9 +189,9 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-    @Test 
+    @Test
     void signup_usernameInUse_throwsException() {
-        UserInput userInput = new UserInput("john", "doe", "johndoe", "john.doe@example.com", "password", Role.USER);
+        UserInput userInput = new UserInput("johndoe", "john.doe@example.com", "password", Role.USER);
         when(userRepository.existsByUsername("johndoe")).thenReturn(true);
 
         ServiceException exception = assertThrows(ServiceException.class, () -> {
@@ -202,4 +203,4 @@ public class UserServiceTest {
         verify(passwordEncoder, never()).encode("password");
         verify(userRepository, never()).save(any(User.class));
     }
-}   
+}

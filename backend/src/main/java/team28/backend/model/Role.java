@@ -7,8 +7,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Locale;
 
 public enum Role {
-    ADMIN,
-    USER;
+    USER,
+    MANAGER;
 
     public GrantedAuthority toGrantedAuthority() {
         return new SimpleGrantedAuthority("ROLE_" + name());
