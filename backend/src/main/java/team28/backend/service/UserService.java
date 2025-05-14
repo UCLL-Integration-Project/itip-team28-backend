@@ -16,15 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Service
 public class UserService {
     private final UserRepository UserRepository;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
-    
-    public UserService(UserRepository UserRepository, AuthenticationManager authenticationManager, JwtService jwtService, PasswordEncoder passwordEncoder) {
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
+    private final AuthenticationManager AuthenticationManager;
+    private final JwtService JwtService;
+    private final PasswordEncoder PasswordEncoder;
+
+    public UserService(UserRepository UserRepository, AuthenticationManager AuthenticationManager,
+            JwtService JwtService, PasswordEncoder PasswordEncoder) {
+        this.JwtService = JwtService;
+        this.AuthenticationManager = AuthenticationManager;
         this.UserRepository = UserRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.PasswordEncoder = PasswordEncoder;
     }
 
     public List<User> GetAllUsers() {
@@ -48,7 +49,8 @@ public class UserService {
             throw new ServiceException("User not found");
         }
 
-        User UpdatedUser = new User(user.GetName(), user.GetLastname(), user.GetUsername(), user.GetEmail(), user.GetPassword(), user.GetRole());
+        User UpdatedUser = new User(user.GetUsername(), user.GetEmail(),
+                user.GetPassword(), user.GetRole());
         return UserRepository.save(UpdatedUser);
     }
 
@@ -63,34 +65,29 @@ public class UserService {
     }
 
     public AuthenticationResponse Login(String username, String password) {
-        final var usernamePasswordAuthentication = new UsernamePasswordAuthenticationToken(username, password);
-        final var authentication = authenticationManager.authenticate(usernamePasswordAuthentication);
+        final var UsernamePasswordAuthentication = new UsernamePasswordAuthenticationToken(username, password);
+        final var authentication = AuthenticationManager.authenticate(UsernamePasswordAuthentication);
         final var user = ((UserDetailsImpl) authentication.getPrincipal()).user();
-        final var token = jwtService.generateToken(user);
+        final var token = JwtService.generateToken(user);
         return new AuthenticationResponse(
                 "Authentication successful.",
                 token,
                 user.GetUsername(),
-                user.GetFullName(),
                 user.GetRole(),
-                user.GetId()
-        );
+                user.GetId());
     }
 
-    public User Signup(UserInput userInput) {
-        if (UserRepository.existsByUsername(userInput.username())) {
+    public User Signup(UserInput UserInput) {
+        if (UserRepository.existsByUsername(UserInput.username())) {
             throw new ServiceException("Username is already in use.");
         }
 
-        final var hashedPassword = passwordEncoder.encode(userInput.password());
+        final var HashedPassword = PasswordEncoder.encode(UserInput.password());
         final var user = new User(
-                userInput.username(),
-                userInput.name(),
-                userInput.lastname(),
-                userInput.email(),
-                hashedPassword,
-                userInput.role()
-        );
+                UserInput.username(),
+                UserInput.email(),
+                HashedPassword,
+                UserInput.role());
 
         return UserRepository.save(user);
     }
