@@ -45,16 +45,6 @@ public class UserController {
         return UserService.GetAllUsers();
     }
 
-    @Operation(summary = "Update an existing user")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User updated successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    @PutMapping
-    public User UpdateUser(@RequestBody User UpdatedUser, @PathVariable Long id) {
-        return UserService.UpdateUser(id, UpdatedUser);
-    }
-
     @Operation(summary = "Delete a user")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User deleted successfully"),

@@ -34,18 +34,6 @@ public class UserService {
         return UserRepository.findAll();
     }
 
-    public User UpdateUser(Long id, User user) {
-        boolean ExistingUser = UserRepository.existsById(id);
-
-        if (!ExistingUser) {
-            throw new UserException("User not found");
-        }
-
-        User UpdatedUser = new User(user.getUsername(), user.getEmail(),
-                user.getPassword(), user.getRole());
-        return UserRepository.save(UpdatedUser);
-    }
-
     public void DeleteUser(Long id) {
         boolean ExistingUser = UserRepository.existsById(id);
 
