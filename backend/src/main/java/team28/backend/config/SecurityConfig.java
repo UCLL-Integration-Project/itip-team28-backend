@@ -78,8 +78,6 @@ public class SecurityConfig {
                                 .requestMatchers("/users/login", "/users/signup").permitAll()
                                 // Allow OpenAPI access
                                 .requestMatchers("/v3/api-docs/**").permitAll()
-                                //Allow scans
-                                .requestMatchers("/scans").permitAll()
                                 // Allow Swagger UI
                                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html").permitAll()
                                 .anyRequest().authenticated())
