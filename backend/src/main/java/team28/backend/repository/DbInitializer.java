@@ -38,6 +38,9 @@ public class DbInitializer {
         @SuppressWarnings("unused")
         final var user2 = UserRepository
                 .save(new User("test2", "test@example.com", PasswordEncoder.encode("test"), Role.MANAGER));
+        @SuppressWarnings("unused")
         final var scan1 = ScanRepository.save(new Scan("1", "macaddr1", LocalDateTime.of(2025, 5, 1, 9, 15)));
+        @SuppressWarnings("unused")
+        final var scan2 = ScanRepository.save(new Scan("1", "macaddr2", LocalDateTime.of(2025, 5, 1, 11, 18)));
     }
 }
