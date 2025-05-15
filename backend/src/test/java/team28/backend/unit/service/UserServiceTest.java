@@ -174,7 +174,7 @@ public class UserServiceTest {
             UserService.Signup(userInput);
         });
 
-        assertEquals("Username is already in use.", exception.getMessage());
+        assertEquals("Username is already in use", exception.getMessage());
         verify(UserRepository, times(1)).existsByUsername("johndoe");
         verify(PasswordEncoder, never()).encode("password");
         verify(UserRepository, never()).save(any(User.class));

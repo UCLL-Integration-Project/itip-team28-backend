@@ -61,8 +61,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @DeleteMapping
-    public String DeleteUser(@RequestBody Long id) {
-        UserService.DeleteUser(id);
+    public String DeleteUser(@RequestBody User user) {
+        UserService.DeleteUser(user.getId());
         return "User deleted";
     }
 

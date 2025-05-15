@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import org.springframework.security.authentication.AuthenticationManager;
 
+import team28.backend.model.Role;
 import team28.backend.model.User;
 import team28.backend.repository.UserRepository;
 import team28.backend.controller.dto.AuthenticationResponse;
@@ -79,7 +80,7 @@ public class UserService {
                 UserInput.username(),
                 UserInput.email(),
                 HashedPassword,
-                UserInput.role());
+                Role.USER);
 
         return UserRepository.save(user);
     }
