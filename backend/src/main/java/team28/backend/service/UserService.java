@@ -10,7 +10,8 @@ import team28.backend.model.User;
 import team28.backend.repository.UserRepository;
 import team28.backend.controller.dto.AuthenticationResponse;
 import team28.backend.controller.dto.UserInput;
-import team28.backend.exceptions.ServiceException;
+import team28.backend.exceptions.UserException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
@@ -32,21 +33,11 @@ public class UserService {
         return UserRepository.findAll();
     }
 
-    public User CreateUser(User user) {
-        boolean ExistingUser = UserRepository.existsByUsername(user.getUsername());
-
-        if (ExistingUser) {
-            throw new ServiceException("User already exists");
-        }
-
-        return UserRepository.save(user);
-    }
-
     public User UpdateUser(Long id, User user) {
         boolean ExistingUser = UserRepository.existsById(id);
 
         if (!ExistingUser) {
-            throw new ServiceException("User not found");
+            throw new UserException("User not found");
         }
 
         User UpdatedUser = new User(user.getUsername(), user.getEmail(),
@@ -58,7 +49,7 @@ public class UserService {
         boolean ExistingUser = UserRepository.existsById(id);
 
         if (!ExistingUser) {
-            throw new ServiceException("User not found");
+            throw new UserException("User not found");
         }
 
         UserRepository.deleteById(id);
@@ -78,8 +69,9 @@ public class UserService {
     }
 
     public User Signup(UserInput UserInput) {
-        if (UserRepository.existsByUsername(UserInput.username())) {
-            throw new ServiceException("Username is already in use.");
+        boolean exists = UserRepository.existsByUsername(UserInput.username());
+        if (exists) {
+            throw new UserException("Username is already in use");
         }
 
         final var HashedPassword = PasswordEncoder.encode(UserInput.password());

@@ -1,10 +1,12 @@
 package team28.backend.service;
 
+import team28.backend.exceptions.UserException;
+import team28.backend.model.User;
 import team28.backend.repository.UserRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,9 +18,13 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsPa
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new UserDetailsImpl(
-                UserRepository.findByUsername(username));
+    public UserDetails loadUserByUsername(String username) throws UserException {
+        User user = UserRepository.findByUsername(username);
+        if (user == null) {
+            throw new UserException("Username not found");
+        }
+        return new UserDetailsImpl(user);
+
     }
 
     @Override

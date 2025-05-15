@@ -1,6 +1,6 @@
 package team28.backend.unit.service;
 
-import team28.backend.exceptions.ServiceException;
+import team28.backend.exceptions.UserException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -78,31 +78,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenUserInfo_whenCreatingNewUser_thenUserIsCreated() {
-        when(UserRepository.existsByUsername("johndoe")).thenReturn(false);
-        when(UserRepository.save(user)).thenReturn(user);
-
-        User result = UserService.CreateUser(user);
-
-        assertNotNull(result);
-        assertEquals("johndoe", result.getUsername());
-        verify(UserRepository, times(1)).existsByUsername("johndoe");
-        verify(UserRepository, times(1)).save(user);
-    }
-
-    @Test
-    public void givenExistingUserInfo_whenCreatingNewUser_thenThrowException() {
-        when(UserRepository.existsByUsername("johndoe")).thenReturn(true);
-
-        ServiceException exception = assertThrows(ServiceException.class, () -> {
-            UserService.CreateUser(user);
-        });
-        assertEquals("User already exists", exception.getMessage());
-        verify(UserRepository, times(1)).existsByUsername("johndoe");
-        verify(UserRepository, never()).save(user);
-    }
-
-    @Test
     public void givenNewUserInfo_whenUpdatingUser_thenUpdateTheUserInfo() {
         when(UserRepository.existsById(1L)).thenReturn(true);
         when(UserRepository.save(any(User.class))).thenReturn(user);
@@ -119,7 +94,7 @@ public class UserServiceTest {
     public void givenNewUserInfoForUserThatDoesntExists_whenUpdatingUser_thenThrowException() {
         when(UserRepository.existsById(1L)).thenReturn(false);
 
-        ServiceException exception = assertThrows(ServiceException.class, () -> {
+        UserException exception = assertThrows(UserException.class, () -> {
             UserService.UpdateUser(1L, user);
         });
 
@@ -142,7 +117,7 @@ public class UserServiceTest {
     public void givenUserIdTHatDoesntExists_whenDeletingUser_thenThrowException() {
         when(UserRepository.existsById(1L)).thenReturn(false);
 
-        ServiceException exception = assertThrows(ServiceException.class, () -> {
+        UserException exception = assertThrows(UserException.class, () -> {
             UserService.DeleteUser(1L);
         });
 
@@ -195,7 +170,7 @@ public class UserServiceTest {
         UserInput userInput = new UserInput("johndoe", "john.doe@example.com", "password", Role.USER);
         when(UserRepository.existsByUsername("johndoe")).thenReturn(true);
 
-        ServiceException exception = assertThrows(ServiceException.class, () -> {
+        UserException exception = assertThrows(UserException.class, () -> {
             UserService.Signup(userInput);
         });
 

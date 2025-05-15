@@ -1,11 +1,18 @@
 package team28.backend.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -36,13 +43,6 @@ public class UserController {
     @GetMapping
     public List<User> GetAllUsers() {
         return UserService.GetAllUsers();
-    }
-
-    @Operation(summary = "Create a new user")
-    @ApiResponse(responseCode = "200", description = "User created successfully")
-    @PostMapping
-    public User CreateUser(@RequestBody User user) {
-        return UserService.CreateUser(user);
     }
 
     @Operation(summary = "Update an existing user")
@@ -78,5 +78,17 @@ public class UserController {
     @PostMapping("/signup")
     public User Signup(@Valid @RequestBody UserInput userInput) {
         return UserService.Signup(userInput);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ MethodArgumentNotValidException.class })
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : ex.getFieldErrors()) {
+            String fieldName = error.getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        }
+        return errors;
     }
 }
