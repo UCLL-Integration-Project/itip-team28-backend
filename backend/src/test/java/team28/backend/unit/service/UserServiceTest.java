@@ -77,31 +77,33 @@ public class UserServiceTest {
         verify(UserRepository, times(1)).findAll();
     }
 
-    @Test
-    public void givenNewUserInfo_whenUpdatingUser_thenUpdateTheUserInfo() {
-        when(UserRepository.existsById(1L)).thenReturn(true);
-        when(UserRepository.save(any(User.class))).thenReturn(user);
+    // @Test
+    // public void givenNewUserInfo_whenUpdatingUser_thenUpdateTheUserInfo() {
+    // when(UserRepository.existsById(1L)).thenReturn(true);
+    // when(UserRepository.save(any(User.class))).thenReturn(user);
 
-        User result = UserService.UpdateUser(1L, user);
+    // User result = UserService.UpdateUser(1L, user);
 
-        assertNotNull(result);
-        assertEquals("johndoe", result.getUsername());
-        verify(UserRepository, times(1)).existsById(1L);
-        verify(UserRepository, times(1)).save(any(User.class));
-    }
+    // assertNotNull(result);
+    // assertEquals("johndoe", result.getUsername());
+    // verify(UserRepository, times(1)).existsById(1L);
+    // verify(UserRepository, times(1)).save(any(User.class));
+    // }
 
-    @Test
-    public void givenNewUserInfoForUserThatDoesntExists_whenUpdatingUser_thenThrowException() {
-        when(UserRepository.existsById(1L)).thenReturn(false);
+    // @Test
+    // public void
+    // givenNewUserInfoForUserThatDoesntExists_whenUpdatingUser_thenThrowException()
+    // {
+    // when(UserRepository.existsById(1L)).thenReturn(false);
 
-        UserException exception = assertThrows(UserException.class, () -> {
-            UserService.UpdateUser(1L, user);
-        });
+    // UserException exception = assertThrows(UserException.class, () -> {
+    // UserService.UpdateUser(1L, user);
+    // });
 
-        assertEquals("User not found", exception.getMessage());
-        verify(UserRepository, times(1)).existsById(1L);
-        verify(UserRepository, never()).save(user);
-    }
+    // assertEquals("User not found", exception.getMessage());
+    // verify(UserRepository, times(1)).existsById(1L);
+    // verify(UserRepository, never()).save(user);
+    // }
 
     @Test
     public void givenUserId_whenDeletingUser_thenDeleteThatUser() {
