@@ -6,11 +6,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import org.springframework.security.authentication.AuthenticationManager;
 
+import team28.backend.model.Role;
 import team28.backend.model.User;
 import team28.backend.repository.UserRepository;
 import team28.backend.controller.dto.AuthenticationResponse;
 import team28.backend.controller.dto.UserInput;
-import team28.backend.exceptions.ServiceException;
+import team28.backend.exceptions.UserException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
@@ -32,33 +34,11 @@ public class UserService {
         return UserRepository.findAll();
     }
 
-    public User CreateUser(User user) {
-        boolean ExistingUser = UserRepository.existsByUsername(user.GetUsername());
-
-        if (ExistingUser) {
-            throw new ServiceException("User already exists");
-        }
-
-        return UserRepository.save(user);
-    }
-
-    public User UpdateUser(Long id, User user) {
-        boolean ExistingUser = UserRepository.existsById(id);
-
-        if (!ExistingUser) {
-            throw new ServiceException("User not found");
-        }
-
-        User UpdatedUser = new User(user.GetUsername(), user.GetEmail(),
-                user.GetPassword(), user.GetRole());
-        return UserRepository.save(UpdatedUser);
-    }
-
     public void DeleteUser(Long id) {
         boolean ExistingUser = UserRepository.existsById(id);
 
         if (!ExistingUser) {
-            throw new ServiceException("User not found");
+            throw new UserException("User not found");
         }
 
         UserRepository.deleteById(id);
@@ -72,14 +52,15 @@ public class UserService {
         return new AuthenticationResponse(
                 "Authentication successful.",
                 token,
-                user.GetUsername(),
-                user.GetRole(),
-                user.GetId());
+                user.getUsername(),
+                user.getRole(),
+                user.getId());
     }
 
     public User Signup(UserInput UserInput) {
-        if (UserRepository.existsByUsername(UserInput.username())) {
-            throw new ServiceException("Username is already in use.");
+        boolean exists = UserRepository.existsByUsername(UserInput.username());
+        if (exists) {
+            throw new UserException("Username is already in use");
         }
 
         final var HashedPassword = PasswordEncoder.encode(UserInput.password());
@@ -87,7 +68,7 @@ public class UserService {
                 UserInput.username(),
                 UserInput.email(),
                 HashedPassword,
-                UserInput.role());
+                Role.USER);
 
         return UserRepository.save(user);
     }

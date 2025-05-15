@@ -6,4 +6,6 @@ import team28.backend.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
+
+    User findByUsername(String username);
 }

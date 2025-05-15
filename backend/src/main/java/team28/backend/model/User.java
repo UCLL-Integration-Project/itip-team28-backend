@@ -23,7 +23,7 @@ public class User {
     @NotNull(message = "Username cannot be empty.")
     private String username;
 
-    @Email(message = " E mail is not valid")
+    @Email(message = "Email is not valid.")
     @NotNull(message = "Email cannot be empty.")
     private String email;
 
@@ -45,43 +45,43 @@ public class User {
         this.role = role;
     }
 
-    public Long GetId() {
+    public Long getId() {
         return id;
     }
 
-    public void SetId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String GetUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public void SetUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    public String GetEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void SetEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String GetPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void SetPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public Role GetRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void SetRole(Role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

@@ -11,16 +11,16 @@ import team28.backend.model.User;
 public record UserDetailsImpl(User user) implements UserDetails {
     @Override
     public String getUsername() {
-        return user.GetUsername();
+        return user.getUsername();
     }
 
     @Override
     public String getPassword() {
-        return user.GetPassword();
+        return user.getPassword();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(user.GetRole().toGrantedAuthority());
+        return List.of(user.getRole().toGrantedAuthority());
     }
 }
