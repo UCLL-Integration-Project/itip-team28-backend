@@ -15,12 +15,13 @@ public class DbInitializer {
 
     private final UserRepository UserRepository;
     private final PasswordEncoder PasswordEncoder;
-    private final ScanRepository scanRepository;
+    private final ScanRepository ScanRepository;
 
-    public DbInitializer(PasswordEncoder PasswordEncoder, UserRepository UserRepository, ScanRepository scanRepository) {
+    public DbInitializer(PasswordEncoder PasswordEncoder, UserRepository UserRepository,
+            ScanRepository ScanRepository) {
         this.PasswordEncoder = PasswordEncoder;
         this.UserRepository = UserRepository;
-        this.scanRepository = scanRepository;
+        this.ScanRepository = ScanRepository;
     }
 
     public void clearAll() {
@@ -37,6 +38,6 @@ public class DbInitializer {
         @SuppressWarnings("unused")
         final var user2 = UserRepository
                 .save(new User("test2", "test@example.com", PasswordEncoder.encode("test"), Role.MANAGER));
-        final var scan1 = ScanRepository.save(new Scan("1", "macaddr1", LocalDateTime.of(2025, 5, 1, 9, 15)))
+        final var scan1 = ScanRepository.save(new Scan("1", "macaddr1", LocalDateTime.of(2025, 5, 1, 9, 15)));
     }
 }
