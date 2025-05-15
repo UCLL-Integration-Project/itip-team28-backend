@@ -16,22 +16,22 @@ public class Scan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
-    private String carId;
+    @NotNull(message = "CardID cannot be empty.")
+    private String CarId;
 
-    @NotNull
-    private String readerId;
+    @NotNull(message = "ReaderID cannot be empty.")
+    private String ReaderId;
 
-    @NotNull
+    @NotNull(message = "Timestamp cannot be empty.")
     private LocalDateTime timestamp;
 
     protected Scan() {
 
     }
 
-    public Scan(String carId, String readerId, LocalDateTime timestamp) {
-        this.carId = carId;
-        this.readerId = readerId;
+    public Scan(String CarId, String ReaderId, LocalDateTime timestamp) {
+        this.CarId = CarId;
+        this.ReaderId = ReaderId;
         this.timestamp = timestamp;
     }
 
@@ -44,19 +44,19 @@ public class Scan {
     }
 
     public String getCarId() {
-        return carId;
+        return CarId;
     }
 
-    public void setCarId(String carId) {
-        this.carId = carId;
+    public void setCarId(String CarId) {
+        this.CarId = CarId;
     }
 
     public String getReaderId() {
-        return readerId;
+        return ReaderId;
     }
 
-    public void setReaderId(String readerId) {
-        this.readerId = readerId;
+    public void setReaderId(String ReaderId) {
+        this.ReaderId = ReaderId;
     }
 
     public LocalDateTime getTimestamp() {

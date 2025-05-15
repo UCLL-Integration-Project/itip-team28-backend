@@ -10,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +21,6 @@ import team28.backend.controller.dto.UserInput;
 import team28.backend.model.User;
 import team28.backend.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -59,15 +57,15 @@ public class UserController {
     @Operation(summary = "Login with username and password")
     @ApiResponse(responseCode = "200", description = "Authentication successful")
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest authenticationRequest) {
-        return UserService.Login(authenticationRequest.username(), authenticationRequest.password());
+    public AuthenticationResponse login(@RequestBody AuthenticationRequest AuthenticationRequest) {
+        return UserService.Login(AuthenticationRequest.username(), AuthenticationRequest.password());
     }
 
     @Operation(summary = "Sign up a new user")
     @ApiResponse(responseCode = "200", description = "User signed up successfully")
     @PostMapping("/signup")
-    public User Signup(@Valid @RequestBody UserInput userInput) {
-        return UserService.Signup(userInput);
+    public User Signup(@Valid @RequestBody UserInput UserInput) {
+        return UserService.Signup(UserInput);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
