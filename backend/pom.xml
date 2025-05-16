@@ -104,6 +104,12 @@
 			<version>5.14.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.influxdb</groupId>
+			<artifactId>influxdb-client-java</artifactId>
+			<version>6.11.0</version> <!-- of de laatste versie -->
+		</dependency>
+
 	</dependencies>
 
 	<build>

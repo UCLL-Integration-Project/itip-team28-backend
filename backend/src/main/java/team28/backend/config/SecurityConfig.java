@@ -76,6 +76,8 @@ public class SecurityConfig {
                                 .requestMatchers("/error/**").permitAll()
                                 // Allow all to login and signup
                                 .requestMatchers("/users/login", "/users/signup").permitAll()
+                                .requestMatchers("/tags/data").permitAll()
+
                                 // Allow OpenAPI access
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 // Allow Swagger UI
