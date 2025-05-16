@@ -3,7 +3,7 @@ package team28.backend.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 import team28.backend.controller.dto.ScanInput;
 import team28.backend.model.Scan;
 import team28.backend.service.ScanService;
@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/scans")
@@ -29,7 +30,7 @@ public class ScanController {
     }
 
     @PostMapping
-    public Scan CreateScan(@RequestBody ScanInput ScanInput) {
+    public Scan CreateScan(@Valid @RequestBody ScanInput ScanInput) {
         return ScanService.CreateScan(ScanInput);
     }
 

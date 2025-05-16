@@ -28,20 +28,14 @@ public class ScanService {
     }
 
     public Scan CreateScan(ScanInput ScanInput) {
-        boolean ExistsCar = CarRepository.existsById(ScanInput.carId().getId());
-        if (!ExistsCar) {
-            throw new ScanException("Car with ID: " + ScanInput.carId().getId() + " doesn't exist");
-        }
 
-        boolean ExistsTag = TagRepository.existsById(ScanInput.tagId().getId());
-        if (!ExistsTag) {
-            throw new ScanException("Tag with ID: " + ScanInput.tagId().getId() + " doesn't exist");
-        }
+        var car = CarRepository.findById(ScanInput.carId())
+                .orElseThrow(() -> new ScanException("Car with ID: " + ScanInput.carId() + " doesn't exist"));
 
-        final var scan = new Scan(
-                ScanInput.carId(),
-                ScanInput.tagId(),
-                ScanInput.timestamp());
+        var tag = TagRepository.findById(ScanInput.tagId())
+                .orElseThrow(() -> new ScanException("Tag with ID: " + ScanInput.tagId() + " doesn't exist"));
+
+        var scan = new Scan(car, tag, ScanInput.timestamp());
 
         return ScanRepository.save(scan);
     }

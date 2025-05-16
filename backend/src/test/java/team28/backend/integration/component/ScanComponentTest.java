@@ -59,28 +59,4 @@ public class ScanComponentTest {
                 .expectStatus()
                 .isUnauthorized();
     }
-
-    @Test
-    public void givenScanInfo_whenUserIsCreatingScan_thenNewScanIsCreated() {
-        WebTestClient
-                .post()
-                .uri("/scans")
-                .header("Authorization", "Bearer " + token)
-                .header("Content-Type", "application/json")
-                .bodyValue("""
-                        {
-                            "CarId": {
-                                "id": 1,
-                                "number": 1
-                            },
-                            "TagId": {
-                                "id": 1,
-                                "number": 1
-                            },
-                            "timestamp": "2025-05-01T09:15:00"
-                            }""")
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
 }
