@@ -16,7 +16,7 @@ import team28.backend.service.JwtService;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Import(SecurityConfig.class)
-public class ScanComponentTest {
+public class CarComponentTest {
 
     @Autowired
     private WebTestClient WebTestClient;
@@ -39,10 +39,10 @@ public class ScanComponentTest {
     }
 
     @Test
-    public void givenScans_whenUserIsRequestingScans_thenShowAllScans() {
+    public void givenCars_whenUserIsRequestingCars_thenShowAllCars() {
         WebTestClient
                 .get()
-                .uri("/scans")
+                .uri("/cars")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus()
@@ -50,10 +50,10 @@ public class ScanComponentTest {
     }
 
     @Test
-    public void givenScans_whenUserIsNotLoggedIn_thenThrowException() {
+    public void givenCars_whenUserIsNotLoggedIn_thenThrowException() {
         WebTestClient
                 .get()
-                .uri("/scans")
+                .uri("/cars")
                 .header("Content-Type", "application/json")
                 .exchange()
                 .expectStatus()

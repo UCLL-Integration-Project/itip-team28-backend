@@ -3,7 +3,11 @@ package team28.backend.model;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,6 +15,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,6 +39,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Scan> scans = new ArrayList<Scan>();
 
     protected User() {
     }
@@ -83,6 +92,19 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Scan> getScans() {
+        return scans;
+    }
+
+    public void setScans(List<Scan> scans) {
+        this.scans = scans;
+    }
+
+    public void addScan(Scan scan) {
+        this.scans.add(scan);
+        scan.setUser(this);
     }
 
 }

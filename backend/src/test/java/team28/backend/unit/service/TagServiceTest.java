@@ -32,7 +32,7 @@ public class TagServiceTest {
 
     @BeforeEach
     void setUp() {
-        tag = new Tag("Tag123");
+        tag = new Tag(13);
         tag.setId(1L);
     }
 
@@ -44,7 +44,7 @@ public class TagServiceTest {
         List<Tag> result = TagService.GetAllTags();
 
         assertEquals(1, result.size());
-        assertEquals("Tag123", result.get(0).getName());
+        assertEquals(13, result.get(0).getNumber());
         verify(TagRepository, times(1)).findAll();
     }
 }

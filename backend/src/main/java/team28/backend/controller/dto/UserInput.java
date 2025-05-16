@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import team28.backend.model.Role;
 
 public record UserInput(
-                @NotBlank String username,
-                @Email @NotNull(message = "Email cannot be empty.") String email,
-                @NotBlank String password,
-                Role role) {
+        @NotBlank String username,
+        @Email @NotNull(message = "Email cannot be empty.") String email,
+        @NotBlank String password,
+        Role role) {
 }
