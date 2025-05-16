@@ -1,6 +1,10 @@
 package team28.backend.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,8 +19,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import team28.backend.controller.dto.ScanInput;
+import team28.backend.exceptions.ScanException;
+import team28.backend.model.Car;
 import team28.backend.model.Scan;
+import team28.backend.model.Tag;
+import team28.backend.repository.CarRepository;
 import team28.backend.repository.ScanRepository;
+import team28.backend.repository.TagRepository;
 import team28.backend.service.ScanService;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,15 +35,29 @@ public class ScanServiceTest {
     @Mock
     private ScanRepository ScanRepository;
 
+    @Mock
+    private CarRepository CarRepository;
+
+    @Mock
+    private TagRepository TagRepository;
+
     @InjectMocks
     private ScanService ScanService;
 
     @Mock
     private Scan scan;
 
+    @Mock
+    private Tag tag;
+
+    @Mock
+    private Car car;
+
     @BeforeEach
     void setUp() {
-        scan = new Scan("C1", "R1", LocalDateTime.of(2025, 5, 1, 9, 15));
+        tag = new Tag(1);
+        car = new Car(1);
+        scan = new Scan(car, tag, LocalDateTime.of(2025, 5, 1, 9, 15));
         scan.setId(1L);
     }
 
@@ -45,9 +69,54 @@ public class ScanServiceTest {
         List<Scan> result = ScanService.GetAllScans();
 
         assertEquals(1, result.size());
-        assertEquals("C1", result.get(0).getCarId());
-        assertEquals("R1", result.get(0).getReaderId());
+        assertEquals(1, result.get(0).getCar().getNumber());
+        assertEquals(1, result.get(0).getTag().getNumber());
         verify(ScanRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void givenScanInfo_whenScanIsBeingCreated_thenScanIsAddedToDatabase() {
+        ScanInput ScanInput = new ScanInput(car, tag, LocalDateTime.of(2025, 5, 1, 9, 15));
+        when(CarRepository.existsByNumber(car.getNumber())).thenReturn(true);
+        when(TagRepository.existsByNumber(tag.getNumber())).thenReturn(true);
+        when(ScanRepository.save(any(Scan.class))).thenReturn(scan);
+
+        Scan result = ScanService.CreateScan(ScanInput);
+
+        assertNotNull(result);
+        assertEquals(1, result.getCar().getNumber());
+        verify(CarRepository, times(1)).existsByNumber(car.getNumber());
+        verify(TagRepository, times(1)).existsByNumber(tag.getNumber());
+        verify(ScanRepository, times(1)).save(any(Scan.class));
+    }
+
+    @Test
+    public void givenNonExistingCarInfo_whenScanIsCreated_thenThrowException() {
+        ScanInput ScanInput = new ScanInput(car, tag, LocalDateTime.of(2025, 5, 1, 9, 15));
+        when(CarRepository.existsByNumber(car.getNumber())).thenReturn(false);
+
+        ScanException exception = assertThrows(ScanException.class, () -> {
+            ScanService.CreateScan(ScanInput);
+        });
+
+        assertEquals("Car with Number: 1 doesn't exist", exception.getMessage());
+        verify(CarRepository, times(1)).existsByNumber(car.getNumber());
+        verify(ScanRepository, never()).save(any(Scan.class));
+    }
+
+    @Test
+    public void givenNonExistingTagInfo_whenScanIsCreated_thenThrowException() {
+        ScanInput ScanInput = new ScanInput(car, tag, LocalDateTime.of(2025, 5, 1, 9, 15));
+        when(CarRepository.existsByNumber(car.getNumber())).thenReturn(true);
+        when(TagRepository.existsByNumber(tag.getNumber())).thenReturn(false);
+
+        ScanException exception = assertThrows(ScanException.class, () -> {
+            ScanService.CreateScan(ScanInput);
+        });
+
+        assertEquals("Tag with ID: 1 doesn't exist", exception.getMessage());
+        verify(TagRepository, times(1)).existsByNumber(car.getNumber());
+        verify(ScanRepository, never()).save(any(Scan.class));
     }
 
 }

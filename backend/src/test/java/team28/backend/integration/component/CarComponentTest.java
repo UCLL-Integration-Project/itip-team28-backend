@@ -16,7 +16,7 @@ import team28.backend.service.JwtService;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Import(SecurityConfig.class)
-public class ScanComponentTest {
+public class CarComponentTest {
 
     @Autowired
     private WebTestClient WebTestClient;
@@ -39,10 +39,10 @@ public class ScanComponentTest {
     }
 
     @Test
-    public void givenScans_whenUserIsRequestingScans_thenShowAllScans() {
+    public void givenCars_whenUserIsRequestingCars_thenShowAllCars() {
         WebTestClient
                 .get()
-                .uri("/scans")
+                .uri("/cars")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus()
@@ -50,37 +50,13 @@ public class ScanComponentTest {
     }
 
     @Test
-    public void givenScans_whenUserIsNotLoggedIn_thenThrowException() {
+    public void givenCars_whenUserIsNotLoggedIn_thenThrowException() {
         WebTestClient
                 .get()
-                .uri("/scans")
+                .uri("/cars")
                 .header("Content-Type", "application/json")
                 .exchange()
                 .expectStatus()
                 .isUnauthorized();
-    }
-
-    @Test
-    public void givenScanInfo_whenUserIsCreatingScan_thenNewScanIsCreated() {
-        WebTestClient
-                .post()
-                .uri("/scans")
-                .header("Authorization", "Bearer " + token)
-                .header("Content-Type", "application/json")
-                .bodyValue("""
-                        {
-                            "CarId": {
-                                "id": 1,
-                                "number": 1
-                            },
-                            "TagId": {
-                                "id": 1,
-                                "number": 1
-                            },
-                            "timestamp": "2025-05-01T09:15:00"
-                            }""")
-                .exchange()
-                .expectStatus()
-                .isOk();
     }
 }

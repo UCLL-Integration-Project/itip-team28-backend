@@ -39,7 +39,7 @@ public class TagComponentTest {
     }
 
     @Test
-    public void givenTags_whenUserIsRequestingTags_thenShowAllUsers() {
+    public void givenTags_whenUserIsRequestingTags_thenShowAllTags() {
         WebTestClient
                 .get()
                 .uri("/tags")

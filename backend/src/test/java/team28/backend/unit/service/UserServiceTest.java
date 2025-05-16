@@ -146,19 +146,19 @@ public class UserServiceTest {
         assertEquals(token, response.token());
         assertEquals("johndoe", response.username());
         assertEquals(user.getRole(), response.role());
-        // verify(AuthenticationManager,
-        // times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(AuthenticationManager,
+                times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(JwtService, times(1)).generateToken(user);
     }
 
     @Test
     public void givenUserInfo_whenUserIsRegistrating_thenUserIsAddedToDatabase() {
-        UserInput userInput = new UserInput("johndoe", "john.doe@example.com", "password", Role.USER);
+        UserInput UserInput = new UserInput("johndoe", "john.doe@example.com", "password", Role.USER);
         when(UserRepository.existsByUsername("johndoe")).thenReturn(false);
         when(PasswordEncoder.encode("password")).thenReturn("hashedPassword");
         when(UserRepository.save(any(User.class))).thenReturn(user);
 
-        User result = UserService.Signup(userInput);
+        User result = UserService.Signup(UserInput);
 
         assertNotNull(result);
         assertEquals("johndoe", result.getUsername());
@@ -169,11 +169,11 @@ public class UserServiceTest {
 
     @Test
     public void givenExistingUserInfo_whenUserIsRegistrating_thenThrowException() {
-        UserInput userInput = new UserInput("johndoe", "john.doe@example.com", "password", Role.USER);
+        UserInput UserInput = new UserInput("johndoe", "john.doe@example.com", "password", Role.USER);
         when(UserRepository.existsByUsername("johndoe")).thenReturn(true);
 
         UserException exception = assertThrows(UserException.class, () -> {
-            UserService.Signup(userInput);
+            UserService.Signup(UserInput);
         });
 
         assertEquals("Username is already in use", exception.getMessage());

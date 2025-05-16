@@ -11,10 +11,9 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import team28.backend.model.Tag;
+import team28.backend.model.Car;
 
-public class TagTest {
-
+public class CarTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
@@ -26,24 +25,23 @@ public class TagTest {
 
     @Test
     public void givenValidValues_whenCreatingTag_thenTagIsCreatedWithThoseValues() {
-        int Number = 123;
+        int CarId = 123;
 
-        Tag tag = new Tag(Number);
+        Car car = new Car(CarId);
 
-        assertEquals(123, tag.getNumber());
+        assertEquals(123, car.getNumber());
     }
 
     @Test
     public void givenNegativeNumber_whenCreatingTag_thenThrowExecption() {
-        int Number = -123;
+        int CarId = -123;
 
-        Tag tag = new Tag(Number);
+        Car car = new Car(CarId);
 
-        Set<ConstraintViolation<Tag>> violations = validator.validate(tag);
+        Set<ConstraintViolation<Car>> violations = validator.validate(car);
 
         assertEquals(1, violations.size());
-        ConstraintViolation<Tag> violation = violations.iterator().next();
+        ConstraintViolation<Car> violation = violations.iterator().next();
         assertEquals("Number must be a positive number", violation.getMessage());
     }
-
 }
