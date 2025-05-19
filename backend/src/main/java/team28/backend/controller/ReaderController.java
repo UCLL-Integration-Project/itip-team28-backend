@@ -7,13 +7,21 @@ import com.influxdb.query.FluxTable;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import team28.backend.controller.dto.ReaderInput;
 import team28.backend.model.Reader;
+import team28.backend.model.User;
 import team28.backend.service.ReaderService;
+import team28.backend.service.UserService;
 
 import java.util.*;
 
@@ -32,8 +40,24 @@ public class ReaderController {
     @Operation(summary = "Get all tags")
     @ApiResponse(responseCode = "200", description = "List of readers returned successfully")
     @GetMapping
-    public List<Reader> getAllReaders() {
+    public List<Reader> GetAllReaders() {
         return ReaderService.GetAllReaders();
+    }
+
+    @PostMapping
+    public Reader CreateReader(@Valid @RequestBody ReaderInput ReaderInput) {
+        return ReaderService.CreateReader(ReaderInput);
+    }
+
+    @PutMapping
+    public Reader UpdateReader(Reader reader, @Valid @RequestBody ReaderInput ReaderInput) {
+        return ReaderService.UpdateReader(reader.getId(), ReaderInput);
+    }
+
+    @DeleteMapping
+    public String DeleteReader(@RequestBody Reader reader) {
+        ReaderService.DeleteReader(reader.getId());
+        return "Reader deleted";
     }
 
     @Operation(summary = "Get all data")

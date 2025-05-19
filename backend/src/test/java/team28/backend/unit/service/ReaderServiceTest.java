@@ -32,7 +32,7 @@ public class ReaderServiceTest {
 
     @BeforeEach
     void setUp() {
-        reader = new Reader(13);
+        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
         reader.setId(1L);
     }
 
@@ -44,7 +44,9 @@ public class ReaderServiceTest {
         List<Reader> result = ReaderService.GetAllReaders();
 
         assertEquals(1, result.size());
-        assertEquals(13, result.get(0).getNumber());
+        assertEquals("00-B0-D0-63-C2-26", result.get(0).getMacAddress());
+        assertEquals("Reader1", result.get(0).getName());
+        assertEquals("40N", result.get(0).getCoordinates());
         verify(ReaderRepository, times(1)).findAll();
     }
 }

@@ -11,7 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "readers")
@@ -20,8 +20,14 @@ public class Reader {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Positive(message = "Number must be a positive number")
-    private int number;
+    @NotNull(message = "MacAddress cannot be empty.")
+    private String MacAddress;
+
+    @NotNull(message = "Name cannot be empty.")
+    private String name;
+
+    @NotNull(message = "Coordinates cannot be empty.")
+    private String coordinates;
 
     @OneToMany(mappedBy = "reader")
     @JsonBackReference
@@ -30,8 +36,10 @@ public class Reader {
     protected Reader() {
     };
 
-    public Reader(int number) {
-        this.number = number;
+    public Reader(String MacAddress, String name, String coordinates) {
+        this.MacAddress = MacAddress;
+        this.name = name;
+        this.coordinates = coordinates;
     }
 
     public long getId() {
@@ -42,12 +50,28 @@ public class Reader {
         this.id = id;
     }
 
-    public int getNumber() {
-        return number;
+    public String getMacAddress() {
+        return MacAddress;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setMacAddress(String macAddress) {
+        MacAddress = macAddress;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(String coordinates) {
+        this.coordinates = coordinates;
     }
 
     public List<Scan> getScans() {
