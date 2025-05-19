@@ -56,7 +56,7 @@ public class ScanServiceTest {
 
     @BeforeEach
     void setUp() {
-        reader = new Reader(1);
+        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
         reader.setId(1L);
         car = new Car(1);
         car.setId(1L);
@@ -73,7 +73,7 @@ public class ScanServiceTest {
 
         assertEquals(1, result.size());
         assertEquals(1, result.get(0).getCar().getNumber());
-        assertEquals(1, result.get(0).getReader().getNumber());
+        assertEquals("Reader1", result.get(0).getReader().getName());
         verify(ScanRepository, times(1)).findAll();
     }
 

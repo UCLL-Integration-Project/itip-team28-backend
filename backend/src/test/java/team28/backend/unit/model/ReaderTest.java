@@ -26,24 +26,60 @@ public class ReaderTest {
 
     @Test
     public void givenValidValues_whenCreatingReader_thenReaderIsCreatedWithThoseValues() {
-        int Number = 123;
+        String MacAddress = "00-B0-D0-63-C2-26";
+        String name = "Reader1";
+        String coordinates = "40N";
 
-        Reader reader = new Reader(Number);
+        Reader reader = new Reader(MacAddress, name, coordinates);
 
-        assertEquals(123, reader.getNumber());
+        assertEquals("00-B0-D0-63-C2-26", reader.getMacAddress());
+        assertEquals("Reader1", reader.getName());
+        assertEquals("40N", reader.getCoordinates());
     }
 
     @Test
-    public void givenNegativeNumber_whenCreatingReader_thenThrowExecption() {
-        int Number = -123;
+    public void givenEmptyMacAddress_whenCreatingReader_thenThrowExecption() {
+        String MacAddress = null;
+        String name = "Reader1";
+        String coordinates = "40N";
 
-        Reader reader = new Reader(Number);
+        Reader reader = new Reader(MacAddress, name, coordinates);
 
         Set<ConstraintViolation<Reader>> violations = validator.validate(reader);
 
         assertEquals(1, violations.size());
         ConstraintViolation<Reader> violation = violations.iterator().next();
-        assertEquals("Number must be a positive number", violation.getMessage());
+        assertEquals("MacAddress cannot be empty.", violation.getMessage());
+    }
+
+    @Test
+    public void givenEmptyName_whenCreatingReader_thenThrowExecption() {
+        String MacAddress = "00-B0-D0-63-C2-26";
+        String name = null;
+        String coordinates = "40N";
+
+        Reader reader = new Reader(MacAddress, name, coordinates);
+
+        Set<ConstraintViolation<Reader>> violations = validator.validate(reader);
+
+        assertEquals(1, violations.size());
+        ConstraintViolation<Reader> violation = violations.iterator().next();
+        assertEquals("Name cannot be empty.", violation.getMessage());
+    }
+
+    @Test
+    public void givenEmptyCoordinates_whenCreatingReader_thenThrowExecption() {
+        String MacAddress = "00-B0-D0-63-C2-26";
+        String name = "Reader1";
+        String coordinates = null;
+
+        Reader reader = new Reader(MacAddress, name, coordinates);
+
+        Set<ConstraintViolation<Reader>> violations = validator.validate(reader);
+
+        assertEquals(1, violations.size());
+        ConstraintViolation<Reader> violation = violations.iterator().next();
+        assertEquals("Coordinates cannot be empty.", violation.getMessage());
     }
 
 }

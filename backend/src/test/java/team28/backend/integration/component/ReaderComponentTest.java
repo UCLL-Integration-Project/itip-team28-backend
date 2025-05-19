@@ -59,4 +59,41 @@ public class ReaderComponentTest {
                 .expectStatus()
                 .isUnauthorized();
     }
+
+    @Test
+    public void givenReadersInfo_whenReaderIsCreated_thenReaderIsCreated() {
+        WebTestClient
+                .post()
+                .uri("/readers")
+                .header("Authorization", "Bearer " + token)
+                .header("Content-Type", "application/json")
+                .bodyValue("""
+                            {
+                                "MacAddress": "test",
+                                "name": "test",
+                                "coordinates": "80N"
+                            }
+                        """)
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    public void givenInvalidUsersCredintials_whenUserIsLoggingIn_thenThrowException() {
+        WebTestClient
+                .post()
+                .uri("/readers")
+                .header("Content-Type", "application/json")
+                .bodyValue("""
+                            {
+                                "MacAddress": "test",
+                                "name": "test",
+                                "coordinates": "80N"
+                            }
+                        """)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(401);
+    }
 }

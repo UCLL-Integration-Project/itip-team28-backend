@@ -20,25 +20,25 @@ public class ReaderDatabaseTest {
 
     @BeforeEach
     public void setUp() {
-        reader = new Reader(1);
+        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
         ReaderRepository.save(reader);
     }
 
     @Test
-    public void givenExistingNumber_whenSearchingForReader_thenReturnTrue() {
-        int number = 1;
+    public void givenExistingName_whenSearchingForReader_thenReturnTrue() {
+        String name = "Reader1";
 
-        boolean existing = ReaderRepository.existsByNumber(number);
+        boolean existing = ReaderRepository.existsByName(name);
 
         assertNotEquals(false, existing);
         assertEquals(true, existing);
     }
 
     @Test
-    public void givenNonExistingNumber_whenSearchingForTag_thenReturnFalse() {
-        int number = 2;
+    public void givenNonExistingName_whenSearchingForReader_thenReturnFalse() {
+        String name = "Reader101";
 
-        boolean existing = ReaderRepository.existsByNumber(number);
+        boolean existing = ReaderRepository.existsByName(name);
 
         assertNotEquals(true, existing);
         assertEquals(false, existing);
