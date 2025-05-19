@@ -8,27 +8,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import team28.backend.model.Tag;
-import team28.backend.repository.TagRepository;
+import team28.backend.model.Reader;
+import team28.backend.repository.ReaderRepository;
 
 @DataJpaTest
-public class TagDatabaseTest {
+public class ReaderDatabaseTest {
     @Autowired
-    private TagRepository TagRepository;
+    private ReaderRepository ReaderRepository;
 
-    private Tag tag;
+    private Reader reader;
 
     @BeforeEach
     public void setUp() {
-        tag = new Tag(1);
-        TagRepository.save(tag);
+        reader = new Reader(1);
+        ReaderRepository.save(reader);
     }
 
     @Test
-    public void givenExistingNumber_whenSearchingForTag_thenReturnTrue() {
-        int Number = 1;
+    public void givenExistingNumber_whenSearchingForReader_thenReturnTrue() {
+        int number = 1;
 
-        boolean existing = TagRepository.existsByNumber(Number);
+        boolean existing = ReaderRepository.existsByNumber(number);
 
         assertNotEquals(false, existing);
         assertEquals(true, existing);
@@ -36,9 +36,9 @@ public class TagDatabaseTest {
 
     @Test
     public void givenNonExistingNumber_whenSearchingForTag_thenReturnFalse() {
-        int Number = 2;
+        int number = 2;
 
-        boolean existing = TagRepository.existsByNumber(Number);
+        boolean existing = ReaderRepository.existsByNumber(number);
 
         assertNotEquals(true, existing);
         assertEquals(false, existing);

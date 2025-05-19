@@ -9,21 +9,21 @@ import team28.backend.controller.dto.ScanInput;
 import team28.backend.exceptions.ScanException;
 import team28.backend.model.Car;
 import team28.backend.model.Scan;
-import team28.backend.model.Tag;
+import team28.backend.model.Reader;
 import team28.backend.repository.CarRepository;
 import team28.backend.repository.ScanRepository;
-import team28.backend.repository.TagRepository;
+import team28.backend.repository.ReaderRepository;
 
 @Service
 public class ScanService {
     private final ScanRepository ScanRepository;
     private final CarRepository CarRepository;
-    private final TagRepository TagRepository;
+    private final ReaderRepository ReaderRepository;
 
-    public ScanService(ScanRepository ScanRepository, CarRepository CarRepository, TagRepository TagRepository) {
+    public ScanService(ScanRepository ScanRepository, CarRepository CarRepository, ReaderRepository ReaderRepository) {
         this.ScanRepository = ScanRepository;
         this.CarRepository = CarRepository;
-        this.TagRepository = TagRepository;
+        this.ReaderRepository = ReaderRepository;
     }
 
     public List<Scan> GetAllScans() {
@@ -32,19 +32,19 @@ public class ScanService {
 
     public Scan CreateScan(ScanInput ScanInput) {
 
-        Optional<Car> carOptional = CarRepository.findById(ScanInput.carId());
-        if (carOptional.isEmpty()) {
+        Optional<Car> CarOptional = CarRepository.findById(ScanInput.carId());
+        if (CarOptional.isEmpty()) {
             throw new ScanException("Car with ID: " + ScanInput.carId() + " doesn't exist");
         }
-        Car car = carOptional.get();
+        Car car = CarOptional.get();
 
-        Optional<Tag> tagOptional = TagRepository.findById(ScanInput.tagId());
-        if (tagOptional.isEmpty()) {
-            throw new ScanException("Tag with ID: " + ScanInput.tagId() + " doesn't exist");
+        Optional<Reader> ReaderOptional = ReaderRepository.findById(ScanInput.tagId());
+        if (ReaderOptional.isEmpty()) {
+            throw new ScanException("Reader with ID: " + ScanInput.tagId() + " doesn't exist");
         }
-        Tag tag = tagOptional.get();
+        Reader reader = ReaderOptional.get();
 
-        var scan = new Scan(car, tag, ScanInput.timestamp());
+        var scan = new Scan(car, reader, ScanInput.timestamp());
 
         return ScanRepository.save(scan);
     }

@@ -14,8 +14,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
 
 @Entity
-@Table(name = "tags")
-public class Tag {
+@Table(name = "readers")
+public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,14 +23,14 @@ public class Tag {
     @Positive(message = "Number must be a positive number")
     private int number;
 
-    @OneToMany(mappedBy = "tag")
+    @OneToMany(mappedBy = "reader")
     @JsonBackReference
     private List<Scan> scans = new ArrayList<Scan>();;
 
-    protected Tag() {
+    protected Reader() {
     };
 
-    public Tag(int number) {
+    public Reader(int number) {
         this.number = number;
     }
 
@@ -61,7 +61,7 @@ public class Tag {
 
     public void addScan(Scan scan) {
         this.scans.add(scan);
-        scan.setTag(this);
+        scan.setReader(this);
     }
 
 }
