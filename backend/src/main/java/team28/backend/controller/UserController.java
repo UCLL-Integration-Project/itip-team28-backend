@@ -1,12 +1,8 @@
 package team28.backend.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +14,7 @@ import jakarta.validation.Valid;
 import team28.backend.controller.dto.AuthenticationRequest;
 import team28.backend.controller.dto.AuthenticationResponse;
 import team28.backend.controller.dto.UserInput;
+import team28.backend.exceptions.UserException;
 import team28.backend.model.User;
 import team28.backend.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,14 +66,8 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ MethodArgumentNotValidException.class })
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        for (FieldError error : ex.getFieldErrors()) {
-            String fieldName = error.getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        }
-        return errors;
+    @ExceptionHandler({ UserException.class })
+    public String handleValidationExceptions(UserException ex) {
+        return ex.getMessage();
     }
 }
