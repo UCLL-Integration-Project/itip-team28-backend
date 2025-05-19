@@ -11,9 +11,9 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import team28.backend.model.Tag;
+import team28.backend.model.Reader;
 
-public class TagTest {
+public class ReaderTest {
 
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
@@ -25,24 +25,24 @@ public class TagTest {
     }
 
     @Test
-    public void givenValidValues_whenCreatingTag_thenTagIsCreatedWithThoseValues() {
+    public void givenValidValues_whenCreatingReader_thenReaderIsCreatedWithThoseValues() {
         int Number = 123;
 
-        Tag tag = new Tag(Number);
+        Reader reader = new Reader(Number);
 
-        assertEquals(123, tag.getNumber());
+        assertEquals(123, reader.getNumber());
     }
 
     @Test
-    public void givenNegativeNumber_whenCreatingTag_thenThrowExecption() {
+    public void givenNegativeNumber_whenCreatingReader_thenThrowExecption() {
         int Number = -123;
 
-        Tag tag = new Tag(Number);
+        Reader reader = new Reader(Number);
 
-        Set<ConstraintViolation<Tag>> violations = validator.validate(tag);
+        Set<ConstraintViolation<Reader>> violations = validator.validate(reader);
 
         assertEquals(1, violations.size());
-        ConstraintViolation<Tag> violation = violations.iterator().next();
+        ConstraintViolation<Reader> violation = violations.iterator().next();
         assertEquals("Number must be a positive number", violation.getMessage());
     }
 

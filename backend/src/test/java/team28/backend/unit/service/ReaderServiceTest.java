@@ -14,37 +14,37 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import team28.backend.model.Tag;
-import team28.backend.repository.TagRepository;
-import team28.backend.service.TagService;
+import team28.backend.model.Reader;
+import team28.backend.repository.ReaderRepository;
+import team28.backend.service.ReaderService;
 
 @ExtendWith(MockitoExtension.class)
-public class TagServiceTest {
+public class ReaderServiceTest {
 
     @Mock
-    private TagRepository TagRepository;
+    private ReaderRepository ReaderRepository;
 
     @InjectMocks
-    private TagService TagService;
+    private ReaderService ReaderService;
 
     @Mock
-    private Tag tag;
+    private Reader reader;
 
     @BeforeEach
     void setUp() {
-        tag = new Tag(13);
-        tag.setId(1L);
+        reader = new Reader(13);
+        reader.setId(1L);
     }
 
     @Test
-    public void givenAllScans_whenAllScansIsRequested_thenGiveListOfAllScans() {
-        List<Tag> tags = List.of(tag);
-        when(TagRepository.findAll()).thenReturn(tags);
+    public void givenAllReaders_whenAllReadersIsRequested_thenGiveListOfAllReaders() {
+        List<Reader> readers = List.of(reader);
+        when(ReaderRepository.findAll()).thenReturn(readers);
 
-        List<Tag> result = TagService.GetAllTags();
+        List<Reader> result = ReaderService.GetAllReaders();
 
         assertEquals(1, result.size());
         assertEquals(13, result.get(0).getNumber());
-        verify(TagRepository, times(1)).findAll();
+        verify(ReaderRepository, times(1)).findAll();
     }
 }

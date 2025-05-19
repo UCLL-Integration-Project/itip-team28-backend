@@ -16,7 +16,7 @@ import team28.backend.service.JwtService;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Import(SecurityConfig.class)
-public class TagComponentTest {
+public class ReaderComponentTest {
 
     @Autowired
     private WebTestClient WebTestClient;
@@ -39,10 +39,10 @@ public class TagComponentTest {
     }
 
     @Test
-    public void givenTags_whenUserIsRequestingTags_thenShowAllTags() {
+    public void givenReaders_whenUserIsRequestingReaders_thenShowAllTags() {
         WebTestClient
                 .get()
-                .uri("/tags")
+                .uri("/readers")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus()
@@ -50,10 +50,10 @@ public class TagComponentTest {
     }
 
     @Test
-    public void givenTags_whenUserIsNotLoggedIn_thenThrowException() {
+    public void givenReader_whenUserIsNotLoggedIn_thenThrowException() {
         WebTestClient
                 .get()
-                .uri("/tags")
+                .uri("/readers")
                 .header("Content-Type", "application/json")
                 .exchange()
                 .expectStatus()

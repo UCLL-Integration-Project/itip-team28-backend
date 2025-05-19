@@ -27,11 +27,11 @@ public class Scan {
     @JsonManagedReference
     private Car car;
 
-    @NotNull(message = "TagId cannot be empty.")
+    @NotNull(message = "ReaderID cannot be empty.")
     @ManyToOne
-    @JoinColumn(name = "tag_id")
+    @JoinColumn(name = "reader_id")
     @JsonManagedReference
-    private Tag tag;
+    private Reader reader;
 
     @NotNull(message = "Timestamp cannot be empty.")
     private LocalDateTime timestamp;
@@ -45,9 +45,9 @@ public class Scan {
 
     }
 
-    public Scan(Car car, Tag tag, LocalDateTime timestamp) {
+    public Scan(Car car, Reader reader, LocalDateTime timestamp) {
         this.car = car;
-        this.tag = tag;
+        this.reader = reader;
         this.timestamp = timestamp;
     }
 
@@ -67,12 +67,12 @@ public class Scan {
         this.car = car;
     }
 
-    public Tag getTag() {
-        return tag;
+    public Reader getReader() {
+        return reader;
     }
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public void setReader(Reader reader) {
+        this.reader = reader;
     }
 
     public LocalDateTime getTimestamp() {

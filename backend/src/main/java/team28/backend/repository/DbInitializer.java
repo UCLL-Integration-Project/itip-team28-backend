@@ -9,7 +9,7 @@ import jakarta.annotation.PostConstruct;
 import team28.backend.model.Car;
 import team28.backend.model.Role;
 import team28.backend.model.Scan;
-import team28.backend.model.Tag;
+import team28.backend.model.Reader;
 import team28.backend.model.User;
 
 @Component
@@ -18,21 +18,21 @@ public class DbInitializer {
     private final UserRepository UserRepository;
     private final PasswordEncoder PasswordEncoder;
     private final ScanRepository ScanRepository;
-    private final TagRepository TagRepository;
+    private final ReaderRepository ReaderRepository;
     private final CarRepository CarRepository;
 
     public DbInitializer(PasswordEncoder PasswordEncoder, UserRepository UserRepository,
-            ScanRepository ScanRepository, TagRepository TagRepository, CarRepository CarRepository) {
+            ScanRepository ScanRepository, ReaderRepository ReaderRepository, CarRepository CarRepository) {
         this.PasswordEncoder = PasswordEncoder;
         this.UserRepository = UserRepository;
         this.ScanRepository = ScanRepository;
-        this.TagRepository = TagRepository;
+        this.ReaderRepository = ReaderRepository;
         this.CarRepository = CarRepository;
     }
 
     public void clearAll() {
         ScanRepository.deleteAll();
-        TagRepository.deleteAll();
+        ReaderRepository.deleteAll();
         CarRepository.deleteAll();
         UserRepository.deleteAll();
     }
@@ -47,14 +47,14 @@ public class DbInitializer {
         final var user2 = UserRepository
                 .save(new User("test2", "test@example.com", PasswordEncoder.encode("test"), Role.MANAGER));
 
-        final var tag1 = TagRepository.save(new Tag(1));
-        final var tag2 = TagRepository.save(new Tag(2));
+        final var reader1 = ReaderRepository.save(new Reader(1));
+        final var reader2 = ReaderRepository.save(new Reader(2));
 
         final var car1 = CarRepository.save(new Car(1));
         final var car2 = CarRepository.save(new Car(2));
 
-        final var scan1 = ScanRepository.save(new Scan(car1, tag1, LocalDateTime.of(2025, 5, 1, 9, 15)));
-        final var scan2 = ScanRepository.save(new Scan(car2, tag2, LocalDateTime.of(2025, 5, 1, 11, 18)));
+        final var scan1 = ScanRepository.save(new Scan(car1, reader1, LocalDateTime.of(2025, 5, 1, 9, 15)));
+        final var scan2 = ScanRepository.save(new Scan(car2, reader2, LocalDateTime.of(2025, 5, 1, 11, 18)));
 
         user.addScan(scan1);
         user.addScan(scan2);
