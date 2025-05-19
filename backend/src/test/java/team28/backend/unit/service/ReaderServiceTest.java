@@ -1,6 +1,10 @@
 package team28.backend.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import team28.backend.controller.dto.ReaderInput;
+import team28.backend.exceptions.ReaderException;
 import team28.backend.model.Reader;
 import team28.backend.repository.ReaderRepository;
 import team28.backend.service.ReaderService;
@@ -48,5 +54,39 @@ public class ReaderServiceTest {
         assertEquals("Reader1", result.get(0).getName());
         assertEquals("40N", result.get(0).getCoordinates());
         verify(ReaderRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void givenReaderInfo_whenReaderIsBeingCreated_thenReaderIsAddedToDatabase() {
+        ReaderInput ReaderInput = new ReaderInput(reader.getMacAddress(), reader.getName(), reader.getCoordinates());
+        when(ReaderRepository.save(any(Reader.class))).thenReturn(reader);
+
+        Reader result = ReaderService.CreateReader(ReaderInput);
+
+        assertNotNull(result);
+        verify(ReaderRepository, times(1)).save(any(Reader.class));
+    }
+
+    @Test
+    public void givenReaderId_whenDeletingReader_thenDeleteThatReader() {
+        when(ReaderRepository.existsById(1L)).thenReturn(true);
+
+        ReaderService.DeleteReader(1L);
+
+        verify(ReaderRepository, times(1)).existsById(1L);
+        verify(ReaderRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void givenUserIdTHatDoesntExists_whenDeletingUser_thenThrowException() {
+        when(ReaderRepository.existsById(1L)).thenReturn(false);
+
+        ReaderException exception = assertThrows(ReaderException.class, () -> {
+            ReaderService.DeleteReader(1L);
+        });
+
+        assertEquals("Reader not found", exception.getMessage());
+        verify(ReaderRepository, times(1)).existsById(1L);
+        verify(ReaderRepository, never()).deleteById(1L);
     }
 }
