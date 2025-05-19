@@ -47,8 +47,8 @@ public class DbInitializer {
         final var user2 = UserRepository
                 .save(new User("test2", "test@example.com", PasswordEncoder.encode("test"), Role.MANAGER));
 
-        final var reader1 = ReaderRepository.save(new Reader(1));
-        final var reader2 = ReaderRepository.save(new Reader(2));
+        final var reader1 = ReaderRepository.save(new Reader("00-B0-D0-63-C2-26", "Reader1", "40N"));
+        final var reader2 = ReaderRepository.save(new Reader("01-B1-D1-64-C3-27", "Reader2", "30SW"));
 
         final var car1 = CarRepository.save(new Car(1));
         final var car2 = CarRepository.save(new Car(2));
