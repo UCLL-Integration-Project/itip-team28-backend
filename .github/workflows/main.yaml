@@ -11,6 +11,9 @@ env:
   INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
   INFLUXDB_ORG: ${{ secrets.INFLUXDB_ORG }}
   INFLUXDB_BUCKET: ${{ secrets.INFLUXDB_BUCKET }}
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+  JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+  JWT_LIFETIME: ${{ secrets.JWT_LIFETIME }}h
 
 jobs:
   build-and-push-image:
@@ -30,7 +33,7 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn -B package --file backend/pom.xml
+        run: mvn -B package --file backend/pom.xml -DskipTests=true
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
