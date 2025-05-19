@@ -8,5 +8,8 @@ import java.util.List;
 
 @ConfigurationProperties(prefix = "cors")
 public record CorsProperties(
-        @DefaultValue("http://localhost:8080") List<URL> AllowedOrigins) {
+        @DefaultValue({
+            "http://localhost:8080",
+            "https://itip-team28-frontend-itip-project28.apps.okd.ucll.cloud"
+        }) List<URL> AllowedOrigins) {
 }
