@@ -14,6 +14,7 @@ env:
   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
   JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
   JWT_LIFETIME: ${{ secrets.JWT_LIFETIME }}h
+  SPRING_PROFILES_ACTIVE: prod
 
 jobs:
   build-and-push-image:
