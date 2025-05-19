@@ -7,6 +7,10 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  INFLUXDB_URL: ${{ secrets.INFLUXDB_URL }}
+  INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
+  INFLUXDB_ORG: ${{ secrets.INFLUXDB_ORG }}
+  INFLUXDB_BUCKET: ${{ secrets.INFLUXDB_BUCKET }}
 
 jobs:
   build-and-push-image:
