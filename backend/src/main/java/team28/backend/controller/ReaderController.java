@@ -5,34 +5,41 @@ import com.influxdb.client.QueryApi;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import team28.backend.model.Tag;
-import team28.backend.service.TagService;
+import team28.backend.model.Reader;
+import team28.backend.service.ReaderService;
 
 import java.util.*;
 
 @RestController
-@RequestMapping("/tags")
-public class TagController {
+@RequestMapping("/readers")
+public class ReaderController {
 
-    private final TagService tagService;
+    private final ReaderService ReaderService;
     private final InfluxDBClient influxDBClient;
 
-    public TagController(TagService tagService, InfluxDBClient influxDBClient) {
-        this.tagService = tagService;
+    public ReaderController(ReaderService ReaderService, InfluxDBClient influxDBClient) {
+        this.ReaderService = ReaderService;
         this.influxDBClient = influxDBClient;
     }
 
+    @Operation(summary = "Get all tags")
+    @ApiResponse(responseCode = "200", description = "List of readers returned successfully")
     @GetMapping
-    public List<Tag> getAllTags() {
-        return tagService.GetAllTags();
+    public List<Reader> getAllReaders() {
+        return ReaderService.GetAllReaders();
     }
 
+    @Operation(summary = "Get all data")
+    @ApiResponse(responseCode = "200", description = "List of data returned successfully")
     @GetMapping("/data")
-    public List<Map<String, String>> getTagData() {
+    public List<Map<String, String>> getReaderData() {
         QueryApi queryApi = influxDBClient.getQueryApi();
 
         String fluxQuery = "from(bucket: \"Integration\")"
