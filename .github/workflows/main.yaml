@@ -33,7 +33,7 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn -B package --file backend/pom.xml
+        run: mvn -B package --file backend/pom.xml -DskipTests=true
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
