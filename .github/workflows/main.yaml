@@ -11,6 +11,9 @@ env:
   INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
   INFLUXDB_ORG: ${{ secrets.INFLUXDB_ORG }}
   INFLUXDB_BUCKET: ${{ secrets.INFLUXDB_BUCKET }}
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+  JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+  JWT_LIFETIME: ${{ secrets.JWT_LIFETIME }}h
 
 jobs:
   build-and-push-image:
