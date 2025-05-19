@@ -5,6 +5,9 @@ import com.influxdb.client.QueryApi;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,11 +29,15 @@ public class TagController {
         this.influxDBClient = influxDBClient;
     }
 
+    @Operation(summary = "Get all tags")
+    @ApiResponse(responseCode = "200", description = "List of tags returned successfully")
     @GetMapping
     public List<Tag> getAllTags() {
         return tagService.GetAllTags();
     }
 
+    @Operation(summary = "Get all data")
+    @ApiResponse(responseCode = "200", description = "List of data returned successfully")
     @GetMapping("/data")
     public List<Map<String, String>> getTagData() {
         QueryApi queryApi = influxDBClient.getQueryApi();
