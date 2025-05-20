@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import team28.backend.controller.dto.CarInput;
 import team28.backend.model.Car;
 import team28.backend.service.CarService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/cars")
@@ -26,5 +29,11 @@ public class CarController {
     @GetMapping
     public List<Car> GetAllCars() {
         return CarService.GetAllCars();
+    }
+
+    @Operation(summary = "Find path to endpoint")
+    @PostMapping("/pathfind")
+    public void findPath(@RequestBody CarInput carInput) {
+        CarService.findPath(carInput.longitude(), carInput.latitude());
     }
 }
