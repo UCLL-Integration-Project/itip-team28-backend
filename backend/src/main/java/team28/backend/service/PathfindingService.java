@@ -5,6 +5,9 @@ import team28.backend.model.Reader;
 
 import java.util.*;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class PathfindingService {
 
     public List<String> findPath(Reader start, Reader end, List<Reader> allReaders) {
