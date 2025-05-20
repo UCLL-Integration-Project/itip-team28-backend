@@ -11,6 +11,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import team28.backend.model.Coordinate;
 import team28.backend.model.Reader;
 
 public class ReaderTest {
@@ -28,7 +29,8 @@ public class ReaderTest {
     public void givenValidValues_whenCreatingReader_thenReaderIsCreatedWithThoseValues() {
         String MacAddress = "00-B0-D0-63-C2-26";
         String name = "Reader1";
-        String coordinates = "40N";
+        Coordinate coordinates = new Coordinate(0, 0);
+;
 
         Reader reader = new Reader(MacAddress, name, coordinates);
 
@@ -41,7 +43,7 @@ public class ReaderTest {
     public void givenEmptyMacAddress_whenCreatingReader_thenThrowExecption() {
         String MacAddress = null;
         String name = "Reader1";
-        String coordinates = "40N";
+        Coordinate coordinates = new Coordinate(0, 0);
 
         Reader reader = new Reader(MacAddress, name, coordinates);
 
@@ -56,7 +58,7 @@ public class ReaderTest {
     public void givenEmptyName_whenCreatingReader_thenThrowExecption() {
         String MacAddress = "00-B0-D0-63-C2-26";
         String name = null;
-        String coordinates = "40N";
+        Coordinate coordinates = new Coordinate(0, 0);
 
         Reader reader = new Reader(MacAddress, name, coordinates);
 
@@ -71,7 +73,7 @@ public class ReaderTest {
     public void givenEmptyCoordinates_whenCreatingReader_thenThrowExecption() {
         String MacAddress = "00-B0-D0-63-C2-26";
         String name = "Reader1";
-        String coordinates = null;
+        Coordinate coordinates = null;
 
         Reader reader = new Reader(MacAddress, name, coordinates);
 

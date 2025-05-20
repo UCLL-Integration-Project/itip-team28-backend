@@ -23,9 +23,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import team28.backend.controller.dto.ScanInput;
 import team28.backend.exceptions.ScanException;
 import team28.backend.model.Car;
+import team28.backend.model.Coordinate;
 import team28.backend.model.Scan;
 import team28.backend.model.Reader;
 import team28.backend.repository.CarRepository;
+import team28.backend.repository.CoordinateRepository;
 import team28.backend.repository.ScanRepository;
 import team28.backend.repository.ReaderRepository;
 import team28.backend.service.ScanService;
@@ -42,6 +44,9 @@ public class ScanServiceTest {
     @Mock
     private ReaderRepository TagRepository;
 
+    @Mock
+    private CoordinateRepository CoordinateRepository;
+
     @InjectMocks
     private ScanService ScanService;
 
@@ -56,7 +61,8 @@ public class ScanServiceTest {
 
     @BeforeEach
     void setUp() {
-        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
+        final var coordinate1 = CoordinateRepository.save(new Coordinate(0, 0));
+        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", coordinate1);
         reader.setId(1L);
         car = new Car(1);
         car.setId(1L);

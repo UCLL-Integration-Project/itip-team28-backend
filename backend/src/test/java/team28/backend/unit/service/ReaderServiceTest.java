@@ -20,7 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import team28.backend.controller.dto.ReaderInput;
 import team28.backend.exceptions.ReaderException;
+import team28.backend.model.Coordinate;
 import team28.backend.model.Reader;
+import team28.backend.repository.CoordinateRepository;
 import team28.backend.repository.ReaderRepository;
 import team28.backend.service.ReaderService;
 
@@ -30,6 +32,9 @@ public class ReaderServiceTest {
     @Mock
     private ReaderRepository ReaderRepository;
 
+    @Mock
+    private CoordinateRepository CoordinateRepository;
+
     @InjectMocks
     private ReaderService ReaderService;
 
@@ -38,7 +43,8 @@ public class ReaderServiceTest {
 
     @BeforeEach
     void setUp() {
-        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
+        final var coordinate1 = CoordinateRepository.save(new Coordinate(0, 0));
+        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", coordinate1);
         reader.setId(1L);
     }
 

@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -26,8 +27,8 @@ public class Reader {
     @NotNull(message = "Name cannot be empty.")
     private String name;
 
-    @NotNull(message = "Coordinates cannot be empty.")
-    private String coordinates;
+    @OneToOne
+    private Coordinate coordinate;
 
     @OneToMany(mappedBy = "reader")
     @JsonBackReference
@@ -36,10 +37,10 @@ public class Reader {
     protected Reader() {
     };
 
-    public Reader(String MacAddress, String name, String coordinates) {
+    public Reader(String MacAddress, String name, Coordinate coordinate) {
         this.MacAddress = MacAddress;
         this.name = name;
-        this.coordinates = coordinates;
+        this.coordinate = coordinate;
     }
 
     public long getId() {
@@ -66,12 +67,12 @@ public class Reader {
         this.name = name;
     }
 
-    public String getCoordinates() {
-        return coordinates;
+    public Coordinate getCoordinates() {
+        return coordinate;
     }
 
-    public void setCoordinates(String coordinates) {
-        this.coordinates = coordinates;
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
     }
 
     public List<Scan> getScans() {
