@@ -79,18 +79,32 @@ public class ReaderController {
                 + " |> filter(fn: (r) => r._measurement == \"halt\")";
 
         List<FluxTable> tables = queryApi.query(fluxQuery);
-        List<Map<String, String>> result = new ArrayList<>();
+        Map<String, Map<String, String>> groupedData = new HashMap<>();
 
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
-                Map<String, String> data = new HashMap<>();
-                data.put("carId", String.valueOf(record.getValueByKey("car_id")));
-                data.put("readerId", String.valueOf(record.getValueByKey("reader_id")));
-                data.put("timestampRead", String.valueOf(record.getValueByKey("timestamp_read")));
-                result.add(data);
+                String time = record.getTime().toString();
+                String field = (String) record.getValueByKey("_field");
+                String value = String.valueOf(record.getValue());
+
+                groupedData.putIfAbsent(time, new HashMap<>());
+                Map<String, String> dataEntry = groupedData.get(time);
+
+                switch (field) {
+                    case "car_id":
+                        dataEntry.put("carId", value);
+                        break;
+                    case "reader_id":
+                        dataEntry.put("readerId", value);
+                        break;
+                    case "timestamp_read":
+                        dataEntry.put("timestampRead", value);
+                        break;
+                }
             }
         }
-        return result;
+
+        return new ArrayList<>(groupedData.values());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
