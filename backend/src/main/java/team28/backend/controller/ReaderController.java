@@ -76,7 +76,7 @@ public class ReaderController {
 
         String fluxQuery = "from(bucket: \"Integration\")"
                 + " |> range(start: -1h)"
-                + " |> filter(fn: (r) => r._measurement == \"rfid\")";
+                + " |> filter(fn: (r) => r._measurement == \"halt\")";
 
         List<FluxTable> tables = queryApi.query(fluxQuery);
         List<Map<String, String>> result = new ArrayList<>();
