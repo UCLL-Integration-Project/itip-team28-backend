@@ -40,7 +40,7 @@ public class ScanServiceTest {
     private CarRepository CarRepository;
 
     @Mock
-    private ReaderRepository TagRepository;
+    private ReaderRepository ReaderRepository;
 
     @InjectMocks
     private ScanService ScanService;
@@ -81,7 +81,7 @@ public class ScanServiceTest {
     public void givenScanInfo_whenScanIsBeingCreated_thenScanIsAddedToDatabase() {
         ScanInput ScanInput = new ScanInput(car.getId(), reader.getId(), LocalDateTime.of(2025, 5, 1, 9, 15));
         when(CarRepository.findById(car.getId())).thenReturn(Optional.of(car));
-        when(TagRepository.findById(reader.getId())).thenReturn(Optional.of(reader));
+        when(ReaderRepository.findById(reader.getId())).thenReturn(Optional.of(reader));
         when(ScanRepository.save(any(Scan.class))).thenReturn(scan);
 
         Scan result = ScanService.CreateScan(ScanInput);
@@ -89,7 +89,7 @@ public class ScanServiceTest {
         assertNotNull(result);
         assertEquals(1, result.getCar().getNumber());
         verify(CarRepository, times(1)).findById(car.getId());
-        verify(TagRepository, times(1)).findById(reader.getId());
+        verify(ReaderRepository, times(1)).findById(reader.getId());
         verify(ScanRepository, times(1)).save(any(Scan.class));
     }
 
@@ -111,14 +111,14 @@ public class ScanServiceTest {
     public void givenNonExistingReaderInfo_whenScanIsCreated_thenThrowException() {
         ScanInput ScanInput = new ScanInput(car.getId(), reader.getId(), LocalDateTime.of(2025, 5, 1, 9, 15));
         when(CarRepository.findById(car.getId())).thenReturn(Optional.of(car));
-        when(TagRepository.findById(reader.getId())).thenReturn(Optional.empty());
+        when(ReaderRepository.findById(reader.getId())).thenReturn(Optional.empty());
 
         ScanException exception = assertThrows(ScanException.class, () -> {
             ScanService.CreateScan(ScanInput);
         });
 
         assertEquals("Reader with ID: 1 doesn't exist", exception.getMessage());
-        verify(TagRepository, times(1)).findById(reader.getId());
+        verify(ReaderRepository, times(1)).findById(reader.getId());
         verify(ScanRepository, never()).save(any(Scan.class));
     }
 

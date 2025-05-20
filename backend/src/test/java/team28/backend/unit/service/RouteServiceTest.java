@@ -2,13 +2,16 @@ package team28.backend.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,13 +20,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import team28.backend.controller.dto.ReaderInput;
 import team28.backend.controller.dto.RouteInput;
+import team28.backend.exceptions.RouteException;
 import team28.backend.model.Reader;
 import team28.backend.model.Route;
 import team28.backend.repository.ReaderRepository;
 import team28.backend.repository.RouteRepository;
-import team28.backend.service.ReaderService;
 import team28.backend.service.RouteService;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +33,9 @@ public class RouteServiceTest {
 
     @Mock
     private RouteRepository RouteRepository;
+
+    @Mock
+    private ReaderRepository ReaderRepository;
 
     @InjectMocks
     private RouteService RouteService;
@@ -71,16 +76,67 @@ public class RouteServiceTest {
         verify(RouteRepository, times(1)).findAll();
     }
 
-    @Test
     public void givenRouteInfo_whenRouteIsBeingCreated_thenRouteIsAddedToDatabase() {
-        RouteInput RouteInput = new RouteInput(RouteInput.status(), RouteInput.startingPointReaderId(),
-                RouteInput.destinationReaderId(), RouteInput.currentPointReaderId(), RouteInput.timestamp(),
-                RouteInput.instructions());
+
+        RouteInput RouteInput = new RouteInput(route.isStatus(), route.getStartingPoint().getId(),
+                route.getDestination().getId(), route.getCurrentPoint().getId(), route.getTimestamp(),
+                route.getInstructions());
+        when(ReaderRepository.findById(route.getStartingPoint().getId())).thenReturn(Optional.of(reader1));
+        when(ReaderRepository.findById(route.getDestination().getId())).thenReturn(Optional.of(reader2));
+        when(ReaderRepository.findById(route.getCurrentPoint().getId())).thenReturn(Optional.of(reader1));
         when(RouteRepository.save(any(Route.class))).thenReturn(route);
 
-        Reader result = ReaderService.CreateReader(ReaderInput);
+        Route result = RouteService.CreateRoute(RouteInput);
 
         assertNotNull(result);
-        verify(ReaderRepository, times(1)).save(any(Reader.class));
+        verify(RouteRepository, times(1)).save(any(Route.class));
+    }
+
+    @Test
+    public void givenNonExistingStartingPointInfo_whenRouteIsCreated_thenThrowException() {
+        RouteInput RouteInput = new RouteInput(route.isStatus(), route.getStartingPoint().getId(),
+                route.getDestination().getId(), route.getCurrentPoint().getId(), route.getTimestamp(),
+                route.getInstructions());
+        when(ReaderRepository.findById(route.getStartingPoint().getId())).thenReturn(Optional.empty());
+
+        RouteException exception = assertThrows(RouteException.class, () -> {
+            RouteService.CreateRoute(RouteInput);
+        });
+
+        assertEquals("Reader with ID: 1 doesn't exist", exception.getMessage());
+        verify(RouteRepository, never()).save(any(Route.class));
+    }
+
+    @Test
+    public void givenNonExistingDestinationInfo_whenRouteIsCreated_thenThrowException() {
+        RouteInput RouteInput = new RouteInput(route.isStatus(), route.getStartingPoint().getId(),
+                route.getDestination().getId(), route.getCurrentPoint().getId(), route.getTimestamp(),
+                route.getInstructions());
+        when(ReaderRepository.findById(route.getStartingPoint().getId())).thenReturn(Optional.of(reader1));
+        when(ReaderRepository.findById(route.getDestination().getId())).thenReturn(Optional.empty());
+
+        RouteException exception = assertThrows(RouteException.class, () -> {
+            RouteService.CreateRoute(RouteInput);
+        });
+
+        assertEquals("Reader with ID: 1 doesn't exist", exception.getMessage());
+        verify(RouteRepository, never()).save(any(Route.class));
+    }
+
+    @Test
+    public void givenNonExistingCurrentPointInfo_whenRouteIsCreated_thenThrowException() {
+        RouteInput RouteInput = new RouteInput(route.isStatus(), route.getStartingPoint().getId(),
+                route.getDestination().getId(), route.getCurrentPoint().getId(), route.getTimestamp(),
+                route.getInstructions());
+        when(ReaderRepository.findById(route.getStartingPoint().getId())).thenReturn(Optional.of(reader1));
+        when(ReaderRepository.findById(route.getDestination().getId())).thenReturn(Optional.of(reader2));
+        when(ReaderRepository.findById(route.getCurrentPoint().getId())).thenReturn(Optional.empty());
+
+        RouteException exception = assertThrows(RouteException.class, () -> {
+            RouteService.CreateRoute(RouteInput);
+        });
+
+        assertEquals("Reader with ID: 1 doesn't exist", exception.getMessage());
+        verify(RouteRepository, never()).save(any(Route.class));
     }
 }

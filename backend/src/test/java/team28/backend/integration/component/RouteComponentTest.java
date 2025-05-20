@@ -16,8 +16,7 @@ import team28.backend.service.JwtService;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Import(SecurityConfig.class)
-public class ReaderComponentTest {
-
+public class RouteComponentTest {
     @Autowired
     private WebTestClient WebTestClient;
 
@@ -39,10 +38,10 @@ public class ReaderComponentTest {
     }
 
     @Test
-    public void givenReaders_whenUserIsRequestingReaders_thenShowAllTags() {
+    public void givenRoutes_whenUserIsRequestingRoutes_thenShowAllTags() {
         WebTestClient
                 .get()
-                .uri("/readers")
+                .uri("/routes")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus()
@@ -50,10 +49,10 @@ public class ReaderComponentTest {
     }
 
     @Test
-    public void givenReader_whenUserIsNotLoggedIn_thenThrowException() {
+    public void givenRoutes_whenUserIsNotLoggedIn_thenThrowException() {
         WebTestClient
                 .get()
-                .uri("/readers")
+                .uri("/routes")
                 .header("Content-Type", "application/json")
                 .exchange()
                 .expectStatus()
@@ -61,35 +60,19 @@ public class ReaderComponentTest {
     }
 
     @Test
-    public void givenReadersInfo_whenReaderIsCreated_thenReaderIsCreated() {
-        WebTestClient
-                .post()
-                .uri("/readers")
-                .header("Authorization", "Bearer " + token)
-                .header("Content-Type", "application/json")
-                .bodyValue("""
-                            {
-                                "MacAddress": "test",
-                                "name": "test",
-                                "coordinates": "80N"
-                            }
-                        """)
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
-
-    @Test
-    public void givenInvalidReaderInfo_whenUserIsNotLoggedIn_thenThrowException() {
+    public void givenInvalidRouteInfo_whenUserIsNotLoggedIn_thenThrowException() {
         WebTestClient
                 .post()
                 .uri("/readers")
                 .header("Content-Type", "application/json")
                 .bodyValue("""
                             {
-                                "MacAddress": "test",
-                                "name": "test",
-                                "coordinates": "80N"
+                                "status": "false",
+                                "startingPointReaderId": "1",
+                                "destinationReaderId": "2",
+                                "currentPointReaderId": "1",
+                                "timestamp": "2025-05-05T10:00"
+                                "instructions": []
                             }
                         """)
                 .exchange()
