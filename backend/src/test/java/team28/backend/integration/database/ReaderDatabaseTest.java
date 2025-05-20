@@ -8,37 +8,37 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import team28.backend.model.Tag;
-import team28.backend.repository.TagRepository;
+import team28.backend.model.Reader;
+import team28.backend.repository.ReaderRepository;
 
 @DataJpaTest
-public class TagDatabaseTest {
+public class ReaderDatabaseTest {
     @Autowired
-    private TagRepository TagRepository;
+    private ReaderRepository ReaderRepository;
 
-    private Tag tag;
+    private Reader reader;
 
     @BeforeEach
     public void setUp() {
-        tag = new Tag(1);
-        TagRepository.save(tag);
+        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
+        ReaderRepository.save(reader);
     }
 
     @Test
-    public void givenExistingNumber_whenSearchingForTag_thenReturnTrue() {
-        int Number = 1;
+    public void givenExistingName_whenSearchingForReader_thenReturnTrue() {
+        String name = "Reader1";
 
-        boolean existing = TagRepository.existsByNumber(Number);
+        boolean existing = ReaderRepository.existsByName(name);
 
         assertNotEquals(false, existing);
         assertEquals(true, existing);
     }
 
     @Test
-    public void givenNonExistingNumber_whenSearchingForTag_thenReturnFalse() {
-        int Number = 2;
+    public void givenNonExistingName_whenSearchingForReader_thenReturnFalse() {
+        String name = "Reader101";
 
-        boolean existing = TagRepository.existsByNumber(Number);
+        boolean existing = ReaderRepository.existsByName(name);
 
         assertNotEquals(true, existing);
         assertEquals(false, existing);

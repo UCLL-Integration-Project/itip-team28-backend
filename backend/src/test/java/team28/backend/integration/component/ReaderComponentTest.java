@@ -16,7 +16,7 @@ import team28.backend.service.JwtService;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Import(SecurityConfig.class)
-public class TagComponentTest {
+public class ReaderComponentTest {
 
     @Autowired
     private WebTestClient WebTestClient;
@@ -39,10 +39,10 @@ public class TagComponentTest {
     }
 
     @Test
-    public void givenTags_whenUserIsRequestingTags_thenShowAllTags() {
+    public void givenReaders_whenUserIsRequestingReaders_thenShowAllTags() {
         WebTestClient
                 .get()
-                .uri("/tags")
+                .uri("/readers")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus()
@@ -50,13 +50,50 @@ public class TagComponentTest {
     }
 
     @Test
-    public void givenTags_whenUserIsNotLoggedIn_thenThrowException() {
+    public void givenReader_whenUserIsNotLoggedIn_thenThrowException() {
         WebTestClient
                 .get()
-                .uri("/tags")
+                .uri("/readers")
                 .header("Content-Type", "application/json")
                 .exchange()
                 .expectStatus()
                 .isUnauthorized();
+    }
+
+    @Test
+    public void givenReadersInfo_whenReaderIsCreated_thenReaderIsCreated() {
+        WebTestClient
+                .post()
+                .uri("/readers")
+                .header("Authorization", "Bearer " + token)
+                .header("Content-Type", "application/json")
+                .bodyValue("""
+                            {
+                                "MacAddress": "test",
+                                "name": "test",
+                                "coordinates": "80N"
+                            }
+                        """)
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    public void givenInvalidUsersCredintials_whenUserIsLoggingIn_thenThrowException() {
+        WebTestClient
+                .post()
+                .uri("/readers")
+                .header("Content-Type", "application/json")
+                .bodyValue("""
+                            {
+                                "MacAddress": "test",
+                                "name": "test",
+                                "coordinates": "80N"
+                            }
+                        """)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(401);
     }
 }

@@ -14,7 +14,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import team28.backend.model.Car;
 import team28.backend.model.Scan;
-import team28.backend.model.Tag;
+import team28.backend.model.Reader;
 
 public class ScanTest {
 
@@ -30,23 +30,23 @@ public class ScanTest {
     @Test
     public void givenValidValues_whenCreatingScan_thenScanIsCreatedWithThoseValues() {
         Car CarId = new Car(1);
-        Tag Number = new Tag(13);
+        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
 
-        Scan scan = new Scan(CarId, Number, timestamp);
+        Scan scan = new Scan(CarId, ReaderId, timestamp);
 
         assertEquals(1, scan.getCar().getNumber());
-        assertEquals(13, scan.getTag().getNumber());
+        assertEquals("Reader1", scan.getReader().getName());
         assertEquals(LocalDateTime.parse("2025-05-01T09:15"), scan.getTimestamp());
     }
 
     @Test
     public void givenEmptyCar_whenCreatingScan_thenThrowExecption() {
         Car CarId = null;
-        Tag Number = new Tag(13);
+        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
 
-        Scan scan = new Scan(CarId, Number, timestamp);
+        Scan scan = new Scan(CarId, ReaderId, timestamp);
 
         Set<ConstraintViolation<Scan>> violations = validator.validate(scan);
 
@@ -56,27 +56,27 @@ public class ScanTest {
     }
 
     @Test
-    public void givenEmptyTag_whenCreatingScan_thenThrowExecption() {
+    public void givenEmptyReader_whenCreatingScan_thenThrowExecption() {
         Car CarId = new Car(1);
-        Tag Number = null;
+        Reader ReaderId = null;
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
 
-        Scan scan = new Scan(CarId, Number, timestamp);
+        Scan scan = new Scan(CarId, ReaderId, timestamp);
 
         Set<ConstraintViolation<Scan>> violations = validator.validate(scan);
 
         assertEquals(1, violations.size());
         ConstraintViolation<Scan> violation = violations.iterator().next();
-        assertEquals("TagId cannot be empty.", violation.getMessage());
+        assertEquals("ReaderID cannot be empty.", violation.getMessage());
     }
 
     @Test
     public void givenEmptyTimestamp_whenCreatingScan_thenThrowExecption() {
         Car CarId = new Car(1);
-        Tag Number = new Tag(13);
+        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
         LocalDateTime timestamp = null;
 
-        Scan scan = new Scan(CarId, Number, timestamp);
+        Scan scan = new Scan(CarId, ReaderId, timestamp);
 
         Set<ConstraintViolation<Scan>> violations = validator.validate(scan);
 
