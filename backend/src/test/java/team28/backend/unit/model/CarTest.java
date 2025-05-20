@@ -24,7 +24,7 @@ public class CarTest {
     }
 
     @Test
-    public void givenValidValues_whenCreatingTag_thenTagIsCreatedWithThoseValues() {
+    public void givenValidValues_whenCreatingCar_thenCarIsCreatedWithThoseValues() {
         int CarId = 123;
 
         Car car = new Car(CarId);
@@ -33,7 +33,7 @@ public class CarTest {
     }
 
     @Test
-    public void givenNegativeNumber_whenCreatingTag_thenThrowExecption() {
+    public void givenNegativeNumber_whenCreatingCar_thenThrowExecption() {
         int CarId = -123;
 
         Car car = new Car(CarId);

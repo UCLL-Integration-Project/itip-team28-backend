@@ -1,6 +1,7 @@
 package team28.backend.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import team28.backend.model.Car;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Role;
+import team28.backend.model.Route;
 import team28.backend.model.Scan;
 import team28.backend.model.Reader;
 import team28.backend.model.User;
@@ -22,21 +24,27 @@ public class DbInitializer {
     private final ReaderRepository ReaderRepository;
     private final CarRepository CarRepository;
     private final CoordinateRepository CoordinateRepository;
+    private final RouteRepository RouteRepository;
 
     public DbInitializer(PasswordEncoder PasswordEncoder, UserRepository UserRepository,
-            ScanRepository ScanRepository, ReaderRepository ReaderRepository, CarRepository CarRepository, CoordinateRepository CoordinateRepository) {
+            ScanRepository ScanRepository, ReaderRepository ReaderRepository, CarRepository CarRepository,
+            CoordinateRepository CoordinateRepository,
+            RouteRepository RouteRepository) {
         this.PasswordEncoder = PasswordEncoder;
         this.UserRepository = UserRepository;
         this.ScanRepository = ScanRepository;
         this.ReaderRepository = ReaderRepository;
         this.CarRepository = CarRepository;
         this.CoordinateRepository = CoordinateRepository;
+        this.RouteRepository = RouteRepository;
     }
 
     public void clearAll() {
+        RouteRepository.deleteAll();
         ScanRepository.deleteAll();
         ReaderRepository.deleteAll();
         CarRepository.deleteAll();
+        CoordinateRepository.deleteAll();
         UserRepository.deleteAll();
     }
 
@@ -55,7 +63,7 @@ public class DbInitializer {
         final var coordinate3 = CoordinateRepository.save(new Coordinate(0, 1));
         final var coordinate4 = CoordinateRepository.save(new Coordinate(1, 1));
         final var coordinate5 = CoordinateRepository.save(new Coordinate(2, 1));
-    
+
         final var reader1 = ReaderRepository.save(new Reader("00-B0-D0-63-C2-26", "Reader1", coordinate1));
         final var reader2 = ReaderRepository.save(new Reader("01-B1-D1-64-C3-27", "Reader2", coordinate2));
         @SuppressWarnings("unused")
@@ -71,11 +79,24 @@ public class DbInitializer {
         final var scan1 = ScanRepository.save(new Scan(car1, reader1, LocalDateTime.of(2025, 5, 1, 9, 15)));
         final var scan2 = ScanRepository.save(new Scan(car2, reader2, LocalDateTime.of(2025, 5, 1, 11, 18)));
 
+        final var route1 = RouteRepository
+                .save(new Route(true, reader1, reader2, reader1, LocalDateTime.of(2025, 5, 1, 9, 15),
+                        List.of("Step 1", "Step 2")));
+
         user.addScan(scan1);
         user.addScan(scan2);
 
         ScanRepository.save(scan1);
         ScanRepository.save(scan2);
         UserRepository.save(user);
+
+        reader1.addStartingPoint(route1);
+        reader2.addDestination(route1);
+        reader1.addCurrentPoint(route1);
+
+        RouteRepository.save(route1);
+
+        ReaderRepository.save(reader1);
+        ReaderRepository.save(reader2);
     }
 }

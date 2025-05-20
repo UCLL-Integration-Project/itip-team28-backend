@@ -9,15 +9,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import team28.backend.controller.dto.ReaderInput;
+import team28.backend.exceptions.ReaderException;
 import team28.backend.model.Reader;
 import team28.backend.service.ReaderService;
 
@@ -72,20 +76,40 @@ public class ReaderController {
 
         String fluxQuery = "from(bucket: \"Integration\")"
                 + " |> range(start: -1h)"
-                + " |> filter(fn: (r) => r._measurement == \"rfid\")";
+                + " |> filter(fn: (r) => r._measurement == \"halt\")";
 
         List<FluxTable> tables = queryApi.query(fluxQuery);
-        List<Map<String, String>> result = new ArrayList<>();
+        Map<String, Map<String, String>> groupedData = new HashMap<>();
 
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
-                Map<String, String> data = new HashMap<>();
-                data.put("carId", String.valueOf(record.getValueByKey("car_id")));
-                data.put("readerId", String.valueOf(record.getValueByKey("reader_id")));
-                data.put("timestampRead", String.valueOf(record.getValueByKey("timestamp_read")));
-                result.add(data);
+                String time = record.getTime().toString();
+                String field = (String) record.getValueByKey("_field");
+                String value = String.valueOf(record.getValue());
+
+                groupedData.putIfAbsent(time, new HashMap<>());
+                Map<String, String> dataEntry = groupedData.get(time);
+
+                switch (field) {
+                    case "car_id":
+                        dataEntry.put("carId", value);
+                        break;
+                    case "reader_id":
+                        dataEntry.put("readerId", value);
+                        break;
+                    case "timestamp_read":
+                        dataEntry.put("timestampRead", value);
+                        break;
+                }
             }
         }
-        return result;
+
+        return new ArrayList<>(groupedData.values());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ ReaderException.class })
+    public String handleValidationExceptions(ReaderException ex) {
+        return ex.getMessage();
     }
 }
