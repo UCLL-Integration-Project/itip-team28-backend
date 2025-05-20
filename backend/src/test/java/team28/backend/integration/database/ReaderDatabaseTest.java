@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import team28.backend.model.Coordinate;
 import team28.backend.model.Reader;
 import team28.backend.repository.ReaderRepository;
 
@@ -20,7 +21,8 @@ public class ReaderDatabaseTest {
 
     @BeforeEach
     public void setUp() {
-        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
+        Coordinate coordinates = new Coordinate(0, 0);
+        reader = new Reader("00-B0-D0-63-C2-26", "Reader1", coordinates);
         ReaderRepository.save(reader);
     }
 

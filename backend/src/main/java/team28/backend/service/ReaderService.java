@@ -39,7 +39,7 @@ public class ReaderService {
         }
 
         final var reader = new Reader(
-                ReaderInput.MacAddress(), ReaderInput.name(), ReaderInput.coordinates());
+                ReaderInput.MacAddress(), ReaderInput.name(), ReaderInput.coordinate());
 
         return ReaderRepository.save(reader);
     }
@@ -55,7 +55,7 @@ public class ReaderService {
 
         UpdatedReader.setMacAddress(ReaderInput.MacAddress());
         UpdatedReader.setName(ReaderInput.name());
-        UpdatedReader.setCoordinates(ReaderInput.coordinates());
+        UpdatedReader.setCoordinate(ReaderInput.coordinate());
 
         return ReaderRepository.save(UpdatedReader);
     }

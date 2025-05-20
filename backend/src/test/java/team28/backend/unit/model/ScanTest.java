@@ -13,6 +13,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import team28.backend.model.Car;
+import team28.backend.model.Coordinate;
 import team28.backend.model.Scan;
 import team28.backend.model.Reader;
 
@@ -30,7 +31,8 @@ public class ScanTest {
     @Test
     public void givenValidValues_whenCreatingScan_thenScanIsCreatedWithThoseValues() {
         Car CarId = new Car(1);
-        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
+        Coordinate coordinates = new Coordinate(0, 0);
+        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", coordinates);
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
 
         Scan scan = new Scan(CarId, ReaderId, timestamp);
@@ -43,7 +45,8 @@ public class ScanTest {
     @Test
     public void givenEmptyCar_whenCreatingScan_thenThrowExecption() {
         Car CarId = null;
-        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
+        Coordinate coordinates = new Coordinate(0, 0);
+        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", coordinates);
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
 
         Scan scan = new Scan(CarId, ReaderId, timestamp);
@@ -73,7 +76,8 @@ public class ScanTest {
     @Test
     public void givenEmptyTimestamp_whenCreatingScan_thenThrowExecption() {
         Car CarId = new Car(1);
-        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", "40N");
+        Coordinate coordinates = new Coordinate(0, 0);
+        Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", coordinates);
         LocalDateTime timestamp = null;
 
         Scan scan = new Scan(CarId, ReaderId, timestamp);
