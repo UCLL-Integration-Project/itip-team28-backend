@@ -4,10 +4,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -21,19 +25,28 @@ public class Route {
 
     private boolean status;
 
+    @ManyToOne
+    @JoinColumn(name = "reader_startingpoint_id")
+    @JsonBackReference
     @NotNull(message = "Starting point cannot be empty.")
     private Reader StartingPoint;
 
+    @ManyToOne
+    @JoinColumn(name = "reader_destination_id")
+    @JsonBackReference
     @NotNull(message = "Destination cannot be empty.")
     private Reader destination;
 
+    @ManyToOne
+    @JoinColumn(name = "reader_currentpoint_id")
+    @JsonBackReference
     @NotNull(message = "Current point cannot be empty.")
     private Reader CurrentPoint;
 
     @NotNull(message = "Timestamp cannot be empty.")
     private LocalDateTime timestamp;
 
-    private List<String> instructions = new ArrayList<>();
+    private List<String> instructions = new ArrayList<String>();
 
     protected Route() {
     };
