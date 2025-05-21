@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import team28.backend.controller.dto.IpRegistrationInput;
 import team28.backend.controller.dto.ReaderInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Reader;
@@ -48,9 +50,9 @@ public class ReaderController {
 
     @Operation(summary = "Update reader")
     @ApiResponse(responseCode = "200", description = "Reader was successfully updated")
-    @PutMapping
-    public Reader UpdateReader(Reader reader, @Valid @RequestBody ReaderInput ReaderInput) {
-        return ReaderService.UpdateReader(reader.getId(), ReaderInput);
+    @PutMapping("/{id}")
+    public Reader UpdateReader(@PathVariable Long id, @Valid @RequestBody ReaderInput ReaderInput) {
+        return ReaderService.UpdateReaderName(id, ReaderInput);
     }
 
     @Operation(summary = "Delete reader")
@@ -67,5 +69,12 @@ public class ReaderController {
         Map<String, String> errors = new HashMap<>();
         errors.put("ServiceException", ex.getMessage());
         return errors;
+    }
+
+    @Operation(summary = "Register IP address for a reader")
+    @ApiResponse(responseCode = "200", description = "IP address was successfully registered")
+    @PostMapping("/ip")
+    public Reader RegisterIpAddress(@Valid @RequestBody IpRegistrationInput input) {
+        return ReaderService.RegisterIpAddress(input.MacAddress(), input.ipAddress());
     }
 }

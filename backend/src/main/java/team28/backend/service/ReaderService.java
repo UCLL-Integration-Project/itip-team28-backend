@@ -53,24 +53,33 @@ public class ReaderService {
         return ReaderRepository.save(reader);
     }
 
-    public Reader UpdateReader(Long id, ReaderInput ReaderInput) {
+    public Reader UpdateReaderName(Long id, ReaderInput ReaderInput) {
         boolean exists = ReaderRepository.existsById(id);
         if (!exists) {
             throw new ServiceException("Reader doesn't exist");
         }
 
-        Optional<Reader> reader = ReaderRepository.findById(id);
-        Reader UpdatedReader = reader.get();
+        Optional<Reader> readerOpt = ReaderRepository.findById(id);
+        Reader UpdatedReader = readerOpt.get();
 
-        Coordinate coordinates = new Coordinate(ReaderInput.coordinates().getLongitude(),
-                ReaderInput.coordinates().getLatitude());
+        if (!UpdatedReader.getName().equals(ReaderInput.name()) && ReaderRepository.existsByName(ReaderInput.name())) {
+            throw new ServiceException("Name is already in use");
+        }
 
-        var NewCoordinates = CoordinateRepository.save(coordinates);
-
-        UpdatedReader.setMacAddress(ReaderInput.MacAddress());
         UpdatedReader.setName(ReaderInput.name());
-        UpdatedReader.setCoordinate(NewCoordinates);
 
         return ReaderRepository.save(UpdatedReader);
     }
+
+    public Reader RegisterIpAddress(String MacAddress, String ipAddress) {
+        Optional<Reader> readerOpt = ReaderRepository.findByMacAddresss(MacAddress);
+        if (readerOpt.isEmpty()) {
+            throw new ServiceException("Reader with MAC address " + MacAddress + " not found");
+        }
+
+        Reader reader = readerOpt.get();
+        reader.setIpAddress(ipAddress);
+        return ReaderRepository.save(reader);
+    }
+
 }
