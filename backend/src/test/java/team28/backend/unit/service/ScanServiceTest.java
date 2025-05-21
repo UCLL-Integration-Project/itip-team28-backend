@@ -21,7 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import team28.backend.controller.dto.ScanInput;
-import team28.backend.exceptions.ScanException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Car;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Scan;
@@ -104,7 +104,7 @@ public class ScanServiceTest {
         ScanInput ScanInput = new ScanInput(car.getId(), reader.getId(), LocalDateTime.of(2025, 5, 1, 9, 15));
         when(CarRepository.findById(car.getId())).thenReturn(Optional.empty());
 
-        ScanException exception = assertThrows(ScanException.class, () -> {
+        ServiceException exception = assertThrows(ServiceException.class, () -> {
             ScanService.CreateScan(ScanInput);
         });
 
@@ -119,7 +119,7 @@ public class ScanServiceTest {
         when(CarRepository.findById(car.getId())).thenReturn(Optional.of(car));
         when(ReaderRepository.findById(reader.getId())).thenReturn(Optional.empty());
 
-        ScanException exception = assertThrows(ScanException.class, () -> {
+        ServiceException exception = assertThrows(ServiceException.class, () -> {
             ScanService.CreateScan(ScanInput);
         });
 

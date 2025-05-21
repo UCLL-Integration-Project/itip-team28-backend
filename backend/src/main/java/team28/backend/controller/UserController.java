@@ -1,6 +1,8 @@
 package team28.backend.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +16,7 @@ import jakarta.validation.Valid;
 import team28.backend.controller.dto.AuthenticationRequest;
 import team28.backend.controller.dto.AuthenticationResponse;
 import team28.backend.controller.dto.UserInput;
-import team28.backend.exceptions.UserException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.User;
 import team28.backend.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,8 +68,10 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ UserException.class })
-    public String handleValidationExceptions(UserException ex) {
-        return ex.getMessage();
+    @ExceptionHandler({ ServiceException.class })
+    public Map<String, String> handleServiceException(ServiceException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("ServiceException", ex.getMessage());
+        return errors;
     }
 }

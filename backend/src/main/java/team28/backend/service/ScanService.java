@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import team28.backend.controller.dto.ScanInput;
-import team28.backend.exceptions.ScanException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Car;
 import team28.backend.model.Scan;
 import team28.backend.model.Reader;
@@ -34,13 +34,13 @@ public class ScanService {
 
         Optional<Car> CarOptional = CarRepository.findById(ScanInput.carId());
         if (CarOptional.isEmpty()) {
-            throw new ScanException("Car with ID: " + ScanInput.carId() + " doesn't exist");
+            throw new ServiceException("Car with ID: " + ScanInput.carId() + " doesn't exist");
         }
         Car car = CarOptional.get();
 
         Optional<Reader> ReaderOptional = ReaderRepository.findById(ScanInput.tagId());
         if (ReaderOptional.isEmpty()) {
-            throw new ScanException("Reader with ID: " + ScanInput.tagId() + " doesn't exist");
+            throw new ServiceException("Reader with ID: " + ScanInput.tagId() + " doesn't exist");
         }
         Reader reader = ReaderOptional.get();
 
