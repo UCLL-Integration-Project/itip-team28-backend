@@ -25,4 +25,14 @@ public class InfluxConfig {
                 influxOrg,
                 influxBucket);
     }
+
+    @Bean
+    public String influxOrg() {
+        return influxOrg;
+    }
+
+    @Bean
+    public String influxBucket() {
+        return influxBucket;
+    }
 }

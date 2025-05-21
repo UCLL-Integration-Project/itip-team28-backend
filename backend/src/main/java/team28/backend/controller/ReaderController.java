@@ -1,10 +1,5 @@
 package team28.backend.controller;
 
-import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.QueryApi;
-import com.influxdb.query.FluxRecord;
-import com.influxdb.query.FluxTable;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -32,11 +27,9 @@ import java.util.*;
 public class ReaderController {
 
     private final ReaderService ReaderService;
-    private final InfluxDBClient influxDBClient;
 
-    public ReaderController(ReaderService ReaderService, InfluxDBClient influxDBClient) {
+    public ReaderController(ReaderService ReaderService) {
         this.ReaderService = ReaderService;
-        this.influxDBClient = influxDBClient;
     }
 
     @Operation(summary = "Get all readers")
@@ -66,45 +59,6 @@ public class ReaderController {
     public String DeleteReader(@RequestBody Reader reader) {
         ReaderService.DeleteReader(reader.getId());
         return "Reader deleted";
-    }
-
-    @Operation(summary = "Get all data")
-    @ApiResponse(responseCode = "200", description = "List of data returned successfully")
-    @GetMapping("/data")
-    public List<Map<String, String>> getReaderData() {
-        QueryApi queryApi = influxDBClient.getQueryApi();
-
-        String fluxQuery = "from(bucket: \"Integration\")"
-                + " |> range(start: -1h)"
-                + " |> filter(fn: (r) => r._measurement == \"halt\")";
-
-        List<FluxTable> tables = queryApi.query(fluxQuery);
-        Map<String, Map<String, String>> groupedData = new HashMap<>();
-
-        for (FluxTable table : tables) {
-            for (FluxRecord record : table.getRecords()) {
-                String time = record.getTime().toString();
-                String field = (String) record.getValueByKey("_field");
-                String value = String.valueOf(record.getValue());
-
-                groupedData.putIfAbsent(time, new HashMap<>());
-                Map<String, String> dataEntry = groupedData.get(time);
-
-                switch (field) {
-                    case "car_id":
-                        dataEntry.put("carId", value);
-                        break;
-                    case "reader_id":
-                        dataEntry.put("readerId", value);
-                        break;
-                    case "timestamp_read":
-                        dataEntry.put("timestampRead", value);
-                        break;
-                }
-            }
-        }
-
-        return new ArrayList<>(groupedData.values());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
