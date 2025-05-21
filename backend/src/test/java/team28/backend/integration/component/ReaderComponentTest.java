@@ -71,7 +71,10 @@ public class ReaderComponentTest {
                             {
                                 "MacAddress": "test",
                                 "name": "test",
-                                "coordinates": "80N"
+                                "coordinates": {
+                                    "longitude": 10,
+                                    "latitude": 10
+                                }
                             }
                         """)
                 .exchange()
@@ -89,7 +92,9 @@ public class ReaderComponentTest {
                             {
                                 "MacAddress": "test",
                                 "name": "test",
-                                "coordinates": "80N"
+                                "coordinates": {
+                                    id: 1
+                                }
                             }
                         """)
                 .exchange()

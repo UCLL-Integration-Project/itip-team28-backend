@@ -29,14 +29,14 @@ public class ReaderTest {
     public void givenValidValues_whenCreatingReader_thenReaderIsCreatedWithThoseValues() {
         String MacAddress = "00-B0-D0-63-C2-26";
         String name = "Reader1";
-        Coordinate coordinates = new Coordinate(0, 0);
-;
+        Coordinate coordinates = new Coordinate(10, 20);
 
         Reader reader = new Reader(MacAddress, name, coordinates);
 
         assertEquals("00-B0-D0-63-C2-26", reader.getMacAddress());
         assertEquals("Reader1", reader.getName());
-        assertEquals("40N", reader.getCoordinates());
+        assertEquals(10, reader.getCoordinates().getLongitude());
+        assertEquals(20, reader.getCoordinates().getLatitude());
     }
 
     @Test

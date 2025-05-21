@@ -14,7 +14,7 @@ public class PathfindingService {
         Map<String, Reader> grid = new HashMap<>();
         for (Reader r : allReaders) {
             Coordinate c = r.getCoordinates();
-            grid.put(c.getlatitude() + "," + c.getlongitude(), r);
+            grid.put(c.getLatitude() + "," + c.getLongitude(), r);
         }
 
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingInt(Node::fCost));
@@ -35,7 +35,8 @@ public class PathfindingService {
             closedSet.add(current.reader);
 
             for (Reader neighbor : getNeighbors(current.reader, grid)) {
-                if (closedSet.contains(neighbor)) continue;
+                if (closedSet.contains(neighbor))
+                    continue;
 
                 int tentativeG = current.gCost + 1;
 
@@ -52,21 +53,21 @@ public class PathfindingService {
     }
 
     private int heuristic(Coordinate a, Coordinate b) {
-        return Math.abs(a.getlatitude() - b.getlatitude()) + Math.abs(a.getlongitude() - b.getlongitude());
+        return Math.abs(a.getLatitude() - b.getLatitude()) + Math.abs(a.getLongitude() - b.getLongitude());
     }
 
     private List<Reader> getNeighbors(Reader reader, Map<String, Reader> grid) {
         List<Reader> neighbors = new ArrayList<>();
         int[][] directions = {
-                {-1, 0}, // up
-                {1, 0},  // down
-                {0, -1}, // left
-                {0, 1}   // right
+                { -1, 0 }, // up
+                { 1, 0 }, // down
+                { 0, -1 }, // left
+                { 0, 1 } // right
         };
 
         Coordinate coord = reader.getCoordinates();
-        int x = coord.getlatitude();
-        int y = coord.getlongitude();
+        int x = coord.getLatitude();
+        int y = coord.getLongitude();
 
         for (int[] dir : directions) {
             String key = (x + dir[0]) + "," + (y + dir[1]);
@@ -85,13 +86,17 @@ public class PathfindingService {
             Coordinate from = node.parent.reader.getCoordinates();
             Coordinate to = node.reader.getCoordinates();
 
-            int dx = to.getlatitude() - from.getlatitude();
-            int dy = to.getlongitude() - from.getlongitude();
+            int dx = to.getLatitude() - from.getLatitude();
+            int dy = to.getLongitude() - from.getLongitude();
 
-            if (dx == -1) directions.add(0, "UP");
-            else if (dx == 1) directions.add(0, "DOWN");
-            else if (dy == -1) directions.add(0, "LEFT");
-            else if (dy == 1) directions.add(0, "RIGHT");
+            if (dx == -1)
+                directions.add(0, "UP");
+            else if (dx == 1)
+                directions.add(0, "DOWN");
+            else if (dy == -1)
+                directions.add(0, "LEFT");
+            else if (dy == 1)
+                directions.add(0, "RIGHT");
 
             node = node.parent;
         }

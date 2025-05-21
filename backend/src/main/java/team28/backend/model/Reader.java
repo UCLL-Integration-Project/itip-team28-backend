@@ -28,6 +28,7 @@ public class Reader {
     private String name;
 
     @OneToOne
+    @NotNull(message = "Coordinates cannot be empty.")
     private Coordinate coordinate;
 
     @OneToMany(mappedBy = "reader")

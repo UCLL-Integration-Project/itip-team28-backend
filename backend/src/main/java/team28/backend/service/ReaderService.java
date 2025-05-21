@@ -7,15 +7,19 @@ import org.springframework.stereotype.Service;
 
 import team28.backend.controller.dto.ReaderInput;
 import team28.backend.exceptions.ReaderException;
+import team28.backend.model.Coordinate;
 import team28.backend.model.Reader;
+import team28.backend.repository.CoordinateRepository;
 import team28.backend.repository.ReaderRepository;
 
 @Service
 public class ReaderService {
     private final ReaderRepository ReaderRepository;
+    private final CoordinateRepository CoordinateRepository;
 
-    public ReaderService(ReaderRepository ReaderRepository) {
+    public ReaderService(ReaderRepository ReaderRepository, CoordinateRepository CoordinateRepository) {
         this.ReaderRepository = ReaderRepository;
+        this.CoordinateRepository = CoordinateRepository;
     }
 
     public List<Reader> GetAllReaders() {
@@ -38,8 +42,13 @@ public class ReaderService {
             throw new ReaderException("Name is already in use");
         }
 
+        Coordinate coordinates = new Coordinate(ReaderInput.coordinates().getLongitude(),
+                ReaderInput.coordinates().getLatitude());
+
+        var NewCoordinates = CoordinateRepository.save(coordinates);
+
         final var reader = new Reader(
-                ReaderInput.MacAddress(), ReaderInput.name(), ReaderInput.coordinate());
+                ReaderInput.MacAddress(), ReaderInput.name(), NewCoordinates);
 
         return ReaderRepository.save(reader);
     }
@@ -53,9 +62,14 @@ public class ReaderService {
         Optional<Reader> reader = ReaderRepository.findById(id);
         Reader UpdatedReader = reader.get();
 
+        Coordinate coordinates = new Coordinate(ReaderInput.coordinates().getLongitude(),
+                ReaderInput.coordinates().getLatitude());
+
+        var NewCoordinates = CoordinateRepository.save(coordinates);
+
         UpdatedReader.setMacAddress(ReaderInput.MacAddress());
         UpdatedReader.setName(ReaderInput.name());
-        UpdatedReader.setCoordinate(ReaderInput.coordinate());
+        UpdatedReader.setCoordinate(NewCoordinates);
 
         return ReaderRepository.save(UpdatedReader);
     }
