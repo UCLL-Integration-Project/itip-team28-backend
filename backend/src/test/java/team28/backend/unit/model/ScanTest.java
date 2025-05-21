@@ -37,7 +37,7 @@ public class ScanTest {
 
         Scan scan = new Scan(CarId, ReaderId, timestamp);
 
-        assertEquals(1, scan.getCar().getName());
+        assertEquals("NONA142", scan.getCar().getName());
         assertEquals("Reader1", scan.getReader().getName());
         assertEquals(LocalDateTime.parse("2025-05-01T09:15"), scan.getTimestamp());
     }

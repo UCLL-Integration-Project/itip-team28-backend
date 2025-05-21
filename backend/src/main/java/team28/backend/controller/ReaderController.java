@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import team28.backend.controller.dto.ReaderInput;
-import team28.backend.exceptions.ReaderException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Reader;
 import team28.backend.service.ReaderService;
 
@@ -62,8 +62,10 @@ public class ReaderController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ ReaderException.class })
-    public String handleValidationExceptions(ReaderException ex) {
-        return ex.getMessage();
+    @ExceptionHandler({ ServiceException.class })
+    public Map<String, String> handleServiceException(ServiceException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("ServiceException", ex.getMessage());
+        return errors;
     }
 }

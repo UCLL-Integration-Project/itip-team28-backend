@@ -69,8 +69,8 @@ public class DbInitializer {
         @SuppressWarnings("unused")
         final var reader5 = ReaderRepository.save(new Reader("04-B4-D4-67-C6-2A", "Reader5", coordinate5));
 
+        @SuppressWarnings("unused")
         final var car1 = CarRepository.save(new Car("ABAU09I2"));
-        final var car2 = CarRepository.save(new Car("NI2NRN1O"));
 
         final var route1 = RouteRepository
                 .save(new Route(true, reader1, reader2, reader1, LocalDateTime.of(2025, 5, 1, 9, 15),

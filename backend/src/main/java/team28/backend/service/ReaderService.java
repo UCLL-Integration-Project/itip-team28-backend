@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import team28.backend.controller.dto.ReaderInput;
-import team28.backend.exceptions.ReaderException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Reader;
 import team28.backend.repository.CoordinateRepository;
@@ -30,7 +30,7 @@ public class ReaderService {
         boolean ExistingReader = ReaderRepository.existsById(id);
 
         if (!ExistingReader) {
-            throw new ReaderException("Reader not found");
+            throw new ServiceException("Reader not found");
         }
 
         ReaderRepository.deleteById(id);
@@ -39,7 +39,7 @@ public class ReaderService {
     public Reader CreateReader(ReaderInput ReaderInput) {
         boolean exists = ReaderRepository.existsByName(ReaderInput.name());
         if (exists) {
-            throw new ReaderException("Name is already in use");
+            throw new ServiceException("Name is already in use");
         }
 
         Coordinate coordinates = new Coordinate(ReaderInput.coordinates().getLongitude(),
@@ -56,7 +56,7 @@ public class ReaderService {
     public Reader UpdateReader(Long id, ReaderInput ReaderInput) {
         boolean exists = ReaderRepository.existsById(id);
         if (!exists) {
-            throw new ReaderException("Reader doesn't exist");
+            throw new ServiceException("Reader doesn't exist");
         }
 
         Optional<Reader> reader = ReaderRepository.findById(id);

@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import team28.backend.exceptions.ScanException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Scan;
 import team28.backend.service.ScanService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,8 +36,10 @@ public class ScanController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ ScanException.class })
-    public String handleValidationExceptions(ScanException ex) {
-        return ex.getMessage();
+    @ExceptionHandler({ ServiceException.class })
+    public Map<String, String> handleServiceException(ServiceException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("ServiceException", ex.getMessage());
+        return errors;
     }
 }

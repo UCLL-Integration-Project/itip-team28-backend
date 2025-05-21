@@ -36,7 +36,7 @@ public class CarDatabaseTest {
 
     @Test
     public void givenNonExistingCarId_whenSearchingForCar_thenReturnFalse() {
-        String CarId = "NONA142";
+        String CarId = "NONA1421";
 
         boolean existing = CarRepository.existsByName(CarId);
 

@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import team28.backend.controller.dto.ReaderInput;
-import team28.backend.exceptions.ReaderException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Reader;
 import team28.backend.repository.CoordinateRepository;
@@ -90,7 +90,7 @@ public class ReaderServiceTest {
     public void givenUserIdTHatDoesntExists_whenDeletingUser_thenThrowException() {
         when(ReaderRepository.existsById(1L)).thenReturn(false);
 
-        ReaderException exception = assertThrows(ReaderException.class, () -> {
+        ServiceException exception = assertThrows(ServiceException.class, () -> {
             ReaderService.DeleteReader(1L);
         });
 

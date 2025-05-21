@@ -11,7 +11,7 @@ import team28.backend.model.User;
 import team28.backend.repository.UserRepository;
 import team28.backend.controller.dto.AuthenticationResponse;
 import team28.backend.controller.dto.UserInput;
-import team28.backend.exceptions.UserException;
+import team28.backend.exceptions.ServiceException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -38,7 +38,7 @@ public class UserService {
         boolean ExistingUser = UserRepository.existsById(id);
 
         if (!ExistingUser) {
-            throw new UserException("User not found");
+            throw new ServiceException("User not found");
         }
 
         UserRepository.deleteById(id);
@@ -49,6 +49,7 @@ public class UserService {
         final var authentication = AuthenticationManager.authenticate(UsernamePasswordAuthentication);
         final var user = ((UserDetailsImpl) authentication.getPrincipal()).user();
         final var token = JwtService.generateToken(user);
+
         return new AuthenticationResponse(
                 "Authentication successful.",
                 token,
@@ -60,7 +61,7 @@ public class UserService {
     public User Signup(UserInput UserInput) {
         boolean exists = UserRepository.existsByUsername(UserInput.username());
         if (exists) {
-            throw new UserException("Username is already in use");
+            throw new ServiceException("Username is already in use");
         }
 
         final var HashedPassword = PasswordEncoder.encode(UserInput.password());
