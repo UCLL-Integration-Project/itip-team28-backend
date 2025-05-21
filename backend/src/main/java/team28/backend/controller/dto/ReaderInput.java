@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import team28.backend.model.Coordinate;
 
 public record ReaderInput(
-        @NotBlank String MacAddress,
-        @NotNull String name,
-        @NotBlank Coordinate coordinate) {
+                @NotBlank String MacAddress,
+                @NotNull String name,
+                @NotNull Coordinate coordinates) {
 }

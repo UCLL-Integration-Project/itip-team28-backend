@@ -31,7 +31,7 @@ public class Coordinate {
         return id;
     }
 
-    public int getlongitude() {
+    public int getLongitude() {
         return longitude;
     }
 
@@ -39,7 +39,7 @@ public class Coordinate {
         this.longitude = longitude;
     }
 
-    public int getlatitude() {
+    public int getLatitude() {
         return latitude;
     }
 

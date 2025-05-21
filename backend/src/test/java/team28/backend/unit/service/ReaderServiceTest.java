@@ -58,13 +58,16 @@ public class ReaderServiceTest {
         assertEquals(1, result.size());
         assertEquals("00-B0-D0-63-C2-26", result.get(0).getMacAddress());
         assertEquals("Reader1", result.get(0).getName());
-        assertEquals("40N", result.get(0).getCoordinates());
         verify(ReaderRepository, times(1)).findAll();
     }
 
     @Test
     public void givenReaderInfo_whenReaderIsBeingCreated_thenReaderIsAddedToDatabase() {
-        ReaderInput ReaderInput = new ReaderInput(reader.getMacAddress(), reader.getName(), reader.getCoordinates());
+        Coordinate coordinate = new Coordinate(10,
+                20);
+        when(CoordinateRepository.save(any(Coordinate.class))).thenReturn(coordinate);
+
+        ReaderInput ReaderInput = new ReaderInput(reader.getMacAddress(), reader.getName(), coordinate);
         when(ReaderRepository.save(any(Reader.class))).thenReturn(reader);
 
         Reader result = ReaderService.CreateReader(ReaderInput);

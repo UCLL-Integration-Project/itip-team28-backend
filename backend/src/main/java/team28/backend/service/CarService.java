@@ -30,8 +30,8 @@ public class CarService {
         List<Reader> readers = ReaderService.GetAllReaders();
 
         Optional<Reader> endReader = readers.stream()
-                .filter(r -> r.getCoordinates().getlongitude() == longitude
-                        && r.getCoordinates().getlatitude() == latitude)
+                .filter(r -> r.getCoordinates().getLongitude() == longitude
+                        && r.getCoordinates().getLatitude() == latitude)
                 .findFirst();
 
         if (endReader.isPresent()) {
