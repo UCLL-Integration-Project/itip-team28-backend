@@ -20,15 +20,15 @@ public class CarDatabaseTest {
 
     @BeforeEach
     public void setUp() {
-        car = new Car(1);
+        car = new Car("NONA142");
         CarRepository.save(car);
     }
 
     @Test
     public void givenExistingCarId_whenSearchingForCar_thenReturnTrue() {
-        int CarId = 1;
+        String CarId = "NONA142";
 
-        boolean existing = CarRepository.existsByNumber(CarId);
+        boolean existing = CarRepository.existsByName(CarId);
 
         assertNotEquals(false, existing);
         assertEquals(true, existing);
@@ -36,9 +36,9 @@ public class CarDatabaseTest {
 
     @Test
     public void givenNonExistingCarId_whenSearchingForCar_thenReturnFalse() {
-        int CarId = 2;
+        String CarId = "NONA142";
 
-        boolean existing = CarRepository.existsByNumber(CarId);
+        boolean existing = CarRepository.existsByName(CarId);
 
         assertNotEquals(true, existing);
         assertEquals(false, existing);

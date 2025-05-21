@@ -11,7 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "cars")
@@ -20,8 +20,8 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Positive(message = "Number must be a positive number")
-    private int number;
+    @NotEmpty(message = "Name cannot be empty")
+    private String name;
 
     @OneToMany(mappedBy = "car")
     @JsonBackReference
@@ -30,8 +30,8 @@ public class Car {
     protected Car() {
     };
 
-    public Car(int number) {
-        this.number = number;
+    public Car(String name) {
+        this.name = name;
     }
 
     public long getId() {
@@ -42,12 +42,12 @@ public class Car {
         this.id = id;
     }
 
-    public int getNumber() {
-        return number;
+    public String getName() {
+        return name;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setNumber(String name) {
+        this.name = name;
     }
 
     public List<Scan> getScans() {

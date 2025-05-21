@@ -11,7 +11,6 @@ import team28.backend.model.Car;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Role;
 import team28.backend.model.Route;
-import team28.backend.model.Scan;
 import team28.backend.model.Reader;
 import team28.backend.model.User;
 
@@ -20,19 +19,17 @@ public class DbInitializer {
 
     private final UserRepository UserRepository;
     private final PasswordEncoder PasswordEncoder;
-    private final ScanRepository ScanRepository;
     private final ReaderRepository ReaderRepository;
     private final CarRepository CarRepository;
     private final CoordinateRepository CoordinateRepository;
     private final RouteRepository RouteRepository;
 
     public DbInitializer(PasswordEncoder PasswordEncoder, UserRepository UserRepository,
-            ScanRepository ScanRepository, ReaderRepository ReaderRepository, CarRepository CarRepository,
+            ReaderRepository ReaderRepository, CarRepository CarRepository,
             CoordinateRepository CoordinateRepository,
             RouteRepository RouteRepository) {
         this.PasswordEncoder = PasswordEncoder;
         this.UserRepository = UserRepository;
-        this.ScanRepository = ScanRepository;
         this.ReaderRepository = ReaderRepository;
         this.CarRepository = CarRepository;
         this.CoordinateRepository = CoordinateRepository;
@@ -41,7 +38,6 @@ public class DbInitializer {
 
     public void clearAll() {
         RouteRepository.deleteAll();
-        ScanRepository.deleteAll();
         ReaderRepository.deleteAll();
         CarRepository.deleteAll();
         CoordinateRepository.deleteAll();
@@ -73,21 +69,13 @@ public class DbInitializer {
         @SuppressWarnings("unused")
         final var reader5 = ReaderRepository.save(new Reader("04-B4-D4-67-C6-2A", "Reader5", coordinate5));
 
-        final var car1 = CarRepository.save(new Car(1));
-        final var car2 = CarRepository.save(new Car(2));
-
-        final var scan1 = ScanRepository.save(new Scan(car1, reader1, LocalDateTime.of(2025, 5, 1, 9, 15)));
-        final var scan2 = ScanRepository.save(new Scan(car2, reader2, LocalDateTime.of(2025, 5, 1, 11, 18)));
+        final var car1 = CarRepository.save(new Car("ABAU09I2"));
+        final var car2 = CarRepository.save(new Car("NI2NRN1O"));
 
         final var route1 = RouteRepository
                 .save(new Route(true, reader1, reader2, reader1, LocalDateTime.of(2025, 5, 1, 9, 15),
                         List.of("Step 1", "Step 2")));
 
-        user.addScan(scan1);
-        user.addScan(scan2);
-
-        ScanRepository.save(scan1);
-        ScanRepository.save(scan2);
         UserRepository.save(user);
 
         reader1.addStartingPoint(route1);
