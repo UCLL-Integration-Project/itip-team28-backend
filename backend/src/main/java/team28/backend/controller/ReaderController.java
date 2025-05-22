@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,9 +50,9 @@ public class ReaderController {
 
     @Operation(summary = "Update reader")
     @ApiResponse(responseCode = "200", description = "Reader was successfully updated")
-    @PutMapping(consumes = { "application/json", "application/json;charset=UTF-8" })
-    public Reader UpdateReader(@Valid @RequestBody ReaderUpdateInput reader) {
-        return ReaderService.UpdateReader(reader);
+    @PutMapping("/{id}")
+    public Reader UpdateReader(@PathVariable Long id, @Valid @RequestBody ReaderInput ReaderInput) {
+        return ReaderService.UpdateReaderName(id, ReaderInput);
     }
 
     @Operation(summary = "Delete reader")

@@ -78,4 +78,22 @@ public class ReaderService {
 
         return ReaderRepository.save(UpdatedReader);
     }
+
+    public Reader UpdateReaderName(Long id, ReaderInput ReaderInput) {
+        boolean exists = ReaderRepository.existsById(id);
+        if (!exists) {
+            throw new ServiceException("Reader doesn't exist");
+        }
+
+        Optional<Reader> readerOpt = ReaderRepository.findById(id);
+        Reader UpdatedReader = readerOpt.get();
+
+        if (!UpdatedReader.getName().equals(ReaderInput.name()) && ReaderRepository.existsByName(ReaderInput.name())) {
+            throw new ServiceException("Name is already in use");
+        }
+
+        UpdatedReader.setName(ReaderInput.name());
+
+        return ReaderRepository.save(UpdatedReader);
+    }
 }
