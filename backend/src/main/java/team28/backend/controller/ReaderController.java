@@ -49,7 +49,7 @@ public class ReaderController {
 
     @Operation(summary = "Update reader")
     @ApiResponse(responseCode = "200", description = "Reader was successfully updated")
-    @PutMapping(consumes = { "application/json", "application/json;charset=UTF-8" })
+    @PutMapping
     public Reader UpdateReader(@Valid @RequestBody ReaderUpdateInput reader) {
         return ReaderService.UpdateReader(reader);
     }
