@@ -92,8 +92,9 @@ public class ReaderService {
     public Stock addStockToReader(Long readerId, Long itemId, int quantity){
         Reader reader = readerRepository.findById(readerId)
                 .orElseThrow(() -> new ServiceException("Reader with id " + readerId + " not found"));
-        Optional<Item> item = itemRepository.findById(itemId);
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item with id " + itemId + " not found"));  
 
-        return stockService.addStockToHolder(reader, item.get(), quantity);
+        return stockService.addStockToHolder(reader, item, quantity);
     }
 }

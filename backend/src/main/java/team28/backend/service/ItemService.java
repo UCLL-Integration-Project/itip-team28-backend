@@ -21,11 +21,12 @@ public class ItemService {
     }
 
     public Item createItem(String name) {
-        if (itemRepository.existsByName(name)) {
-            throw new ServiceException("Item with name " + name + "already exists");
+        String normalizedName = name.toLowerCase();
+        if (itemRepository.existsByName(normalizedName)) {
+            throw new ServiceException("Item with name " + normalizedName + " already exists");
         }
 
-        Item NewItem = new Item(name);
+        Item NewItem = new Item(normalizedName);
 
         return itemRepository.save(NewItem);
     }

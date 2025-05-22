@@ -20,7 +20,7 @@ public class Item {
     protected Item() {}
 
     public Item(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public Long getId() {
@@ -36,6 +36,6 @@ public class Item {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 }

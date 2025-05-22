@@ -18,7 +18,7 @@ import jakarta.validation.constraints.Positive;
 
 
 @Entity
-@Table(name="stock_transfer_request")
+@Table(name="stock_transfer_requests")
 public class StockTransferRequest {
 
     @Id

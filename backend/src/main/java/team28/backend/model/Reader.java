@@ -164,5 +164,4 @@ public class Reader implements StockHolderInt {
         this.stocks.add(stock);
         stock.setHolder(this);
     }
-
 }

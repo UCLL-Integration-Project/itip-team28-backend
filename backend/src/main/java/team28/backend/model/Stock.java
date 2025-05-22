@@ -1,5 +1,14 @@
 package team28.backend.model;
 
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.AnyDiscriminator;
+import org.hibernate.annotations.AnyDiscriminatorValue;
+import org.hibernate.annotations.AnyKeyJavaClass;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,16 +32,22 @@ public class Stock {
     @PositiveOrZero(message = "Stock quantity must be zero or positive")
     private int quantity;
 
-    @ManyToOne
+    @Any
+    @AnyDiscriminator(DiscriminatorType.STRING)
+    @AnyDiscriminatorValue(discriminator = "READER", entity = Reader.class)
+    @AnyDiscriminatorValue(discriminator = "CAR", entity = Car.class)
+    @AnyKeyJavaClass(Long.class)
+    @Column(name = "holder_type")
     @JoinColumn(name = "holder_id")
+    @JsonBackReference
     private StockHolderInt holder;
 
     protected Stock() {}
 
-    public Stock(Item item, int quantity, StockHolderInt holder) {
+    public Stock(StockHolderInt holder, Item item, int quantity ) {
+        this.holder = holder;
         this.item = item;
         this.quantity = quantity;
-        this.holder = holder;
     }
 
     public Long getId() {

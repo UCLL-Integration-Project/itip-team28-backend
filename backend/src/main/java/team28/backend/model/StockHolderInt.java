@@ -2,7 +2,7 @@ package team28.backend.model;
 
 import java.util.List;
 
-public abstract interface StockHolderInt {
+public interface StockHolderInt {
     Long getId();
     String getName();
     List<Stock> getStocks();
