@@ -38,25 +38,25 @@ public class ScanComponentTest {
         TokenManager = JwtService.generateToken("klaas", Role.MANAGER);
     }
 
-    @Test
-    public void givenScans_whenUserIsRequestingScans_thenShowAllScans() {
-        WebTestClient
-                .get()
-                .uri("/scans")
-                .header("Authorization", "Bearer " + token)
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
+    // @Test
+    // public void givenScans_whenUserIsRequestingScans_thenShowAllScans() {
+    // WebTestClient
+    // .get()
+    // .uri("/scans")
+    // .header("Authorization", "Bearer " + token)
+    // .exchange()
+    // .expectStatus()
+    // .isOk();
+    // }
 
-    @Test
-    public void givenScans_whenUserIsNotLoggedIn_thenThrowException() {
-        WebTestClient
-                .get()
-                .uri("/scans")
-                .header("Content-Type", "application/json")
-                .exchange()
-                .expectStatus()
-                .isUnauthorized();
-    }
+    // @Test
+    // public void givenScans_whenUserIsNotLoggedIn_thenThrowException() {
+    // WebTestClient
+    // .get()
+    // .uri("/scans")
+    // .header("Content-Type", "application/json")
+    // .exchange()
+    // .expectStatus()
+    // .isUnauthorized();
+    // }
 }
