@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import team28.backend.controller.dto.ReaderInput;
+import team28.backend.controller.dto.ReaderUpdateInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Reader;
 import team28.backend.service.ReaderService;
@@ -48,9 +49,9 @@ public class ReaderController {
 
     @Operation(summary = "Update reader")
     @ApiResponse(responseCode = "200", description = "Reader was successfully updated")
-    @PutMapping
-    public Reader UpdateReader(Reader reader, @Valid @RequestBody ReaderInput ReaderInput) {
-        return ReaderService.UpdateReader(reader.getId(), ReaderInput);
+    @PutMapping(consumes = { "application/json", "application/json;charset=UTF-8" })
+    public Reader UpdateReader(@Valid @RequestBody ReaderUpdateInput reader) {
+        return ReaderService.UpdateReader(reader);
     }
 
     @Operation(summary = "Delete reader")
