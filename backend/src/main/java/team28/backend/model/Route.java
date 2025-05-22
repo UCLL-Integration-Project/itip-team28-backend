@@ -10,8 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,21 +24,16 @@ public class Route {
 
     private boolean status;
 
-    @ManyToOne
-    @JoinColumn(name = "reader_startingpoint_id")
-    @JsonBackReference
+    @OneToOne
     @NotNull(message = "Starting point cannot be empty.")
     private Reader StartingPoint;
 
-    @ManyToOne
-    @JoinColumn(name = "reader_destination_id")
+    @OneToOne
     @JsonBackReference
     @NotNull(message = "Destination cannot be empty.")
     private Reader destination;
 
-    @ManyToOne
-    @JoinColumn(name = "reader_currentpoint_id")
-    @JsonBackReference
+    @OneToOne
     @NotNull(message = "Current point cannot be empty.")
     private Reader CurrentPoint;
 
