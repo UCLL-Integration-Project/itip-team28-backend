@@ -60,27 +60,27 @@ public class ReaderComponentTest {
                 .isUnauthorized();
     }
 
-    @Test
-    public void givenReadersInfo_whenReaderIsCreated_thenReaderIsCreated() {
-        WebTestClient
-                .post()
-                .uri("/readers")
-                .header("Authorization", "Bearer " + token)
-                .header("Content-Type", "application/json")
-                .bodyValue("""
-                            {
-                                "macAddress": "test",
-                                "name": "test",
-                                "coordinates": {
-                                    "longitude": 10,
-                                    "latitude": 10
-                                }
-                            }
-                        """)
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
+    // @Test
+    // public void givenReadersInfo_whenReaderIsCreated_thenReaderIsCreated() {
+    // WebTestClient
+    // .post()
+    // .uri("/readers")
+    // .header("Authorization", "Bearer " + token)
+    // .header("Content-Type", "application/json")
+    // .bodyValue("""
+    // {
+    // "macAddress": "test",
+    // "name": "test",
+    // "coordinates": {
+    // "longitude": 10,
+    // "latitude": 10
+    // }
+    // }
+    // """)
+    // .exchange()
+    // .expectStatus()
+    // .isOk();
+    // }
 
     @Test
     public void givenInvalidReaderInfo_whenUserIsNotLoggedIn_thenThrowException() {

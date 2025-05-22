@@ -35,18 +35,6 @@ public class Reader {
     @JsonBackReference
     private List<Scan> scans = new ArrayList<Scan>();
 
-    @OneToMany(mappedBy = "StartingPoint")
-    @JsonBackReference
-    private List<Route> StartingPoint = new ArrayList<Route>();
-
-    @OneToMany(mappedBy = "destination")
-    @JsonBackReference
-    private List<Route> destination = new ArrayList<Route>();
-
-    @OneToMany(mappedBy = "CurrentPoint")
-    @JsonBackReference
-    private List<Route> CurrentPoint = new ArrayList<Route>();
-
     protected Reader() {
     };
 
@@ -100,21 +88,6 @@ public class Reader {
     public void addScan(Scan scan) {
         this.scans.add(scan);
         scan.setReader(this);
-    }
-
-    public void addStartingPoint(Route route) {
-        this.StartingPoint.add(route);
-        route.setStartingPoint(this);
-    }
-
-    public void addDestination(Route route) {
-        this.destination.add(route);
-        route.setDestination(this);
-    }
-
-    public void addCurrentPoint(Route route) {
-        this.CurrentPoint.add(route);
-        route.setCurrentPoint(this);
     }
 
 }

@@ -1,10 +1,6 @@
 package team28.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "coordinates")
@@ -18,9 +14,15 @@ public class Coordinate {
 
     private int latitude;
 
-    protected Coordinate() {
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "reader_id", nullable = true)
+    private Reader reader;
 
-    }
+    @ManyToOne
+    @JoinColumn(name = "grid_id")
+    private Grid grid;
+
+    protected Coordinate() {}
 
     public Coordinate(int longitude, int latitude) {
         this.longitude = longitude;
@@ -35,7 +37,7 @@ public class Coordinate {
         return longitude;
     }
 
-    public void setlongitude(int longitude) {
+    public void setLongitude(int longitude) {
         this.longitude = longitude;
     }
 
@@ -43,7 +45,23 @@ public class Coordinate {
         return latitude;
     }
 
-    public void setlatitude(int latitude) {
+    public void setLatitude(int latitude) {
         this.latitude = latitude;
+    }
+
+    public Reader getReader() {
+        return reader;
+    }
+
+    public void setReader(Reader reader) {
+        this.reader = reader;
+    }
+
+    public Grid getGrid() {
+        return grid;
+    }
+
+    public void setGrid(Grid grid) {
+        this.grid = grid;
     }
 }
