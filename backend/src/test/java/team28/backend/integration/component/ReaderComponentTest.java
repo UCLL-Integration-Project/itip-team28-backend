@@ -69,7 +69,7 @@ public class ReaderComponentTest {
                 .header("Content-Type", "application/json")
                 .bodyValue("""
                             {
-                                "MacAddress": "test",
+                                "macAddress": "test",
                                 "name": "test",
                                 "coordinates": {
                                     "longitude": 10,
