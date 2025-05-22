@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,10 +17,10 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "readers")
-public class Reader {
+public class Reader implements StockHolderInt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotNull(message = "MacAddress cannot be empty.")
     private String MacAddress;
@@ -47,6 +48,10 @@ public class Reader {
     @JsonBackReference
     private List<Route> CurrentPoint = new ArrayList<Route>();
 
+    @OneToMany(mappedBy = "holder")
+    @JsonManagedReference
+    private List<Stock> stocks = new ArrayList<>();
+
     protected Reader() {
     };
 
@@ -56,7 +61,7 @@ public class Reader {
         this.coordinate = coordinate;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -115,6 +120,49 @@ public class Reader {
     public void addCurrentPoint(Route route) {
         this.CurrentPoint.add(route);
         route.setCurrentPoint(this);
+    }
+
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public List<Route> getStartingPoint() {
+        return StartingPoint;
+    }
+
+    public void setStartingPoint(List<Route> startingPoint) {
+        StartingPoint = startingPoint;
+    }
+
+    public List<Route> getDestination() {
+        return destination;
+    }
+
+    public void setDestination(List<Route> destination) {
+        this.destination = destination;
+    }
+
+    public List<Route> getCurrentPoint() {
+        return CurrentPoint;
+    }
+
+    public void setCurrentPoint(List<Route> currentPoint) {
+        CurrentPoint = currentPoint;
+    }
+
+    public void setStocks(List<Stock> stocks) {
+        this.stocks = stocks;
+    }
+
+    @Override
+    public List<Stock> getStocks() {
+        return stocks;
+    }
+
+    @Override  
+    public void addStock(Stock stock) {
+        this.stocks.add(stock);
+        stock.setHolder(this);
     }
 
 }

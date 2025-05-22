@@ -9,11 +9,13 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import team28.backend.model.Car;
 import team28.backend.model.Coordinate;
+import team28.backend.model.Item;
 import team28.backend.model.Role;
 import team28.backend.model.Route;
 import team28.backend.model.Scan;
 import team28.backend.model.Reader;
 import team28.backend.model.User;
+import team28.backend.service.StockService;
 
 @Component
 public class DbInitializer {
@@ -25,11 +27,19 @@ public class DbInitializer {
     private final CarRepository CarRepository;
     private final CoordinateRepository CoordinateRepository;
     private final RouteRepository RouteRepository;
+    private final ItemRepository itemRepository;
+    private final StockRepository stockRepository;
+    private final StockService stockService;
 
     public DbInitializer(PasswordEncoder PasswordEncoder, UserRepository UserRepository,
             ScanRepository ScanRepository, ReaderRepository ReaderRepository, CarRepository CarRepository,
             CoordinateRepository CoordinateRepository,
-            RouteRepository RouteRepository) {
+            RouteRepository RouteRepository,
+            ItemRepository itemRepository, 
+            StockRepository stockRepository,
+            StockService stockService) {
+        this.itemRepository = itemRepository;
+        this.stockRepository = stockRepository;
         this.PasswordEncoder = PasswordEncoder;
         this.UserRepository = UserRepository;
         this.ScanRepository = ScanRepository;
@@ -37,6 +47,7 @@ public class DbInitializer {
         this.CarRepository = CarRepository;
         this.CoordinateRepository = CoordinateRepository;
         this.RouteRepository = RouteRepository;
+        this.stockService = stockService;
     }
 
     public void clearAll() {
@@ -46,6 +57,8 @@ public class DbInitializer {
         CarRepository.deleteAll();
         CoordinateRepository.deleteAll();
         UserRepository.deleteAll();
+        itemRepository.deleteAll();
+        stockRepository.deleteAll();
     }
 
     @PostConstruct
@@ -57,6 +70,10 @@ public class DbInitializer {
         @SuppressWarnings("unused")
         final var user2 = UserRepository
                 .save(new User("test2", "test@example.com", PasswordEncoder.encode("test"), Role.MANAGER));
+
+
+        final var backpack = itemRepository.save(new Item("Backpack"));
+        final var pencilCase = itemRepository.save(new Item("Pencil Case"));
 
         final var coordinate1 = CoordinateRepository.save(new Coordinate(0, 0));
         final var coordinate2 = CoordinateRepository.save(new Coordinate(1, 0));
@@ -72,6 +89,9 @@ public class DbInitializer {
         final var reader4 = ReaderRepository.save(new Reader("03-B3-D3-66-C5-29", "Reader4", coordinate4));
         @SuppressWarnings("unused")
         final var reader5 = ReaderRepository.save(new Reader("04-B4-D4-67-C6-2A", "Reader5", coordinate5));
+
+        stockService.addStockToHolder(reader1, backpack, 50);
+        stockService.addStockToHolder(reader2, pencilCase, 30);
 
         final var car1 = CarRepository.save(new Car(1));
         final var car2 = CarRepository.save(new Car(2));
@@ -98,5 +118,9 @@ public class DbInitializer {
 
         ReaderRepository.save(reader1);
         ReaderRepository.save(reader2);
+
+
+
     }
+
 }

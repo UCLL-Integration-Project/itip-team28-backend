@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,17 +16,21 @@ import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "cars")
-public class Car {
+public class Car implements StockHolderInt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Positive(message = "Number must be a positive number")
     private int number;
 
     @OneToMany(mappedBy = "car")
     @JsonBackReference
-    private List<Scan> scans = new ArrayList<Scan>();;
+    private List<Scan> scans = new ArrayList<Scan>();
+
+    @OneToMany(mappedBy = "holder")
+    @JsonManagedReference
+    private List<Stock> stocks = new ArrayList<Stock>();
 
     protected Car() {
     };
@@ -34,11 +39,11 @@ public class Car {
         this.number = number;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,4 +68,24 @@ public class Car {
         scan.setCar(this);
     }
 
+    @Override
+    public String getName() {
+        return "Car" + number;
+    }
+
+    @Override
+    public List<Stock> getStocks() {
+        return stocks;
+    }
+
+    @Override
+    public void setStocks(List<Stock> stocks) {
+        this.stocks = stocks;
+    }
+
+    @Override
+    public void addStock(Stock stock) {
+        this.stocks.add(stock);
+        stock.setHolder(this);
+    }
 }
