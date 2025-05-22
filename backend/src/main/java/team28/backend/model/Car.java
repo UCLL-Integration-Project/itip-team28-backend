@@ -29,7 +29,7 @@ public class Car implements StockHolderInt {
     private List<Scan> scans = new ArrayList<Scan>();
 
     @OneToMany(mappedBy = "holder")
-    @JsonManagedReference
+    @JsonBackReference
     private List<Stock> stocks = new ArrayList<Stock>();
 
     protected Car() {
