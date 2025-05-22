@@ -59,4 +59,11 @@ public class CarController {
     public StockTransferRequest requestPickup(@PathVariable Long carId, @RequestBody @Valid StockTransferRequestInput requestInput) {
         return stockService.requestStockTransfer(carId, requestInput.readerId(), requestInput.itemId(), requestInput.quantity());
     }
+
+    @Operation(summary = "Request stock delivery from a car to a reader")
+    @ApiResponse(responseCode = "200", description = "Stock transfer request was successfully created")
+    @PostMapping("/{carId}/requestDelivery")
+    public StockTransferRequest requestStockDelivery(@PathVariable Long carId, @RequestBody @Valid StockTransferRequestInput requestInput) {
+        return stockService.requestStockDelivery(carId, requestInput.readerId(), requestInput.itemId(), requestInput.quantity());
+    }
 }

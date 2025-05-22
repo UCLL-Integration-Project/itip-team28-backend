@@ -46,6 +46,9 @@ public class StockTransferRequest {
     @Enumerated(EnumType.STRING)
     private TransferStatus status;
 
+    @Enumerated(EnumType.STRING)
+    private TransferDirection direction;
+
     protected StockTransferRequest() {
     }
 
@@ -114,6 +117,11 @@ public class StockTransferRequest {
         this.status = status;
     }
 
-    
+    public TransferDirection getDirection() {
+        return direction;
+    }
 
+    public void setDirection(TransferDirection direction) {
+        this.direction = direction;
+    }
 }

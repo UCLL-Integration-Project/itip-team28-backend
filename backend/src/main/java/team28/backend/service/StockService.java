@@ -14,6 +14,7 @@ import team28.backend.model.Reader;
 import team28.backend.model.Stock;
 import team28.backend.model.StockHolderInt;
 import team28.backend.model.StockTransferRequest;
+import team28.backend.model.TransferDirection;
 import team28.backend.model.TransferStatus;
 import team28.backend.repository.CarRepository;
 import team28.backend.repository.ItemRepository;
@@ -87,18 +88,53 @@ public class StockService {
         Item item = request.getItem();
         int quantity = request.getQuantity();
 
-        Stock readerStock = stockRepository.findByHolderIntAndItem(reader, item)
-            .orElseThrow(() -> new ServiceException("Reader does not have stock for item" + item.getName()));
-        if (readerStock.getQuantity() < quantity){
-            throw new ServiceException("Reader does not have enough stock. Available: " + readerStock.getQuantity());
+        if(request.getDirection() == TransferDirection.PICKUP){
+            Stock readerStock = stockRepository.findByHolderIntAndItem(reader, item)
+                .orElseThrow(() -> new ServiceException("Reader does not have stock for item" + item.getName()));
+            if (readerStock.getQuantity() < quantity){
+                throw new ServiceException("Reader does not have enough stock. Available: " + readerStock.getQuantity());
         }
 
         readerStock.setQuantity(readerStock.getQuantity() - quantity);
         stockRepository.save(readerStock);
 
         addStockToHolder(car, item, quantity);
+    } else {
+        Stock carStock = stockRepository.findByHolderIntAndItem(car, item)
+            .orElseThrow(() -> new ServiceException("Car does not have stock for item" + item.getName()));
+
+        if (carStock.getQuantity() < quantity){
+            throw new ServiceException("Car does not have enough stock. Available: " + carStock.getQuantity());
+        }
+
+        carStock.setQuantity(carStock.getQuantity() - quantity);
+        stockRepository.save(carStock);
+        addStockToHolder(reader, item, quantity);
+    }
 
         request.setStatus(TransferStatus.COMPLETE);
         stockTransferRequestRepository.save(request);
     }
+
+    public StockTransferRequest requestStockDelivery(Long carId, Long readerId, Long itemId, int quantity){
+        if (quantity < 0) {
+            throw new ServiceException("Quantity cannot be negative");
+        }
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new ServiceException("Car with id" + carId + "not found"));
+        Reader reader = readerRepository.findById(readerId)
+                .orElseThrow(() -> new ServiceException("Reader with id" + readerId + "not found"));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ServiceException("Item with id" + itemId + "not found"));
+        
+        Stock carStock = stockRepository.findByHolderIntAndItem(car, item)
+            .orElseThrow(() -> new ServiceException("Car does not have stock for item" + item.getName()));
+        if (carStock.getQuantity() < quantity){
+            throw new ServiceException("Car does not have enough stock. Available: " + carStock.getQuantity());
+        }
+
+        StockTransferRequest request = new StockTransferRequest(car, reader, item, quantity, LocalDateTime.now());
+        request.setDirection(TransferDirection.DELIVERY);
+        return stockTransferRequestRepository.save(request);
+    };
 }
