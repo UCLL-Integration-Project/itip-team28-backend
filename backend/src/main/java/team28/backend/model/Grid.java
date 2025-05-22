@@ -5,12 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "grids")
@@ -20,12 +15,11 @@ public class Grid {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "grids")
+    @OneToMany(mappedBy = "grid", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Coordinate> coordinates = new ArrayList<Coordinate>();
+    private List<Coordinate> coordinates = new ArrayList<>();
 
     protected Grid() {
-
     }
 
     public long getId() {
@@ -45,7 +39,7 @@ public class Grid {
     }
 
     public void addCoordinate(Coordinate coordinate) {
+        coordinate.setGrid(this);
         this.coordinates.add(coordinate);
     }
-
 }
