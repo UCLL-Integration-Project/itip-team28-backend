@@ -110,49 +110,6 @@ public class Reader implements StockHolderInt {
         scan.setReader(this);
     }
 
-    public void addStartingPoint(Route route) {
-        this.StartingPoint.add(route);
-        route.setStartingPoint(this);
-    }
-
-    public void addDestination(Route route) {
-        this.destination.add(route);
-        route.setDestination(this);
-    }
-
-    public void addCurrentPoint(Route route) {
-        this.CurrentPoint.add(route);
-        route.setCurrentPoint(this);
-    }
-
-    public Coordinate getCoordinate() {
-        return coordinate;
-    }
-
-    public List<Route> getStartingPoint() {
-        return StartingPoint;
-    }
-
-    public void setStartingPoint(List<Route> startingPoint) {
-        StartingPoint = startingPoint;
-    }
-
-    public List<Route> getDestination() {
-        return destination;
-    }
-
-    public void setDestination(List<Route> destination) {
-        this.destination = destination;
-    }
-
-    public List<Route> getCurrentPoint() {
-        return CurrentPoint;
-    }
-
-    public void setCurrentPoint(List<Route> currentPoint) {
-        CurrentPoint = currentPoint;
-    }
-
     public void setStocks(List<Stock> stocks) {
         this.stocks = stocks;
     }
@@ -167,4 +124,51 @@ public class Reader implements StockHolderInt {
         this.stocks.add(stock);
         stock.setHolder(this);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + ((macAddress == null) ? 0 : macAddress.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((coordinate == null) ? 0 : coordinate.hashCode());
+        result = prime * result + ((scans == null) ? 0 : scans.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Reader other = (Reader) obj;
+        if (id != other.id)
+            return false;
+        if (macAddress == null) {
+            if (other.macAddress != null)
+                return false;
+        } else if (!macAddress.equals(other.macAddress))
+            return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (coordinate == null) {
+            if (other.coordinate != null)
+                return false;
+        } else if (!coordinate.equals(other.coordinate))
+            return false;
+        if (scans == null) {
+            if (other.scans != null)
+                return false;
+        } else if (!scans.equals(other.scans))
+            return false;
+        return true;
+    }
+
 }
