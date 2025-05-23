@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestConnection {
     @GetMapping
     public Map<String, String> getStatus() {
-        return Map.of("message", "Backend is running VERSION 15:20");
+        return Map.of("message", "Backend is running VERSION 16:13");
     }
 }
