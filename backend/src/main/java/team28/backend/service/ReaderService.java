@@ -44,7 +44,7 @@ public class ReaderService {
     }
 
     @Transactional
-    public Reader createReader(ReaderInput readerInput) {
+    public Reader CreateReader(ReaderInput readerInput) {
         if (ReaderRepository.existsByName(readerInput.name())) {
             throw new ServiceException("Name is already in use");
         }
