@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
+import team28.backend.model.Car;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Item;
 import team28.backend.model.Reader;
@@ -54,6 +55,8 @@ public class DbInitializer {
     @PostConstruct
     public void init() {
         clearAll();
+
+        final var car = CarRepository.save(new Car("Test car"));
 
         final var coordinate1 = CoordinateRepository.save(new Coordinate(0, 0));
         final var coordinate2 = CoordinateRepository.save(new Coordinate(1, 0));
