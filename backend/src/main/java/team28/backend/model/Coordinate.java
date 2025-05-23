@@ -17,6 +17,7 @@ public class Coordinate {
     private int latitude;
 
     @ManyToOne(optional = true)
+    @JsonBackReference
     @JoinColumn(name = "reader_id", nullable = true)
     private Reader reader;
 

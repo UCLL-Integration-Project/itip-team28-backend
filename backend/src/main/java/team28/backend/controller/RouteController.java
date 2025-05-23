@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import okhttp3.internal.connection.RouteException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Route;
 import team28.backend.service.RouteService;
 
@@ -33,8 +33,8 @@ public class RouteController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ RouteException.class })
-    public String handleValidationExceptions(RouteException ex) {
+    @ExceptionHandler({ ServiceException.class })
+    public String handleValidationExceptions(ServiceException ex) {
         return ex.getMessage();
     }
 }
