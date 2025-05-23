@@ -30,14 +30,14 @@ public class ScanTest {
 
     @Test
     public void givenValidValues_whenCreatingScan_thenScanIsCreatedWithThoseValues() {
-        Car CarId = new Car(1);
+        Car CarId = new Car("NONA142");
         Coordinate coordinates = new Coordinate(0, 0);
         Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", coordinates);
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
 
         Scan scan = new Scan(CarId, ReaderId, timestamp);
 
-        assertEquals(1, scan.getCar().getNumber());
+        assertEquals("NONA142", scan.getCar().getName());
         assertEquals("Reader1", scan.getReader().getName());
         assertEquals(LocalDateTime.parse("2025-05-01T09:15"), scan.getTimestamp());
     }
@@ -60,7 +60,7 @@ public class ScanTest {
 
     @Test
     public void givenEmptyReader_whenCreatingScan_thenThrowExecption() {
-        Car CarId = new Car(1);
+        Car CarId = new Car("NONA142");
         Reader ReaderId = null;
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
 
@@ -75,7 +75,7 @@ public class ScanTest {
 
     @Test
     public void givenEmptyTimestamp_whenCreatingScan_thenThrowExecption() {
-        Car CarId = new Car(1);
+        Car CarId = new Car("NONA142");
         Coordinate coordinates = new Coordinate(0, 0);
         Reader ReaderId = new Reader("00-B0-D0-63-C2-26", "Reader1", coordinates);
         LocalDateTime timestamp = null;

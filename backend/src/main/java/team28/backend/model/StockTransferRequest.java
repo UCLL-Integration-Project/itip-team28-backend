@@ -1,6 +1,5 @@
 package team28.backend.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -15,10 +14,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-
-
 @Entity
-@Table(name="stock_transfer_requests")
+@Table(name = "stock_transfer_requests")
 public class StockTransferRequest {
 
     @Id
@@ -26,15 +23,15 @@ public class StockTransferRequest {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="car_id")
+    @JoinColumn(name = "car_id")
     private Car car;
 
     @ManyToOne
-    @JoinColumn(name="reader_id")
+    @JoinColumn(name = "reader_id")
     private Reader reader;
 
     @ManyToOne
-    @JoinColumn(name="item_id")
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @Positive(message = "Stock quantity must be a positive number")

@@ -51,7 +51,7 @@ public class ReaderTest {
 
         assertEquals(1, violations.size());
         ConstraintViolation<Reader> violation = violations.iterator().next();
-        assertEquals("MacAddress cannot be empty.", violation.getMessage());
+        assertEquals("macAddress cannot be empty.", violation.getMessage());
     }
 
     @Test

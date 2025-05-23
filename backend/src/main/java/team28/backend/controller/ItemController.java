@@ -24,24 +24,24 @@ import team28.backend.service.ItemService;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    private final ItemService itemService;
+    private final ItemService ItemService;
 
-    public ItemController(ItemService itemService) {
-        this.itemService = itemService;
+    public ItemController(ItemService ItemService) {
+        this.ItemService = ItemService;
     }
 
     @Operation(summary = "Get all items")
     @ApiResponse(responseCode = "200", description = "List of items returned successfully")
     @GetMapping
     public List<Item> getAllItems() {
-        return itemService.getAllItems();
+        return ItemService.getAllItems();
     }
 
     @Operation(summary = "Create new item")
     @ApiResponse(responseCode = "200", description = "Item was successfully created")
     @PostMapping
     public Item createItem(@RequestBody @Valid ItemInput itemInput) {
-        return itemService.createItem(itemInput.name());
+        return ItemService.createItem(itemInput.name());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -52,5 +52,3 @@ public class ItemController {
         return errors;
     }
 }
-
-

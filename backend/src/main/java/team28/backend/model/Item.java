@@ -10,17 +10,18 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 @Table(name = "items")
 public class Item {
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "name cannot be empty")
+    @NotBlank(message = "Name cannot be empty.")
     private String name;
 
-    protected Item() {}
+    protected Item() {
+    }
 
     public Item(String name) {
-        this.name = name.toLowerCase();
+        this.name = name;
     }
 
     public Long getId() {

@@ -7,9 +7,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 import org.junit.jupiter.api.*;
@@ -26,10 +24,10 @@ import team28.backend.model.Stock;
 public class StockTest {
 
     private static ValidatorFactory validatorFactory;
-    private static Validator validator; 
+    private static Validator validator;
 
     @Mock
-    private StockHolderInt stockHolder; 
+    private StockHolderInt stockHolder;
 
     @BeforeAll
     public static void createValidator() {
@@ -40,7 +38,7 @@ public class StockTest {
     @Test
     public void testStockCreation() {
         Item item = new Item("backpack");
-        Stock stock = new Stock(stockHolder,item, 50);
+        Stock stock = new Stock(stockHolder, item, 50);
 
         assertEquals(item, stock.getItem());
         assertEquals(50, stock.getQuantity());
@@ -50,7 +48,7 @@ public class StockTest {
     @Test
     public void testSetQuantity() {
         Item item = new Item("backpack");
-        Stock stock = new Stock(stockHolder,item, 50);
+        Stock stock = new Stock(stockHolder, item, 50);
 
         stock.setQuantity(75);
         assertEquals(75, stock.getQuantity());

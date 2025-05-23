@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import team28.backend.controller.dto.ReaderInput;
+import team28.backend.controller.dto.ReaderUpdateInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Item;
@@ -14,38 +15,38 @@ import team28.backend.model.Stock;
 import team28.backend.repository.CoordinateRepository;
 import team28.backend.repository.ItemRepository;
 import team28.backend.repository.ReaderRepository;
-import team28.backend.repository.StockRepository;
 
 @Service
 public class ReaderService {
-    private final ReaderRepository readerRepository;
-    private final CoordinateRepository coordinateRepository;
-    private final StockService stockService;
-    private final ItemRepository itemRepository;
+    private final ReaderRepository ReaderRepository;
+    private final CoordinateRepository CoordinateRepository;
+    private final StockService StockService;
+    private final ItemRepository ItemRepository;
 
-    public ReaderService(ReaderRepository readerRepository, CoordinateRepository coordinateRepository, StockService stockService, ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
-        this.readerRepository = readerRepository;
-        this.coordinateRepository = coordinateRepository;
-        this.stockService = stockService;
+    public ReaderService(ReaderRepository ReaderRepository, CoordinateRepository CoordinateRepository,
+            StockService StockService, ItemRepository ItemRepository) {
+        this.ItemRepository = ItemRepository;
+        this.ReaderRepository = ReaderRepository;
+        this.CoordinateRepository = CoordinateRepository;
+        this.StockService = StockService;
     }
 
     public List<Reader> GetAllReaders() {
-        return readerRepository.findAll();
+        return ReaderRepository.findAll();
     }
 
     public void DeleteReader(Long id) {
-        boolean ExistingReader = readerRepository.existsById(id);
+        boolean ExistingReader = ReaderRepository.existsById(id);
 
         if (!ExistingReader) {
             throw new ServiceException("Reader not found");
         }
 
-        readerRepository.deleteById(id);
+        ReaderRepository.deleteById(id);
     }
 
     public Reader CreateReader(ReaderInput ReaderInput) {
-        boolean exists = readerRepository.existsByName(ReaderInput.name());
+        boolean exists = ReaderRepository.existsByName(ReaderInput.name());
         if (exists) {
             throw new ServiceException("Name is already in use");
         }
@@ -53,48 +54,52 @@ public class ReaderService {
         Coordinate coordinates = new Coordinate(ReaderInput.coordinates().getLongitude(),
                 ReaderInput.coordinates().getLatitude());
 
-        var NewCoordinates = coordinateRepository.save(coordinates);
+        var NewCoordinates = CoordinateRepository.save(coordinates);
 
         final var reader = new Reader(
-                ReaderInput.MacAddress(), ReaderInput.name(), NewCoordinates);
+                ReaderInput.macAddress(), ReaderInput.name(), NewCoordinates);
 
-        return readerRepository.save(reader);
+        return ReaderRepository.save(reader);
     }
 
-    public Reader UpdateReader(Long id, ReaderInput ReaderInput) {
-        boolean exists = readerRepository.existsById(id);
+    public Reader UpdateReader(ReaderUpdateInput ReaderInput) {
+        boolean exists = ReaderRepository.existsById(ReaderInput.id());
         if (!exists) {
             throw new ServiceException("Reader doesn't exist");
         }
+        boolean NameExists = ReaderRepository.existsByName(ReaderInput.name());
+        if (NameExists) {
+            throw new ServiceException("Name is already in use");
+        }
 
-        Optional<Reader> reader = readerRepository.findById(id);
+        Optional<Reader> reader = ReaderRepository.findById(ReaderInput.id());
         Reader UpdatedReader = reader.get();
 
         Coordinate coordinates = new Coordinate(ReaderInput.coordinates().getLongitude(),
                 ReaderInput.coordinates().getLatitude());
 
-        var NewCoordinates = coordinateRepository.save(coordinates);
+        var NewCoordinates = CoordinateRepository.save(coordinates);
 
-        UpdatedReader.setMacAddress(ReaderInput.MacAddress());
+        UpdatedReader.setMacAddress(ReaderInput.macAddress());
         UpdatedReader.setName(ReaderInput.name());
         UpdatedReader.setCoordinate(NewCoordinates);
 
-        return readerRepository.save(UpdatedReader);
+        return ReaderRepository.save(UpdatedReader);
     }
 
-    public List<Stock> getStockForReader(Long readerId){
-        Reader reader = readerRepository.findById(readerId)
+    public List<Stock> getStockForReader(Long readerId) {
+        Reader reader = ReaderRepository.findById(readerId)
                 .orElseThrow(() -> new ServiceException("Reader with id " + readerId + " not found"));
 
-        return stockService.getStocksForHolder(reader);
+        return StockService.getStocksForHolder(reader);
     }
 
-    public Stock addStockToReader(Long readerId, Long itemId, int quantity){
-        Reader reader = readerRepository.findById(readerId)
+    public Stock addStockToReader(Long readerId, Long itemId, int quantity) {
+        Reader reader = ReaderRepository.findById(readerId)
                 .orElseThrow(() -> new ServiceException("Reader with id " + readerId + " not found"));
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("Item with id " + itemId + " not found"));  
+        Item item = ItemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item with id " + itemId + " not found"));
 
-        return stockService.addStockToHolder(reader, item, quantity);
+        return StockService.addStockToHolder(reader, item, quantity);
     }
 }

@@ -3,7 +3,6 @@ package team28.backend.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -26,25 +25,26 @@ import team28.backend.repository.StockTransferRequestRepository;
 import team28.backend.service.StockService;
 
 @RestController
-@RequestMapping("/stockTransferRequests")
+@RequestMapping("/stocktransferrequests")
 public class StockTransferRequestController {
-    private final StockService stockService;
-    private final StockTransferRequestRepository stockTransferRequestRepository;
-    private final CarRepository carRepository;
+    private final StockService StockService;
+    private final StockTransferRequestRepository StockTransferRequestRepository;
+    private final CarRepository CarRepository;
 
-    public StockTransferRequestController(StockService stockService, StockTransferRequestRepository stockTransferRequestRepository, CarRepository carRepository) {
-        this.carRepository = carRepository;
-        this.stockService = stockService;
-        this.stockTransferRequestRepository = stockTransferRequestRepository;
+    public StockTransferRequestController(StockService StockService,
+            StockTransferRequestRepository StockTransferRequestRepository, CarRepository CarRepository) {
+        this.CarRepository = CarRepository;
+        this.StockService = StockService;
+        this.StockTransferRequestRepository = StockTransferRequestRepository;
     }
 
     @Operation(summary = "Get pending stock transfer requests for a car")
     @ApiResponse(responseCode = "200", description = "List of pending stock transfer requests returned successfully")
-    @GetMapping("/pending/{carId}") 
+    @GetMapping("/pending/{carId}")
     public List<StockTransferRequest> getPendingRequestsForCar(@PathVariable Long carId) {
-        Car car = carRepository.findById(carId)
+        Car car = CarRepository.findById(carId)
                 .orElseThrow(() -> new ServiceException("Car with id " + carId + " not found"));
-        return stockTransferRequestRepository.findByCar(car).stream()
+        return StockTransferRequestRepository.findByCar(car).stream()
                 .filter(request -> request.getStatus() == TransferStatus.PENDING)
                 .collect(Collectors.toList());
     }
@@ -53,7 +53,7 @@ public class StockTransferRequestController {
     @ApiResponse(responseCode = "200", description = "Stock transfer request was successfully set to COMPLETE")
     @PutMapping("{requestId}/complete")
     public void completeRequest(@PathVariable Long requestId) {
-        stockService.completeStockTransfer(requestId);
+        StockService.completeStockTransfer(requestId);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

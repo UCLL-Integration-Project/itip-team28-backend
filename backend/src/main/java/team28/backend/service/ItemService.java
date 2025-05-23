@@ -10,29 +10,29 @@ import team28.backend.repository.ItemRepository;
 
 @Service
 public class ItemService {
-    private final ItemRepository itemRepository;
+    private final ItemRepository ItemRepository;
 
-    public ItemService(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
+    public ItemService(ItemRepository ItemRepository) {
+        this.ItemRepository = ItemRepository;
     }
 
     public List<Item> getAllItems() {
-        return itemRepository.findAll();
+        return ItemRepository.findAll();
     }
 
     public Item createItem(String name) {
         String normalizedName = name.toLowerCase();
-        if (itemRepository.existsByName(normalizedName)) {
+        if (ItemRepository.existsByName(normalizedName)) {
             throw new ServiceException("Item with name " + normalizedName + " already exists");
         }
 
         Item NewItem = new Item(normalizedName);
 
-        return itemRepository.save(NewItem);
+        return ItemRepository.save(NewItem);
     }
 
     public Item getItemById(Long id) {
-        return itemRepository.findById(id)
+        return ItemRepository.findById(id)
                 .orElseThrow(() -> new ServiceException("Item with id " + id + " not found"));
     }
 }

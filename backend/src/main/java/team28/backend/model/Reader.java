@@ -25,8 +25,8 @@ public class Reader implements StockHolderInt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "MacAddress cannot be empty.")
-    private String MacAddress;
+    @NotNull(message = "macAddress cannot be empty.")
+    private String macAddress;
 
     @NotNull(message = "Name cannot be empty.")
     private String name;
@@ -59,7 +59,7 @@ public class Reader implements StockHolderInt {
     };
 
     public Reader(String MacAddress, String name, Coordinate coordinate) {
-        this.MacAddress = MacAddress;
+        this.macAddress = MacAddress;
         this.name = name;
         this.coordinate = coordinate;
     }
@@ -73,11 +73,11 @@ public class Reader implements StockHolderInt {
     }
 
     public String getMacAddress() {
-        return MacAddress;
+        return macAddress;
     }
 
     public void setMacAddress(String macAddress) {
-        MacAddress = macAddress;
+        this.macAddress = macAddress;
     }
 
     public String getName() {
@@ -162,7 +162,7 @@ public class Reader implements StockHolderInt {
         return stocks;
     }
 
-    @Override  
+    @Override
     public void addStock(Stock stock) {
         this.stocks.add(stock);
         stock.setHolder(this);

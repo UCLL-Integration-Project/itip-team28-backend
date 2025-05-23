@@ -9,5 +9,5 @@ import team28.backend.model.StockTransferRequest;
 
 public interface StockTransferRequestRepository extends JpaRepository<StockTransferRequest, Long> {
 
-    Collection<StockTransferRequest> findByCar(Car car);    
+    Collection<StockTransferRequest> findByCar(Car car);
 }

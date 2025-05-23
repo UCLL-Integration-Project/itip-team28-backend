@@ -1,14 +1,11 @@
 package team28.backend.unit.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -111,4 +108,3 @@ public class StockTransferRequestTest {
         assertEquals(TransferStatus.COMPLETE, request.getStatus());
     }
 }
-
