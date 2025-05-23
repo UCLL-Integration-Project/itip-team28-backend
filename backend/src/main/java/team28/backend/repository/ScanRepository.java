@@ -21,20 +21,20 @@ import org.springframework.stereotype.Repository;
 public class ScanRepository {
 
     private final InfluxDBClient influxDBClient;
-    private final CarRepository carRepository;
-    private final ReaderRepository readerRepository;
+    private final CarRepository CarRepository;
+    private final ReaderRepository ReaderRepository;
     private final String bucket;
     private final String org;
 
     public ScanRepository(
             InfluxDBClient influxDBClient,
-            CarRepository carRepository,
-            ReaderRepository readerRepository,
+            CarRepository CarRepository,
+            ReaderRepository ReaderRepository,
             @Qualifier("influxBucket") String bucket,
             @Qualifier("influxOrg") String org) {
         this.influxDBClient = influxDBClient;
-        this.carRepository = carRepository;
-        this.readerRepository = readerRepository;
+        this.CarRepository = CarRepository;
+        this.ReaderRepository = ReaderRepository;
         this.bucket = bucket;
         this.org = org;
     }
@@ -56,10 +56,10 @@ public class ScanRepository {
             for (FluxRecord record : table.getRecords()) {
 
                 String carId = (String) record.getValueByKey("car_id");
-                Car car = carRepository.findByName(carId);
-                
+                Car car = CarRepository.findByName(carId);
+
                 String readerId = (String) record.getValueByKey("reader_id");
-                Reader reader = readerRepository.findByMacAddress(readerId);
+                Reader reader = ReaderRepository.findByMacAddress(readerId);
 
                 LocalDateTime timestamp = record.getTime().atOffset(ZoneOffset.UTC).toLocalDateTime();
                 Scan scan = new Scan(car, reader, timestamp);
