@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import team28.backend.controller.dto.GridInput;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Grid;
@@ -20,6 +23,8 @@ public class GridController {
         this.gridService = gridService;
     }
 
+    @Operation(summary = "Create new grid")
+    @ApiResponse(responseCode = "200", description = "The created grid")
     @PostMapping
     public ResponseEntity<Grid> createGrid(@RequestBody GridInput input) {
 
