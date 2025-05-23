@@ -1,14 +1,18 @@
 package team28.backend.controller;
 
 import java.util.stream.Collectors;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import team28.backend.controller.dto.GridInput;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Grid;
 import team28.backend.service.GridService;
@@ -35,5 +39,13 @@ public class GridController {
         Grid savedGrid = gridService.createGrid(coordinates);
 
         return ResponseEntity.ok(savedGrid);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ ServiceException.class })
+    public Map<String, String> handleServiceException(ServiceException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("ServiceException", ex.getMessage());
+        return errors;
     }
 }

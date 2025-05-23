@@ -1,54 +1,84 @@
 package team28.backend.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import team28.backend.controller.dto.RouteInput;
 import team28.backend.exceptions.ServiceException;
+import team28.backend.model.Coordinate;
+import team28.backend.model.Grid;
 import team28.backend.model.Reader;
 import team28.backend.model.Route;
-import team28.backend.repository.ReaderRepository;
+import team28.backend.repository.GridRepository;
 import team28.backend.repository.RouteRepository;
 
 @Service
 public class RouteService {
 
+    private final GridRepository GridRepository;
     private final RouteRepository RouteRepository;
-    private final ReaderRepository ReaderRepository;
+    private final PathfindingService PathfindingService;
 
-    public RouteService(RouteRepository RouteRepository, ReaderRepository ReaderRepository) {
+    public RouteService(RouteRepository RouteRepository, GridRepository GridRepository,
+            PathfindingService PathfindingService, GridRepository gridRepository) {
         this.RouteRepository = RouteRepository;
-        this.ReaderRepository = ReaderRepository;
+        this.GridRepository = GridRepository;
+        this.PathfindingService = PathfindingService;
     }
 
     public List<Route> GetAllRoutes() {
         return RouteRepository.findAll();
     }
 
-    public Route CreateRoute(RouteInput RouteInput) {
-        Optional<Reader> StartingPointReaderId = ReaderRepository.findById(RouteInput.startingPointReaderId());
-        if (StartingPointReaderId.isEmpty()) {
-            throw new ServiceException("Reader with ID: " + RouteInput.startingPointReaderId() + " doesn't exist");
+    public List<Route> generateRoutes() {
+        Grid grid = GridRepository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new ServiceException("No grid found"));
+
+        List<Coordinate> allCoordinates = grid.getCoordinates();
+
+        List<Coordinate> readerCoordinates = allCoordinates.stream()
+                .filter(c -> c.getReader() != null)
+                .collect(Collectors.toList());
+
+        if (readerCoordinates.size() < 2) {
+            throw new ServiceException("At least two reader coordinates are required to generate routes.");
         }
-        Reader StartingPoint = StartingPointReaderId.get();
 
-        Optional<Reader> DestinationReaderId = ReaderRepository.findById(RouteInput.destinationReaderId());
-        if (DestinationReaderId.isEmpty()) {
-            throw new ServiceException("Reader with ID: " + RouteInput.destinationReaderId() + " doesn't exist");
+        List<Route> routes = new ArrayList<>();
+
+        for (int i = 0; i < readerCoordinates.size(); i++) {
+            for (int j = 0; j < readerCoordinates.size(); j++) {
+                if (i == j)
+                    continue;
+
+                Coordinate fromCoord = readerCoordinates.get(i);
+                Coordinate toCoord = readerCoordinates.get(j);
+
+                Reader fromReader = fromCoord.getReader();
+                Reader toReader = toCoord.getReader();
+
+                List<String> instructions = PathfindingService.findPath(fromCoord, toCoord, allCoordinates);
+
+                if (!instructions.isEmpty()) {
+                    Route route = new Route(
+                            false, // status
+                            fromReader, // StartingPoint
+                            toReader, // destination
+                            fromReader, // CurrentPoint (initially the same as StartingPoint)
+                            LocalDateTime.now(), // timestamp
+                            instructions // instructions
+                    );
+                    routes.add(route);
+                } else {
+                    System.out.println("No path found between " + fromReader.getName() + " and " + toReader.getName());
+                }
+            }
         }
-        Reader destination = DestinationReaderId.get();
 
-        Optional<Reader> CurrentPointReaderId = ReaderRepository.findById(RouteInput.currentPointReaderId());
-        if (CurrentPointReaderId.isEmpty()) {
-            throw new ServiceException("Reader with ID: " + RouteInput.currentPointReaderId() + " doesn't exist");
-        }
-        Reader CurrentPoint = DestinationReaderId.get();
-
-        var route = new Route(RouteInput.status(), StartingPoint, destination, CurrentPoint, RouteInput.timestamp(),
-                RouteInput.instructions());
-
-        return RouteRepository.save(route);
+        return RouteRepository.saveAll(routes); 
     }
+
 }

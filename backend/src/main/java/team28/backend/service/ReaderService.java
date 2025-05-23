@@ -30,9 +30,11 @@ public class ReaderService {
     private final StockService StockService;
     private final ItemRepository ItemRepository;
     private final GridRepository GridRepository;
+    private final RouteService RouteService;
 
     public ReaderService(ReaderRepository ReaderRepository, CoordinateRepository CoordinateRepository,
-            StockService StockService, ItemRepository ItemRepository, GridRepository GridRepository) {
+            StockService StockService, ItemRepository ItemRepository, GridRepository GridRepository,
+            RouteService RouteService) {
         this.ReaderRepository = ReaderRepository;
         this.CoordinateRepository = CoordinateRepository;
         this.restTemplate = new RestTemplate();
@@ -40,6 +42,7 @@ public class ReaderService {
         this.StockService = StockService;
         this.ItemRepository = ItemRepository;
         this.GridRepository = GridRepository;
+        this.RouteService = RouteService;
     }
 
     public List<Reader> GetAllReaders() {
@@ -81,7 +84,9 @@ public class ReaderService {
         coordinates.setReader(reader);
 
         CoordinateRepository.save(coordinates);
-        return ReaderRepository.save(reader);
+        Reader savedReader = ReaderRepository.save(reader);
+        RouteService.generateRoutes();
+        return savedReader;
     }
 
     public Reader UpdateReader(ReaderUpdateInput readerInput) {
@@ -122,6 +127,7 @@ public class ReaderService {
         } else {
             System.err.println("No IP address for reader ID " + readerInput.id());
         }
+        RouteService.generateRoutes();
 
         return savedReader;
     }
