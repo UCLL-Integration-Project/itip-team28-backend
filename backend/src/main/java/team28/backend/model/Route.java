@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,11 +19,12 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "routes")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Route {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private boolean status;
 
@@ -40,6 +44,7 @@ public class Route {
     @NotNull(message = "Timestamp cannot be empty.")
     private LocalDateTime timestamp;
 
+    @ElementCollection
     private List<String> instructions = new ArrayList<String>();
 
     protected Route() {
@@ -55,11 +60,11 @@ public class Route {
         this.instructions = instructions;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -2,10 +2,9 @@ package team28.backend.model;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,42 +12,50 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
-@Table(name = "scans")
-public class Scan {
+@Table(name = "stock_transfer_requests")
+public class StockTransferRequest {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "CarID cannot be empty.")
     @ManyToOne
     @JoinColumn(name = "car_id")
-    @JsonManagedReference
     private Car car;
 
-    @NotNull(message = "ReaderID cannot be empty.")
     @ManyToOne
     @JoinColumn(name = "reader_id")
-    @JsonManagedReference
     private Reader reader;
+
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    @Positive(message = "Stock quantity must be a positive number")
+    private int quantity;
 
     @NotNull(message = "Timestamp cannot be empty.")
     private LocalDateTime timestamp;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
-    private User user;
+    @Enumerated(EnumType.STRING)
+    private TransferStatus status;
 
-    protected Scan() {
+    @Enumerated(EnumType.STRING)
+    private TransferDirection direction;
 
+    protected StockTransferRequest() {
     }
 
-    public Scan(Car car, Reader reader, LocalDateTime timestamp) {
+    public StockTransferRequest(Car car, Reader reader, Item item, int quantity, LocalDateTime timestamp) {
         this.car = car;
         this.reader = reader;
+        this.item = item;
+        this.quantity = quantity;
         this.timestamp = timestamp;
+        this.status = TransferStatus.PENDING;
     }
 
     public Long getId() {
@@ -75,6 +82,22 @@ public class Scan {
         this.reader = reader;
     }
 
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
@@ -83,12 +106,19 @@ public class Scan {
         this.timestamp = timestamp;
     }
 
-    public User getUser() {
-        return user;
+    public TransferStatus getStatus() {
+        return status;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setStatus(TransferStatus status) {
+        this.status = status;
     }
 
+    public TransferDirection getDirection() {
+        return direction;
+    }
+
+    public void setDirection(TransferDirection direction) {
+        this.direction = direction;
+    }
 }

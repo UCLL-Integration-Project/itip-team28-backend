@@ -7,5 +7,5 @@ import team28.backend.model.Coordinate;
 
 @Repository
 public interface CoordinateRepository extends JpaRepository<Coordinate, Long> {
-    
+
 }

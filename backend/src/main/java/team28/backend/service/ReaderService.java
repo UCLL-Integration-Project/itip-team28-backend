@@ -9,18 +9,26 @@ import team28.backend.controller.dto.ReaderInput;
 import team28.backend.controller.dto.ReaderUpdateInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Coordinate;
+import team28.backend.model.Item;
 import team28.backend.model.Reader;
+import team28.backend.model.Stock;
 import team28.backend.repository.CoordinateRepository;
+import team28.backend.repository.ItemRepository;
 import team28.backend.repository.ReaderRepository;
 
 @Service
 public class ReaderService {
     private final ReaderRepository ReaderRepository;
     private final CoordinateRepository CoordinateRepository;
+    private final StockService StockService;
+    private final ItemRepository ItemRepository;
 
-    public ReaderService(ReaderRepository ReaderRepository, CoordinateRepository CoordinateRepository) {
+    public ReaderService(ReaderRepository ReaderRepository, CoordinateRepository CoordinateRepository,
+            StockService StockService, ItemRepository ItemRepository) {
+        this.ItemRepository = ItemRepository;
         this.ReaderRepository = ReaderRepository;
         this.CoordinateRepository = CoordinateRepository;
+        this.StockService = StockService;
     }
 
     public List<Reader> GetAllReaders() {
@@ -77,5 +85,21 @@ public class ReaderService {
         UpdatedReader.setCoordinate(NewCoordinates);
 
         return ReaderRepository.save(UpdatedReader);
+    }
+
+    public List<Stock> getStockForReader(Long readerId) {
+        Reader reader = ReaderRepository.findById(readerId)
+                .orElseThrow(() -> new ServiceException("Reader with id " + readerId + " not found"));
+
+        return StockService.getStocksForHolder(reader);
+    }
+
+    public Stock addStockToReader(Long readerId, Long itemId, int quantity) {
+        Reader reader = ReaderRepository.findById(readerId)
+                .orElseThrow(() -> new ServiceException("Reader with id " + readerId + " not found"));
+        Item item = ItemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item with id " + itemId + " not found"));
+
+        return StockService.addStockToHolder(reader, item, quantity);
     }
 }
