@@ -31,8 +31,9 @@ public class GridController {
         List<Coordinate> coordinates = input.coordinates().stream()
                 .map(coordInput -> new Coordinate(coordInput.longitude(), coordInput.latitude()))
                 .collect(Collectors.toList());
+         int measurement = input.measurement();
 
-        Grid savedGrid = gridService.createGrid(coordinates);
+        Grid savedGrid = gridService.createGrid(coordinates,measurement);
 
         return ResponseEntity.ok(savedGrid);
     }

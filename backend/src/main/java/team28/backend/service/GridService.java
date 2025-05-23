@@ -13,12 +13,14 @@ public class GridService {
     @Autowired
     private GridRepository gridRepository;
 
-    public Grid createGrid(List<Coordinate> coordinates) {
+    public Grid createGrid(List<Coordinate> coordinates, int measurement) {
         Grid grid = new Grid();
 
         for (Coordinate coordinate : coordinates) {
             grid.addCoordinate(coordinate);
         }
+
+        grid.setMeasurement(measurement);
 
         return gridRepository.save(grid);
     }
