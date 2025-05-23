@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import team28.backend.controller.dto.ReaderInput;
 import team28.backend.controller.dto.ReaderUpdateInput;
 import team28.backend.controller.dto.ipRegistrationInput;
+import team28.backend.controller.dto.StockInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Reader;
+import team28.backend.model.Stock;
 import team28.backend.service.ReaderService;
 
 import java.util.*;
@@ -61,6 +64,20 @@ public class ReaderController {
     public String DeleteReader(@RequestBody Reader reader) {
         ReaderService.DeleteReader(reader.getId());
         return "Reader deleted";
+    }
+
+    @Operation(summary = "Get stocks for reader")
+    @ApiResponse(responseCode = "200", description = "List of stocks returned successfully")
+    @GetMapping("/{readerId}/stocks")
+    public List<Stock> getStocksForReader(@PathVariable Long readerId) {
+        return ReaderService.getStockForReader(readerId);
+    }
+
+    @Operation(summary = "Add stock to a reader")
+    @ApiResponse(responseCode = "200", description = "Stock was successfully added to the reader")
+    @PostMapping("/{readerId}/stocks")
+    public Stock addStockToReader(@PathVariable Long readerId, @RequestBody @Valid StockInput stockInput) {
+        return ReaderService.addStockToReader(readerId, stockInput.itemId(), stockInput.quantity());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

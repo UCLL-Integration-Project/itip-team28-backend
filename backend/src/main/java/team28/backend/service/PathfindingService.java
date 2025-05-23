@@ -1,7 +1,6 @@
 package team28.backend.service;
 
 import team28.backend.model.Coordinate;
-import team28.backend.model.Reader;
 
 import java.util.*;
 
@@ -10,31 +9,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class PathfindingService {
 
-    public List<String> findPath(Reader start, Reader end, List<Reader> allReaders) {
-        Map<String, Reader> grid = new HashMap<>();
-        for (Reader r : allReaders) {
-            Coordinate c = r.getCoordinates();
-            grid.put(c.getLatitude() + "," + c.getLongitude(), r);
+    public List<String> findPath(Coordinate start, Coordinate end, List<Coordinate> allCoordinates) {
+        Map<String, Coordinate> grid = new HashMap<>();
+        for (Coordinate c : allCoordinates) {
+            grid.put(c.getLatitude() + "," + c.getLongitude(), c);
         }
 
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingInt(Node::fCost));
-        Map<Reader, Integer> gScores = new HashMap<>();
-        Set<Reader> closedSet = new HashSet<>();
+        Map<Coordinate, Integer> gScores = new HashMap<>();
+        Set<Coordinate> closedSet = new HashSet<>();
 
-        Node startNode = new Node(start, 0, heuristic(start.getCoordinates(), end.getCoordinates()), null);
+        Node startNode = new Node(start, 0, heuristic(start, end), null);
         openSet.add(startNode);
         gScores.put(start, 0);
 
         while (!openSet.isEmpty()) {
             Node current = openSet.poll();
 
-            if (current.reader.equals(end)) {
-                return reconstructPath(current);
+            if (current.coordinate.equals(end)) {
+                List<String> path = reconstructPath(current);
+                System.out.println(path);
+                return path;
             }
 
-            closedSet.add(current.reader);
+            closedSet.add(current.coordinate);
 
-            for (Reader neighbor : getNeighbors(current.reader, grid)) {
+            for (Coordinate neighbor : getNeighbors(current.coordinate, grid)) {
                 if (closedSet.contains(neighbor))
                     continue;
 
@@ -42,8 +42,7 @@ public class PathfindingService {
 
                 if (tentativeG < gScores.getOrDefault(neighbor, Integer.MAX_VALUE)) {
                     gScores.put(neighbor, tentativeG);
-                    Node neighborNode = new Node(neighbor, tentativeG,
-                            heuristic(neighbor.getCoordinates(), end.getCoordinates()), current);
+                    Node neighborNode = new Node(neighbor, tentativeG, heuristic(neighbor, end), current);
                     openSet.add(neighborNode);
                 }
             }
@@ -56,8 +55,8 @@ public class PathfindingService {
         return Math.abs(a.getLatitude() - b.getLatitude()) + Math.abs(a.getLongitude() - b.getLongitude());
     }
 
-    private List<Reader> getNeighbors(Reader reader, Map<String, Reader> grid) {
-        List<Reader> neighbors = new ArrayList<>();
+    private List<Coordinate> getNeighbors(Coordinate coord, Map<String, Coordinate> grid) {
+        List<Coordinate> neighbors = new ArrayList<>();
         int[][] directions = {
                 { -1, 0 }, // up
                 { 1, 0 }, // down
@@ -65,7 +64,6 @@ public class PathfindingService {
                 { 0, 1 } // right
         };
 
-        Coordinate coord = reader.getCoordinates();
         int x = coord.getLatitude();
         int y = coord.getLongitude();
 
@@ -80,38 +78,83 @@ public class PathfindingService {
     }
 
     private List<String> reconstructPath(Node node) {
-        List<String> directions = new LinkedList<>();
+        List<String> instructions = new LinkedList<>();
+        Direction currentFacing = null;
 
         while (node.parent != null) {
-            Coordinate from = node.parent.reader.getCoordinates();
-            Coordinate to = node.reader.getCoordinates();
+            Coordinate from = node.parent.coordinate;
+            Coordinate to = node.coordinate;
 
             int dx = to.getLatitude() - from.getLatitude();
             int dy = to.getLongitude() - from.getLongitude();
 
-            if (dx == -1)
-                directions.add(0, "UP");
-            else if (dx == 1)
-                directions.add(0, "DOWN");
-            else if (dy == -1)
-                directions.add(0, "LEFT");
-            else if (dy == 1)
-                directions.add(0, "RIGHT");
+            Direction movementDir = getDirection(dx, dy);
+
+            if (currentFacing == null) {
+                // First step: assume the car starts facing in the direction of the first move
+                currentFacing = movementDir;
+                instructions.add(0, "go forward");
+            } else {
+                String turn = getTurnInstruction(currentFacing, movementDir);
+                instructions.add(0, turn);
+                currentFacing = movementDir;
+            }
 
             node = node.parent;
         }
 
-        return directions;
+        return instructions;
+    }
+
+    private Direction getDirection(int dx, int dy) {
+        if (dx == -1)
+            return Direction.NORTH;
+        if (dx == 1)
+            return Direction.SOUTH;
+        if (dy == -1)
+            return Direction.WEST;
+        if (dy == 1)
+            return Direction.EAST;
+        throw new IllegalArgumentException("Invalid movement delta: (" + dx + "," + dy + ")");
+    }
+
+    private String getTurnInstruction(Direction from, Direction to) {
+        if (from == to)
+            return "go forward";
+
+        switch (from) {
+            case NORTH:
+                return to == Direction.EAST ? "turn right"
+                        : to == Direction.WEST ? "turn left"
+                                : "turn around";
+            case SOUTH:
+                return to == Direction.WEST ? "turn right"
+                        : to == Direction.EAST ? "turn left"
+                                : "turn around";
+            case EAST:
+                return to == Direction.SOUTH ? "turn right"
+                        : to == Direction.NORTH ? "turn left"
+                                : "turn around";
+            case WEST:
+                return to == Direction.NORTH ? "turn right"
+                        : to == Direction.SOUTH ? "turn left"
+                                : "turn around";
+        }
+        return "unknown";
+    }
+
+    private enum Direction {
+        NORTH, SOUTH, EAST, WEST
     }
 
     private static class Node {
-        Reader reader;
+        Coordinate coordinate;
         int gCost;
         int hCost;
         Node parent;
 
-        Node(Reader reader, int gCost, int hCost, Node parent) {
-            this.reader = reader;
+        Node(Coordinate coordinate, int gCost, int hCost, Node parent) {
+            this.coordinate = coordinate;
             this.gCost = gCost;
             this.hCost = hCost;
             this.parent = parent;
