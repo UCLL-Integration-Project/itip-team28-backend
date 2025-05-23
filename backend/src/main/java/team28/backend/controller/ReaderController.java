@@ -1,10 +1,5 @@
 package team28.backend.controller;
 
-import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.QueryApi;
-import com.influxdb.query.FluxRecord;
-import com.influxdb.query.FluxTable;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -13,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +17,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import team28.backend.controller.dto.ReaderInput;
-import team28.backend.exceptions.ReaderException;
+import team28.backend.controller.dto.ReaderUpdateInput;
+import team28.backend.controller.dto.ipRegistrationInput;
+import team28.backend.controller.dto.StockInput;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Reader;
+import team28.backend.model.Stock;
 import team28.backend.service.ReaderService;
 
 import java.util.*;
@@ -32,11 +32,9 @@ import java.util.*;
 public class ReaderController {
 
     private final ReaderService ReaderService;
-    private final InfluxDBClient influxDBClient;
 
-    public ReaderController(ReaderService ReaderService, InfluxDBClient influxDBClient) {
+    public ReaderController(ReaderService ReaderService) {
         this.ReaderService = ReaderService;
-        this.influxDBClient = influxDBClient;
     }
 
     @Operation(summary = "Get all readers")
@@ -56,8 +54,8 @@ public class ReaderController {
     @Operation(summary = "Update reader")
     @ApiResponse(responseCode = "200", description = "Reader was successfully updated")
     @PutMapping
-    public Reader UpdateReader(Reader reader, @Valid @RequestBody ReaderInput ReaderInput) {
-        return ReaderService.UpdateReader(reader.getId(), ReaderInput);
+    public Reader UpdateReader(@Valid @RequestBody ReaderUpdateInput reader) {
+        return ReaderService.UpdateReader(reader);
     }
 
     @Operation(summary = "Delete reader")
@@ -68,48 +66,32 @@ public class ReaderController {
         return "Reader deleted";
     }
 
-    @Operation(summary = "Get all data")
-    @ApiResponse(responseCode = "200", description = "List of data returned successfully")
-    @GetMapping("/data")
-    public List<Map<String, String>> getReaderData() {
-        QueryApi queryApi = influxDBClient.getQueryApi();
+    @Operation(summary = "Get stocks for reader")
+    @ApiResponse(responseCode = "200", description = "List of stocks returned successfully")
+    @GetMapping("/{readerId}/stocks")
+    public List<Stock> getStocksForReader(@PathVariable Long readerId) {
+        return ReaderService.getStockForReader(readerId);
+    }
 
-        String fluxQuery = "from(bucket: \"Integration\")"
-                + " |> range(start: -1h)"
-                + " |> filter(fn: (r) => r._measurement == \"halt\")";
-
-        List<FluxTable> tables = queryApi.query(fluxQuery);
-        Map<String, Map<String, String>> groupedData = new HashMap<>();
-
-        for (FluxTable table : tables) {
-            for (FluxRecord record : table.getRecords()) {
-                String time = record.getTime().toString();
-                String field = (String) record.getValueByKey("_field");
-                String value = String.valueOf(record.getValue());
-
-                groupedData.putIfAbsent(time, new HashMap<>());
-                Map<String, String> dataEntry = groupedData.get(time);
-
-                switch (field) {
-                    case "car_id":
-                        dataEntry.put("carId", value);
-                        break;
-                    case "reader_id":
-                        dataEntry.put("readerId", value);
-                        break;
-                    case "timestamp_read":
-                        dataEntry.put("timestampRead", value);
-                        break;
-                }
-            }
-        }
-
-        return new ArrayList<>(groupedData.values());
+    @Operation(summary = "Add stock to a reader")
+    @ApiResponse(responseCode = "200", description = "Stock was successfully added to the reader")
+    @PostMapping("/{readerId}/stocks")
+    public Stock addStockToReader(@PathVariable Long readerId, @RequestBody @Valid StockInput stockInput) {
+        return ReaderService.addStockToReader(readerId, stockInput.itemId(), stockInput.quantity());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ ReaderException.class })
-    public String handleValidationExceptions(ReaderException ex) {
-        return ex.getMessage();
+    @ExceptionHandler({ ServiceException.class })
+    public Map<String, String> handleServiceException(ServiceException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("ServiceException", ex.getMessage());
+        return errors;
+    }
+
+    @Operation(summary = "Register IP address for a reader")
+    @ApiResponse(responseCode = "200", description = "IP address was successfully registered")
+    @PostMapping("/ip")
+    public Reader RegisterIpAddress(@Valid @RequestBody ipRegistrationInput input) {
+        return ReaderService.RegisterIpAddress(input.MacAddress(), input.ipAddress());
     }
 }

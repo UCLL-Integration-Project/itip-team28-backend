@@ -1,6 +1,6 @@
 package team28.backend.unit.service;
 
-import team28.backend.exceptions.UserException;
+import team28.backend.exceptions.ServiceException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -119,7 +119,7 @@ public class UserServiceTest {
     public void givenUserIdTHatDoesntExists_whenDeletingUser_thenThrowException() {
         when(UserRepository.existsById(1L)).thenReturn(false);
 
-        UserException exception = assertThrows(UserException.class, () -> {
+        ServiceException exception = assertThrows(ServiceException.class, () -> {
             UserService.DeleteUser(1L);
         });
 
@@ -172,7 +172,7 @@ public class UserServiceTest {
         UserInput UserInput = new UserInput("johndoe", "john.doe@example.com", "password", Role.USER);
         when(UserRepository.existsByUsername("johndoe")).thenReturn(true);
 
-        UserException exception = assertThrows(UserException.class, () -> {
+        ServiceException exception = assertThrows(ServiceException.class, () -> {
             UserService.Signup(UserInput);
         });
 

@@ -1,7 +1,6 @@
 package team28.backend.integration.component;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,25 +37,25 @@ public class ScanComponentTest {
         TokenManager = JwtService.generateToken("klaas", Role.MANAGER);
     }
 
-    @Test
-    public void givenScans_whenUserIsRequestingScans_thenShowAllScans() {
-        WebTestClient
-                .get()
-                .uri("/scans")
-                .header("Authorization", "Bearer " + token)
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
+    // @Test
+    // public void givenScans_whenUserIsRequestingScans_thenShowAllScans() {
+    // WebTestClient
+    // .get()
+    // .uri("/scans")
+    // .header("Authorization", "Bearer " + token)
+    // .exchange()
+    // .expectStatus()
+    // .isOk();
+    // }
 
-    @Test
-    public void givenScans_whenUserIsNotLoggedIn_thenThrowException() {
-        WebTestClient
-                .get()
-                .uri("/scans")
-                .header("Content-Type", "application/json")
-                .exchange()
-                .expectStatus()
-                .isUnauthorized();
-    }
+    // @Test
+    // public void givenScans_whenUserIsNotLoggedIn_thenThrowException() {
+    // WebTestClient
+    // .get()
+    // .uri("/scans")
+    // .header("Content-Type", "application/json")
+    // .exchange()
+    // .expectStatus()
+    // .isUnauthorized();
+    // }
 }

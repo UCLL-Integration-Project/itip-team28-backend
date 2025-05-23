@@ -1,6 +1,6 @@
 package team28.backend.service;
 
-import team28.backend.exceptions.UserException;
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.User;
 import team28.backend.repository.UserRepository;
 
@@ -18,10 +18,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsPa
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UserException {
+    public UserDetails loadUserByUsername(String username) throws ServiceException {
         User user = UserRepository.findByUsername(username);
         if (user == null) {
-            throw new UserException("Username not found");
+            throw new ServiceException("Username not found");
         }
         return new UserDetailsImpl(user);
 
