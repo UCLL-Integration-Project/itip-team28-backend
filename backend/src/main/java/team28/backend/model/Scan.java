@@ -91,4 +91,50 @@ public class Scan {
         this.user = user;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + ((car == null) ? 0 : car.hashCode());
+        result = prime * result + ((reader == null) ? 0 : reader.hashCode());
+        result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Scan other = (Scan) obj;
+        if (id != other.id)
+            return false;
+        if (car == null) {
+            if (other.car != null)
+                return false;
+        } else if (!car.equals(other.car))
+            return false;
+        if (reader == null) {
+            if (other.reader != null)
+                return false;
+        } else if (!reader.equals(other.reader))
+            return false;
+        if (timestamp == null) {
+            if (other.timestamp != null)
+                return false;
+        } else if (!timestamp.equals(other.timestamp))
+            return false;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
+            return false;
+        return true;
+    }
+
 }
