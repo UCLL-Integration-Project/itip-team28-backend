@@ -1,5 +1,8 @@
 package team28.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +23,7 @@ public class Coordinate {
 
     @ManyToOne
     @JoinColumn(name = "grid_id")
+    @JsonBackReference
     private Grid grid;
 
     protected Coordinate() {}
