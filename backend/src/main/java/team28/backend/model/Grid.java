@@ -19,7 +19,7 @@ public class Grid {
     @JsonManagedReference
     private List<Coordinate> coordinates = new ArrayList<>();
 
-    protected Grid() {
+    public Grid() {
     }
 
     public long getId() {
