@@ -15,17 +15,21 @@ import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "cars")
-public class Car {
+public class Car implements StockHolderInt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotEmpty(message = "Name cannot be empty")
     private String name;
 
     @OneToMany(mappedBy = "car")
     @JsonBackReference
-    private List<Scan> scans = new ArrayList<Scan>();;
+    private List<Scan> scans = new ArrayList<Scan>();
+
+    @OneToMany(mappedBy = "holder")
+    @JsonBackReference
+    private List<Stock> stocks = new ArrayList<Stock>();
 
     protected Car() {
     };
@@ -34,11 +38,11 @@ public class Car {
         this.name = name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,6 +65,22 @@ public class Car {
     public void addScan(Scan scan) {
         this.scans.add(scan);
         scan.setCar(this);
+    }
+
+    @Override
+    public List<Stock> getStocks() {
+        return stocks;
+    }
+
+    @Override
+    public void setStocks(List<Stock> stocks) {
+        this.stocks = stocks;
+    }
+
+    @Override
+    public void addStock(Stock stock) {
+        this.stocks.add(stock);
+        stock.setHolder(this);
     }
 
     @Override

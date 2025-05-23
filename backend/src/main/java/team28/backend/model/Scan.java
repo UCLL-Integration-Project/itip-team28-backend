@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 public class Scan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotNull(message = "CarID cannot be empty.")
     @ManyToOne
@@ -51,11 +51,11 @@ public class Scan {
         this.timestamp = timestamp;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
