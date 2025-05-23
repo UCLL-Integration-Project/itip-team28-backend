@@ -51,6 +51,7 @@ public class Reader implements StockHolderInt {
     @JsonBackReference
     private List<Route> CurrentPoint = new ArrayList<Route>();
 
+    private String ipAddress;
     @OneToMany(mappedBy = "holder")
     @JsonManagedReference
     private List<Stock> stocks = new ArrayList<>();
@@ -169,6 +170,14 @@ public class Reader implements StockHolderInt {
         } else if (!scans.equals(other.scans))
             return false;
         return true;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
 }
