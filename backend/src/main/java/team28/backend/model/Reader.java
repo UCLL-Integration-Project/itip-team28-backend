@@ -47,6 +47,8 @@ public class Reader {
     @JsonBackReference
     private List<Route> CurrentPoint = new ArrayList<Route>();
 
+    private String ipAddress;
+
     protected Reader() {
     };
 
@@ -115,6 +117,14 @@ public class Reader {
     public void addCurrentPoint(Route route) {
         this.CurrentPoint.add(route);
         route.setCurrentPoint(this);
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
 }

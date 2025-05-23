@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import team28.backend.controller.dto.ReaderInput;
 import team28.backend.controller.dto.ReaderUpdateInput;
+import team28.backend.controller.dto.ipRegistrationInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Reader;
 import team28.backend.service.ReaderService;
@@ -68,5 +69,12 @@ public class ReaderController {
         Map<String, String> errors = new HashMap<>();
         errors.put("ServiceException", ex.getMessage());
         return errors;
+    }
+
+    @Operation(summary = "Register IP address for a reader")
+    @ApiResponse(responseCode = "200", description = "IP address was successfully registered")
+    @PostMapping("/ip")
+    public Reader RegisterIpAddress(@Valid @RequestBody ipRegistrationInput input) {
+        return ReaderService.RegisterIpAddress(input.MacAddress(), input.ipAddress());
     }
 }

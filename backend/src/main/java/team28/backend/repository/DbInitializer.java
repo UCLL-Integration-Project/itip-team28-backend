@@ -60,7 +60,7 @@ public class DbInitializer {
         final var coordinate4 = CoordinateRepository.save(new Coordinate(1, 1));
         final var coordinate5 = CoordinateRepository.save(new Coordinate(2, 1));
 
-        final var reader1 = ReaderRepository.save(new Reader("00-B0-D0-63-C2-26", "Reader1", coordinate1));
+        final var reader1 = ReaderRepository.save(new Reader("8C:4F:00:3D:13:C8", "Reader1", coordinate1));
         final var reader2 = ReaderRepository.save(new Reader("01-B1-D1-64-C3-27", "Reader2", coordinate2));
         @SuppressWarnings("unused")
         final var reader3 = ReaderRepository.save(new Reader("02-B2-D2-65-C4-28", "Reader3", coordinate3));
