@@ -1,7 +1,6 @@
 package team28.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 
@@ -18,6 +17,7 @@ public class Coordinate {
     private int latitude;
 
     @ManyToOne(optional = true)
+    @JsonBackReference
     @JoinColumn(name = "reader_id", nullable = true)
     private Reader reader;
 
