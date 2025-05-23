@@ -5,5 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record GridInput(
-        @NotEmpty List<@NotNull CoordinateInput> coordinates) {
+        @NotEmpty List<@NotNull CoordinateInput> coordinates,
+        @NotNull Integer measurement) {
 }
