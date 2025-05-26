@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import team28.backend.controller.dto.ReaderInput;
 import team28.backend.controller.dto.ReaderUpdateInput;
-import team28.backend.controller.dto.ipRegistrationInput;
 import team28.backend.controller.dto.StockInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Reader;
@@ -90,16 +89,9 @@ public class ReaderController {
         return errors;
     }
 
-    @Operation(summary = "Register IP address for a reader")
-    @ApiResponse(responseCode = "200", description = "IP address was successfully registered")
-    @PostMapping("/ip")
-    public Reader RegisterIpAddress(@Valid @RequestBody ipRegistrationInput input) {
-        return ReaderService.RegisterIpAddress(input.MacAddress(), input.ipAddress());
-    }
-
     @GetMapping("/config")
-    public ResponseEntity<Map<String, String>> getReaderConfig(@RequestParam String mac) {
-        Map<String, String> config = ReaderService.getReaderConfig(mac);
-        return ResponseEntity.ok(config);
+    public ResponseEntity<String> getReaderConfig(@RequestParam("mac") String macAddress) {
+        String name = ReaderService.getReaderName(macAddress);
+        return ResponseEntity.ok(name);
     }
 }
