@@ -5,7 +5,7 @@ influx:
   org: ${INFLUXDB_ORG}
   bucket: ${INFLUXDB_BUCKET}
 
-# Spring boot
+# Spring Boot
 spring:
   datasource:
     url: jdbc:postgresql://postgresql:30993/${POSTGRES_DB}
