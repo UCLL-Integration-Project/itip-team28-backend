@@ -1,8 +1,11 @@
+# Influx
 influx:
   url: ${INFLUXDB_URL}
   token: ${INFLUXDB_TOKEN}
   org: ${INFLUXDB_ORG}
   bucket: ${INFLUXDB_BUCKET}
+
+# Spring boot
 spring:
   datasource:
     url: jdbc:postgresql://postgresql:30993/${POSTGRES_DB}
