@@ -1,6 +1,8 @@
 package team28.backend.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -157,4 +159,16 @@ public class ReaderService {
 
         return StockService.addStockToHolder(reader, item, quantity);
     }
+
+    public Map<String, String> getReaderConfig(String macAddress) {
+        Reader reader = ReaderRepository.findByMacAddress(macAddress);
+        if (reader == null) {
+            throw new ServiceException("Reader not found");
+        }
+
+        Map<String, String> config = new HashMap<>();
+        config.put("name", reader.getName());
+        return config;
+    }
+
 }

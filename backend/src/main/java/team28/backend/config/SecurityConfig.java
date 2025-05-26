@@ -78,6 +78,7 @@ public class SecurityConfig {
                                 .requestMatchers("/users/login", "/users/signup").permitAll()
                                 .requestMatchers("/tags/data").permitAll()
                                 .requestMatchers("/readers/ip").permitAll()
+                                .requestMatchers("/readers/config").permitAll()
 
                                 // Allow OpenAPI access
                                 .requestMatchers("/v3/api-docs/**").permitAll()
