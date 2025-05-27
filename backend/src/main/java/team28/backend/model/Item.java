@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
+//represents an item that can be held as stocj
 @Entity
 @Table(name = "items")
 public class Item {

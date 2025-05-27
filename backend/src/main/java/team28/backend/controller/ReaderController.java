@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import team28.backend.controller.dto.ReaderInput;
 import team28.backend.controller.dto.ReaderUpdateInput;
-import team28.backend.controller.dto.ipRegistrationInput;
 import team28.backend.controller.dto.StockInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Reader;
@@ -88,10 +89,9 @@ public class ReaderController {
         return errors;
     }
 
-    @Operation(summary = "Register IP address for a reader")
-    @ApiResponse(responseCode = "200", description = "IP address was successfully registered")
-    @PostMapping("/ip")
-    public Reader RegisterIpAddress(@Valid @RequestBody ipRegistrationInput input) {
-        return ReaderService.RegisterIpAddress(input.MacAddress(), input.ipAddress());
+    @GetMapping("/config")
+    public ResponseEntity<String> getReaderConfig(@RequestParam("mac") String macAddress) {
+        String name = ReaderService.getReaderName(macAddress);
+        return ResponseEntity.ok(name);
     }
 }
