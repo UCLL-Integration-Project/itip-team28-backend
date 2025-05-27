@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Grid;
+import team28.backend.repository.CoordinateRepository;
 import team28.backend.repository.GridRepository;
 
 @Service
@@ -13,8 +14,12 @@ public class GridService {
     @Autowired
     private GridRepository gridRepository;
 
+    @Autowired
+    private CoordinateRepository CoordinateRepository;
+
     public Grid createGrid(List<Coordinate> coordinates, int measurement) {
-        gridRepository.deleteAll();
+        // gridRepository.deleteAll();
+        // CoordinateRepository.deleteAll();
 
         Grid grid = new Grid();
 
