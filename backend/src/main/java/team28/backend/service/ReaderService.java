@@ -110,6 +110,7 @@ public class ReaderService {
         return savedReader;
     }
 
+    // retrieves all stock for this reader
     public List<Stock> getStockForReader(Long readerId) {
         Reader reader = ReaderRepository.findById(readerId)
                 .orElseThrow(() -> new ServiceException("Reader with id " + readerId + " not found"));
@@ -117,6 +118,7 @@ public class ReaderService {
         return StockService.getStocksForHolder(reader);
     }
 
+    // adds stock to the reader
     public Stock addStockToReader(Long readerId, Long itemId, int quantity) {
         Reader reader = ReaderRepository.findById(readerId)
                 .orElseThrow(() -> new ServiceException("Reader with id " + readerId + " not found"));

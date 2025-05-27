@@ -38,6 +38,8 @@ public class StockTransferRequestController {
         this.StockTransferRequestRepository = StockTransferRequestRepository;
     }
 
+    //Retrieves all pending stock transfer requests for a specific car. 
+    //You put in the carId as a path variable and it returns all pending requests for that car.
     @Operation(summary = "Get pending stock transfer requests for a car")
     @ApiResponse(responseCode = "200", description = "List of pending stock transfer requests returned successfully")
     @GetMapping("/pending/{carId}")
@@ -49,6 +51,8 @@ public class StockTransferRequestController {
                 .collect(Collectors.toList());
     }
 
+    // Sets the status of a stock transfer to COMPLETE and updates the stock quantities on both car and reader
+    // You put in which request you want to complete by providing the requestId as a path variable
     @Operation(summary = "Complete a stock transfer request")
     @ApiResponse(responseCode = "200", description = "Stock transfer request was successfully set to COMPLETE")
     @PutMapping("{requestId}/complete")

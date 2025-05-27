@@ -10,7 +10,9 @@ import team28.backend.model.Stock;
 import team28.backend.model.StockHolderInt;
 
 public interface StockRepository extends JpaRepository<Stock, Long> {
+    // Finds all stocks associated with a specific stock holder, reader/car
     List<Stock> findByHolder(StockHolderInt holder);
 
+    // Finds a specific stock by its holder and item
     Optional<Stock> findByHolderAndItem(StockHolderInt holder, Item item);
 }

@@ -17,7 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.PositiveOrZero;
-
+//reperesents the stock in the database, it associates an item with a stock holder (either a reader or a car) and keeps track of the quantity available
 @Entity
 @Table(name = "stocks")
 public class Stock {
