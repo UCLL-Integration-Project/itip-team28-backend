@@ -51,6 +51,7 @@ public class ReaderService {
         }
 
         ReaderRepository.deleteById(id);
+        RouteService.generateRoutes();
     }
 
     @Transactional
@@ -60,8 +61,8 @@ public class ReaderService {
         }
 
         Coordinate coordinates = CoordinateRepository.findByLongitudeAndLatitude(
-                readerInput.coordinates().getLongitude(),
-                readerInput.coordinates().getLatitude())
+                readerInput.coordinates().longitude(),
+                readerInput.coordinates().latitude())
                 .orElseThrow(() -> new ServiceException("Given coordinates do not exist."));
 
         Grid grid = GridRepository.findFirstByOrderByIdAsc()
