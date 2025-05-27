@@ -34,6 +34,7 @@ public class RouteService {
     }
 
     public List<Route> generateRoutes() {
+        RouteRepository.deleteAll();
         Grid grid = GridRepository.findFirstByOrderByIdAsc()
                 .orElseThrow(() -> new ServiceException("No grid found"));
 
@@ -43,11 +44,12 @@ public class RouteService {
                 .filter(c -> c.getReader() != null)
                 .collect(Collectors.toList());
 
-        if (readerCoordinates.size() < 2) {
-            throw new ServiceException("At least two reader coordinates are required to generate routes.");
-        }
-
         List<Route> routes = new ArrayList<>();
+
+        if (readerCoordinates.size() < 2) {
+            System.out.println("At least two reader coordinates are required to generate routes.");
+            return routes;
+        }
 
         for (int i = 0; i < readerCoordinates.size(); i++) {
             for (int j = 0; j < readerCoordinates.size(); j++) {
@@ -78,7 +80,7 @@ public class RouteService {
             }
         }
 
-        return RouteRepository.saveAll(routes); 
+        return RouteRepository.saveAll(routes);
     }
 
 }

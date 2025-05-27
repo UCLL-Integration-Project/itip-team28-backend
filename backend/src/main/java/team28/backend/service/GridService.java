@@ -14,6 +14,8 @@ public class GridService {
     private GridRepository gridRepository;
 
     public Grid createGrid(List<Coordinate> coordinates, int measurement) {
+        gridRepository.deleteAll();
+
         Grid grid = new Grid();
 
         for (Coordinate coordinate : coordinates) {

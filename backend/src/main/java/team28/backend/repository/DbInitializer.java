@@ -4,9 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
-import team28.backend.model.Coordinate;
-import team28.backend.model.Item;
-import team28.backend.model.Reader;
+
 import team28.backend.model.Role;
 import team28.backend.model.User;
 import team28.backend.service.StockService;
@@ -53,20 +51,6 @@ public class DbInitializer {
 
     @PostConstruct
     public void init() {
-        clearAll();
-
-        final var coordinate1 = CoordinateRepository.save(new Coordinate(0, 0));
-        final var coordinate2 = CoordinateRepository.save(new Coordinate(1, 0));
-
-        final var reader1 = ReaderRepository.save(new Reader("8C:4F:00:3D:13:C8", "Reader1", coordinate1));
-        final var reader2 = ReaderRepository.save(new Reader("3C:8A:1F:A7:A5:80", "Reader 2", coordinate2));
-
-        final var backpack = ItemRepository.save(new Item("backpack"));
-        final var PencilCase = ItemRepository.save(new Item("pencil case"));
-
-        StockService.addStockToHolder(reader1, backpack, 50);
-        StockService.addStockToHolder(reader2, PencilCase, 30);
-
         @SuppressWarnings("unused")
         final var user = UserRepository
                 .save(new User("test", "test@example.com", PasswordEncoder.encode("test"), Role.USER));
