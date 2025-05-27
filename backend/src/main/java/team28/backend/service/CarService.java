@@ -24,6 +24,7 @@ public class CarService {
         return CarRepository.findAll();
     }
 
+    // retrieves all the stock for this car
     public List<Stock> getStocksForCar(Long carId) {
         Car car = CarRepository.findById(carId)
                 .orElseThrow(() -> new ServiceException("Car with id " + carId + " not found"));
