@@ -78,31 +78,37 @@ public class PathfindingService {
     }
 
     private List<String> reconstructPath(Node node) {
-        List<String> instructions = new LinkedList<>();
-        Direction currentFacing = null;
-
+        List<Direction> pathDirections = new LinkedList<>();
         while (node.parent != null) {
             Coordinate from = node.parent.coordinate;
             Coordinate to = node.coordinate;
-
             int dx = to.getLatitude() - from.getLatitude();
             int dy = to.getLongitude() - from.getLongitude();
-
-            Direction movementDir = getDirection(dx, dy);
-
-            if (currentFacing == null) {
-                // First step: assume the car starts facing in the direction of the first move
-                currentFacing = movementDir;
-                instructions.add(0, "go forward");
-            } else {
-                String turn = getTurnInstruction(currentFacing, movementDir);
-                instructions.add(0, turn);
-                currentFacing = movementDir;
-            }
-
+            pathDirections.add(0, getDirection(dx, dy));
             node = node.parent;
         }
 
+        Direction currentFacing = Direction.NORTH;
+        List<String> instructions = new ArrayList<>();
+        boolean firstStep = true;
+
+        for (Direction stepDir : pathDirections) {
+            if (firstStep) {
+                if (currentFacing != stepDir) {
+                    instructions.add(getTurnInstruction(currentFacing, stepDir));
+                    currentFacing = stepDir;
+                }
+                firstStep = false;
+            } else {
+                if (currentFacing != stepDir) {
+                    instructions.add(getTurnInstruction(currentFacing, stepDir));
+                    currentFacing = stepDir;
+                }
+            }
+            instructions.add("go forward");
+        }
+
+        instructions.add("stop");
         return instructions;
     }
 

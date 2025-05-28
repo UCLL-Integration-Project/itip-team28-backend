@@ -18,8 +18,7 @@ public class GridService {
     private CoordinateRepository CoordinateRepository;
 
     public Grid createGrid(List<Coordinate> coordinates, int measurement) {
-        // gridRepository.deleteAll();
-        // CoordinateRepository.deleteAll();
+        gridRepository.deleteAll();
 
         Grid grid = new Grid();
 

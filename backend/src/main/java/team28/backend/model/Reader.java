@@ -136,5 +136,14 @@ public class Reader implements StockHolderInt {
         if (obj == null || getClass() != obj.getClass()) return false;
         Reader other = (Reader) obj;
         return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Reader [id=" + id + ", macAddress=" + macAddress + ", name=" + name + ", coordinate=" + coordinate
+                + ", scans=" + scans + ", StartingPoint=" + StartingPoint + ", destination=" + destination
+                + ", CurrentPoint=" + CurrentPoint + ", stocks=" + stocks + "]";
     }    
+
+    
 }

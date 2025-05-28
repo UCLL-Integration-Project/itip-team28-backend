@@ -117,4 +117,8 @@ public class Car implements StockHolderInt {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Car [id=" + id + ", name=" + name + ", scans=" + scans + ", stocks=" + stocks + "]";
+    }
 }

@@ -171,4 +171,11 @@ public class Route {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Route [id=" + id + ", status=" + status + ", StartingPoint=" + StartingPoint + ", destination="
+                + destination + ", CurrentPoint=" + CurrentPoint + ", timestamp=" + timestamp + ", instructions="
+                + instructions + "]";
+    }
+
 }

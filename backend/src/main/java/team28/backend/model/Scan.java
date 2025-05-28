@@ -137,4 +137,10 @@ public class Scan {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Scan [id=" + id + ", car=" + car + ", reader=" + reader + ", timestamp=" + timestamp + ", user=" + user
+                + "]";
+    }
+
 }

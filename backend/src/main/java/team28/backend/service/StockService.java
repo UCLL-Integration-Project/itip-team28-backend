@@ -18,6 +18,8 @@ import team28.backend.model.TransferStatus;
 import team28.backend.repository.CarRepository;
 import team28.backend.repository.ItemRepository;
 import team28.backend.repository.ReaderRepository;
+import team28.backend.repository.RouteRepository;
+import team28.backend.repository.ScanRepository;
 import team28.backend.repository.StockRepository;
 import team28.backend.repository.StockTransferRequestRepository;
 
@@ -28,17 +30,22 @@ public class StockService {
     private final ItemRepository ItemRepository;
     private final ReaderRepository ReaderRepository;
     private final CarRepository CarRepository;
+    private final RouteRepository RouteRepository;
+    private final ScanRepository ScanRepository;
 
     public StockService(StockRepository StockRepository, StockTransferRequestRepository StockTransferRequestRepository,
-            ItemRepository ItemRepository, ReaderRepository ReaderRepository, CarRepository CarRepository) {
+            ItemRepository ItemRepository, ReaderRepository ReaderRepository, CarRepository CarRepository,
+            RouteRepository RouteRepository, ScanRepository ScanRepository) {
         this.StockRepository = StockRepository;
         this.StockTransferRequestRepository = StockTransferRequestRepository;
         this.ItemRepository = ItemRepository;
         this.ReaderRepository = ReaderRepository;
         this.CarRepository = CarRepository;
+        this.RouteRepository = RouteRepository;
+        this.ScanRepository = ScanRepository;
     }
 
-    //retrieves all the stock for this holder (car/reader)
+    // retrieves all the stock for this holder (car/reader)
     public List<Stock> getStocksForHolder(StockHolderInt holder) {
         return StockRepository.findByHolder(holder);
     }
@@ -64,7 +71,8 @@ public class StockService {
         }
     }
 
-    // creates a stock transfer request for picking up an item from a reader to a car
+    // creates a stock transfer request for picking up an item from a reader to a
+    // car
     // checks that reader has enough stock for the item
     public StockTransferRequest requestStockPickup(Long carId, Long readerId, Long itemId, int quantity) {
         if (quantity <= 0) {
@@ -80,18 +88,23 @@ public class StockService {
 
         Stock readerStock = StockRepository.findByHolderAndItem(reader, item)
                 .orElseThrow(() -> new ServiceException("Reader does not have stock for item" + item.getName()));
-        
+
         if (readerStock.getQuantity() < quantity) {
             throw new ServiceException("Reader does not have enough stock. Available: " + readerStock.getQuantity());
         }
 
         StockTransferRequest request = new StockTransferRequest(car, reader, item, quantity, LocalDateTime.now());
         request.setDirection(TransferDirection.PICKUP);
+
+        //Coordinate currentLocation = 
+
         return StockTransferRequestRepository.save(request);
     }
 
-    // completes a stock transfer request by updating the stock of the car and reader based on the transfer direction
-    // checks again if the car/reader has enough stock before completing the transfer
+    // completes a stock transfer request by updating the stock of the car and
+    // reader based on the transfer direction
+    // checks again if the car/reader has enough stock before completing the
+    // transfer
     public void completeStockTransfer(Long requestId) {
         StockTransferRequest request = StockTransferRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ServiceException("Stock transfer request with id" + requestId + "not found"));
@@ -129,7 +142,7 @@ public class StockService {
             carStock.setQuantity(carStock.getQuantity() + quantity);
             StockRepository.save(carStock);
 
-        //Else DELIVERY
+            // Else DELIVERY
         } else if (request.getDirection() == TransferDirection.DELIVERY) {
             Stock carStock = StockRepository.findByHolderAndItem(car, item)
                     .orElseThrow(() -> new ServiceException("Car does not have stock for item" + item.getName()));
@@ -157,7 +170,8 @@ public class StockService {
         StockTransferRequestRepository.save(request);
     }
 
-    // creates a stock delivery request for dropping of an item from a cat to a reader
+    // creates a stock delivery request for dropping of an item from a cat to a
+    // reader
     // checks that car has enough stock for the item
     public StockTransferRequest requestStockDelivery(Long carId, Long readerId, Long itemId, int quantity) {
         if (quantity <= 0) {

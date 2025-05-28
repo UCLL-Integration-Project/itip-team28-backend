@@ -89,4 +89,9 @@ public class Grid {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Grid [id=" + id + ", coordinates=" + coordinates + ", measurement=" + measurement + "]";
+    }
+
 }

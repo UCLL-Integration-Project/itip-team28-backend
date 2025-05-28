@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.PositiveOrZero;
+
 //reperesents the stock in the database, it associates an item with a stock holder (either a reader or a car) and keeps track of the quantity available
 @Entity
 @Table(name = "stocks")
@@ -26,7 +27,7 @@ public class Stock {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")    
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @PositiveOrZero(message = "Stock quantity must be zero or positive")
@@ -42,9 +43,10 @@ public class Stock {
     @JsonBackReference
     private StockHolderInt holder;
 
-    protected Stock() {}
+    protected Stock() {
+    }
 
-    public Stock(StockHolderInt holder, Item item, int quantity ) {
+    public Stock(StockHolderInt holder, Item item, int quantity) {
         this.holder = holder;
         this.item = item;
         this.quantity = quantity;
@@ -80,6 +82,11 @@ public class Stock {
 
     public void setHolder(StockHolderInt holder) {
         this.holder = holder;
+    }
+
+    @Override
+    public String toString() {
+        return "Stock [id=" + id + ", item=" + item + ", quantity=" + quantity + ", holder=" + holder + "]";
     }
 
 }

@@ -85,4 +85,10 @@ public class Coordinate {
         return id == other.id;
     }
 
+    @Override
+    public String toString() {
+        return "Coordinate [id=" + id + ", longitude=" + longitude + ", latitude=" + latitude + ", reader=" + reader
+                + ", grid=" + grid + "]";
+    }
+
 }
