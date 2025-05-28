@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 // Represents the request to transfer stock between a reader and a car
 @Entity
 @Table(name = "stock_transfer_requests")
@@ -22,34 +23,35 @@ public class StockTransferRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //tells you which car is involved
+    // tells you which car is involved
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
 
-    //tells you which reader is involved
+    // tells you which reader is involved
     @ManyToOne
     @JoinColumn(name = "reader_id")
     private Reader reader;
 
-    //tells you which item is being transferred
+    // tells you which item is being transferred
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
 
-    //tells you how many of the item is being transferred
+    // tells you how many of the item is being transferred
     @Positive(message = "Stock quantity must be a positive number")
     private int quantity;
 
-    //tells you when the transfer request was made
+    // tells you when the transfer request was made
     @NotNull(message = "Timestamp cannot be empty.")
     private LocalDateTime timestamp;
 
-    //tells you the status of the transfer request, PENDING or COMPLETE
+    // tells you the status of the transfer request, PENDING or COMPLETE
     @Enumerated(EnumType.STRING)
     private TransferStatus status;
 
-    //tells you the direction of the transfer, is the car doing either PICKUP or DELIVERY
+    // tells you the direction of the transfer, is the car doing either PICKUP or
+    // DELIVERY
     @Enumerated(EnumType.STRING)
     private TransferDirection direction;
 
@@ -62,7 +64,7 @@ public class StockTransferRequest {
         this.item = item;
         this.quantity = quantity;
         this.timestamp = timestamp;
-        this.status = TransferStatus.PENDING; //pending is the default status
+        this.status = TransferStatus.PENDING; // pending is the default status
     }
 
     public Long getId() {
@@ -128,4 +130,12 @@ public class StockTransferRequest {
     public void setDirection(TransferDirection direction) {
         this.direction = direction;
     }
+
+    @Override
+    public String toString() {
+        return "StockTransferRequest [id=" + id + ", car=" + car + ", reader=" + reader + ", item=" + item
+                + ", quantity=" + quantity + ", timestamp=" + timestamp + ", status=" + status + ", direction="
+                + direction + "]";
+    }
+
 }

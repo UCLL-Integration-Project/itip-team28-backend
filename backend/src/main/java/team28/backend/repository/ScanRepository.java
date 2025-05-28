@@ -54,15 +54,21 @@ public class ScanRepository {
         List<Scan> scans = new ArrayList<>();
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
+                String carId = (String) record.getValues().get("car_id");
+                String readerId = (String) record.getValues().get("reader_id");
 
-                String carId = (String) record.getValueByKey("car_id");
+                System.out.println("carId: " + carId + ", readerId: " + readerId);
+
                 Car car = CarRepository.findByName(carId);
-
-                String readerId = (String) record.getValueByKey("reader_id");
                 Reader reader = ReaderRepository.findByMacAddress(readerId);
 
+                System.out.println("Car: " + car + ", Reader: " + reader);
+
                 LocalDateTime timestamp = record.getTime().atOffset(ZoneOffset.UTC).toLocalDateTime();
+                System.out.println("Timestamp: " + timestamp);
+
                 Scan scan = new Scan(car, reader, timestamp);
+                System.out.println("Scan created: " + scan);
 
                 scans.add(scan);
             }

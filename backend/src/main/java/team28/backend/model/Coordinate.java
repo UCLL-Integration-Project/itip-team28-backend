@@ -72,7 +72,7 @@ public class Coordinate {
 
     @Override
     public int hashCode() {
-        return Long.hashCode(id);   
+        return Long.hashCode(id);
     }
 
     @Override
@@ -83,6 +83,12 @@ public class Coordinate {
             return false;
         Coordinate other = (Coordinate) obj;
         return id == other.id;
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinate [id=" + id + ", longitude=" + longitude + ", latitude=" + latitude + ", reader=" + reader
+                + ", grid=" + grid + "]";
     }
 
 }
