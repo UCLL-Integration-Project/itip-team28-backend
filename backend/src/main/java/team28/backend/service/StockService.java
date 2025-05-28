@@ -21,16 +21,14 @@ public class StockService {
     private final CarRepository CarRepository;
     private final RouteRepository RouteRepository;
     private final ScanRepository ScanRepository;
-
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     private final String externalUrl = "https://carservice-itip-project28.apps.okd.ucll.cloud/routes";
 
     public StockService(StockRepository StockRepository, StockTransferRequestRepository StockTransferRequestRepository,
-                        ItemRepository ItemRepository, ReaderRepository ReaderRepository,
-                        CarRepository CarRepository, RouteRepository RouteRepository,
-                        ScanRepository ScanRepository) {
+            ItemRepository ItemRepository, ReaderRepository ReaderRepository,
+            CarRepository CarRepository, RouteRepository RouteRepository,
+            ScanRepository ScanRepository, RestTemplate restTemplate) {
         this.StockRepository = StockRepository;
         this.StockTransferRequestRepository = StockTransferRequestRepository;
         this.ItemRepository = ItemRepository;
@@ -38,6 +36,7 @@ public class StockService {
         this.CarRepository = CarRepository;
         this.RouteRepository = RouteRepository;
         this.ScanRepository = ScanRepository;
+        this.restTemplate = restTemplate;
     }
 
     public List<Stock> getStocksForHolder(StockHolderInt holder) {
@@ -138,7 +137,8 @@ public class StockService {
                     .orElseThrow(() -> new ServiceException("Reader does not have stock for item " + item.getName()));
 
             if (readerStock.getQuantity() < quantity) {
-                throw new ServiceException("Reader does not have enough stock. Available: " + readerStock.getQuantity());
+                throw new ServiceException(
+                        "Reader does not have enough stock. Available: " + readerStock.getQuantity());
             }
 
             readerStock.setQuantity(readerStock.getQuantity() - quantity);

@@ -13,7 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -28,18 +28,18 @@ public class Route {
 
     private boolean status;
 
-    @OneToOne
+    @ManyToOne
     @NotNull(message = "Starting point cannot be empty.")
-    private Reader StartingPoint;
+    private Reader startingPoint;
 
-    @OneToOne
+    @ManyToOne
     @JsonBackReference
     @NotNull(message = "Destination cannot be empty.")
     private Reader destination;
 
-    @OneToOne
+    @ManyToOne
     @NotNull(message = "Current point cannot be empty.")
-    private Reader CurrentPoint;
+    private Reader currentPoint;
 
     @NotNull(message = "Timestamp cannot be empty.")
     private LocalDateTime timestamp;
@@ -50,12 +50,12 @@ public class Route {
     protected Route() {
     };
 
-    public Route(boolean status, Reader StartingPoint, Reader destination, Reader CurrentPoint, LocalDateTime timestamp,
+    public Route(boolean status, Reader startingPoint, Reader destination, Reader currentPoint, LocalDateTime timestamp,
             List<String> instructions) {
         this.status = status;
-        this.StartingPoint = StartingPoint;
+        this.startingPoint = startingPoint;
         this.destination = destination;
-        this.CurrentPoint = CurrentPoint;
+        this.currentPoint = currentPoint;
         this.timestamp = timestamp;
         this.instructions = instructions;
     }
@@ -77,11 +77,11 @@ public class Route {
     }
 
     public Reader getStartingPoint() {
-        return StartingPoint;
+        return startingPoint;
     }
 
     public void setStartingPoint(Reader startingPoint) {
-        StartingPoint = startingPoint;
+        this.startingPoint = startingPoint;
     }
 
     public Reader getDestination() {
@@ -93,11 +93,11 @@ public class Route {
     }
 
     public Reader getCurrentPoint() {
-        return CurrentPoint;
+        return currentPoint;
     }
 
     public void setCurrentPoint(Reader currentPoint) {
-        CurrentPoint = currentPoint;
+        this.currentPoint = currentPoint;
     }
 
     public LocalDateTime getTimestamp() {
@@ -122,9 +122,9 @@ public class Route {
         int result = 1;
         result = prime * result + (int) (id ^ (id >>> 32));
         result = prime * result + (status ? 1231 : 1237);
-        result = prime * result + ((StartingPoint == null) ? 0 : StartingPoint.hashCode());
+        result = prime * result + ((startingPoint == null) ? 0 : startingPoint.hashCode());
         result = prime * result + ((destination == null) ? 0 : destination.hashCode());
-        result = prime * result + ((CurrentPoint == null) ? 0 : CurrentPoint.hashCode());
+        result = prime * result + ((currentPoint == null) ? 0 : currentPoint.hashCode());
         result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
         result = prime * result + ((instructions == null) ? 0 : instructions.hashCode());
         return result;
@@ -143,20 +143,20 @@ public class Route {
             return false;
         if (status != other.status)
             return false;
-        if (StartingPoint == null) {
-            if (other.StartingPoint != null)
+        if (startingPoint == null) {
+            if (other.startingPoint != null)
                 return false;
-        } else if (!StartingPoint.equals(other.StartingPoint))
+        } else if (!startingPoint.equals(other.startingPoint))
             return false;
         if (destination == null) {
             if (other.destination != null)
                 return false;
         } else if (!destination.equals(other.destination))
             return false;
-        if (CurrentPoint == null) {
-            if (other.CurrentPoint != null)
+        if (currentPoint == null) {
+            if (other.currentPoint != null)
                 return false;
-        } else if (!CurrentPoint.equals(other.CurrentPoint))
+        } else if (!currentPoint.equals(other.currentPoint))
             return false;
         if (timestamp == null) {
             if (other.timestamp != null)
@@ -173,8 +173,8 @@ public class Route {
 
     @Override
     public String toString() {
-        return "Route [id=" + id + ", status=" + status + ", StartingPoint=" + StartingPoint + ", destination="
-                + destination + ", CurrentPoint=" + CurrentPoint + ", timestamp=" + timestamp + ", instructions="
+        return "Route [id=" + id + ", status=" + status + ", startingPoint=" + startingPoint + ", destination="
+                + destination + ", currentPoint=" + currentPoint + ", timestamp=" + timestamp + ", instructions="
                 + instructions + "]";
     }
 

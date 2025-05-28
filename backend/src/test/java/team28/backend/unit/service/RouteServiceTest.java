@@ -72,9 +72,9 @@
 // List<Route> result = RouteService.GetAllRoutes();
 
 // assertEquals(1, result.size());
-// assertEquals("Reader1", result.get(0).getStartingPoint().getName());
+// assertEquals("Reader1", result.get(0).getstartingPoint().getName());
 // assertEquals("Reader2", result.get(0).getDestination().getName());
-// assertEquals("Reader1", result.get(0).getCurrentPoint().getName());
+// assertEquals("Reader1", result.get(0).getcurrentPoint().getName());
 // verify(RouteRepository, times(1)).findAll();
 // }
 
@@ -82,13 +82,13 @@
 // givenRouteInfo_whenRouteIsBeingCreated_thenRouteIsAddedToDatabase() {
 
 // RouteInput RouteInput = new RouteInput(route.isStatus(),
-// route.getStartingPoint().getId(),
-// route.getDestination().getId(), route.getCurrentPoint().getId(),
+// route.getstartingPoint().getId(),
+// route.getDestination().getId(), route.getcurrentPoint().getId(),
 // route.getTimestamp(),
 // route.getInstructions());
-// when(ReaderRepository.findById(route.getStartingPoint().getId())).thenReturn(Optional.of(reader1));
+// when(ReaderRepository.findById(route.getstartingPoint().getId())).thenReturn(Optional.of(reader1));
 // when(ReaderRepository.findById(route.getDestination().getId())).thenReturn(Optional.of(reader2));
-// when(ReaderRepository.findById(route.getCurrentPoint().getId())).thenReturn(Optional.of(reader1));
+// when(ReaderRepository.findById(route.getcurrentPoint().getId())).thenReturn(Optional.of(reader1));
 // when(RouteRepository.save(any(Route.class))).thenReturn(route);
 
 // Route result = RouteService.CreateRoute(RouteInput);
@@ -99,13 +99,13 @@
 
 // @Test
 // public void
-// givenNonExistingStartingPointInfo_whenRouteIsCreated_thenThrowException() {
+// givenNonExistingstartingPointInfo_whenRouteIsCreated_thenThrowException() {
 // RouteInput RouteInput = new RouteInput(route.isStatus(),
-// route.getStartingPoint().getId(),
-// route.getDestination().getId(), route.getCurrentPoint().getId(),
+// route.getstartingPoint().getId(),
+// route.getDestination().getId(), route.getcurrentPoint().getId(),
 // route.getTimestamp(),
 // route.getInstructions());
-// when(ReaderRepository.findById(route.getStartingPoint().getId())).thenReturn(Optional.empty());
+// when(ReaderRepository.findById(route.getstartingPoint().getId())).thenReturn(Optional.empty());
 
 // RouteException exception = assertThrows(RouteException.class, () -> {
 // RouteService.CreateRoute(RouteInput);
@@ -119,11 +119,11 @@
 // public void
 // givenNonExistingDestinationInfo_whenRouteIsCreated_thenThrowException() {
 // RouteInput RouteInput = new RouteInput(route.isStatus(),
-// route.getStartingPoint().getId(),
-// route.getDestination().getId(), route.getCurrentPoint().getId(),
+// route.getstartingPoint().getId(),
+// route.getDestination().getId(), route.getcurrentPoint().getId(),
 // route.getTimestamp(),
 // route.getInstructions());
-// when(ReaderRepository.findById(route.getStartingPoint().getId())).thenReturn(Optional.of(reader1));
+// when(ReaderRepository.findById(route.getstartingPoint().getId())).thenReturn(Optional.of(reader1));
 // when(ReaderRepository.findById(route.getDestination().getId())).thenReturn(Optional.empty());
 
 // RouteException exception = assertThrows(RouteException.class, () -> {
@@ -136,15 +136,15 @@
 
 // @Test
 // public void
-// givenNonExistingCurrentPointInfo_whenRouteIsCreated_thenThrowException() {
+// givenNonExistingcurrentPointInfo_whenRouteIsCreated_thenThrowException() {
 // RouteInput RouteInput = new RouteInput(route.isStatus(),
-// route.getStartingPoint().getId(),
-// route.getDestination().getId(), route.getCurrentPoint().getId(),
+// route.getstartingPoint().getId(),
+// route.getDestination().getId(), route.getcurrentPoint().getId(),
 // route.getTimestamp(),
 // route.getInstructions());
-// when(ReaderRepository.findById(route.getStartingPoint().getId())).thenReturn(Optional.of(reader1));
+// when(ReaderRepository.findById(route.getstartingPoint().getId())).thenReturn(Optional.of(reader1));
 // when(ReaderRepository.findById(route.getDestination().getId())).thenReturn(Optional.of(reader2));
-// when(ReaderRepository.findById(route.getCurrentPoint().getId())).thenReturn(Optional.empty());
+// when(ReaderRepository.findById(route.getcurrentPoint().getId())).thenReturn(Optional.empty());
 
 // RouteException exception = assertThrows(RouteException.class, () -> {
 // RouteService.CreateRoute(RouteInput);

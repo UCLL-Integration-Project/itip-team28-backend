@@ -39,17 +39,17 @@ public class Reader implements StockHolderInt {
     @JsonBackReference
     private List<Scan> scans = new ArrayList<Scan>();
 
-    @OneToMany(mappedBy = "StartingPoint")
+    @OneToMany(mappedBy = "startingPoint")
     @JsonBackReference
-    private List<Route> StartingPoint = new ArrayList<Route>();
+    private List<Route> startingPoint = new ArrayList<Route>();
 
     @OneToMany(mappedBy = "destination")
     @JsonBackReference
     private List<Route> destination = new ArrayList<Route>();
 
-    @OneToMany(mappedBy = "CurrentPoint")
+    @OneToMany(mappedBy = "currentPoint")
     @JsonBackReference
-    private List<Route> CurrentPoint = new ArrayList<Route>();
+    private List<Route> currentPoint = new ArrayList<Route>();
 
     @OneToMany(mappedBy = "holder")
     @JsonManagedReference
@@ -129,11 +129,13 @@ public class Reader implements StockHolderInt {
     public int hashCode() {
         return Long.hashCode(id);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         Reader other = (Reader) obj;
         return id != null && id.equals(other.id);
     }
@@ -141,9 +143,8 @@ public class Reader implements StockHolderInt {
     @Override
     public String toString() {
         return "Reader [id=" + id + ", macAddress=" + macAddress + ", name=" + name + ", coordinate=" + coordinate
-                + ", scans=" + scans + ", StartingPoint=" + StartingPoint + ", destination=" + destination
-                + ", CurrentPoint=" + CurrentPoint + ", stocks=" + stocks + "]";
-    }    
+                + ", scans=" + scans + ", startingPoint=" + startingPoint + ", destination=" + destination
+                + ", currentPoint=" + currentPoint + ", stocks=" + stocks + "]";
+    }
 
-    
 }

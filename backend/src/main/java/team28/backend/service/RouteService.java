@@ -67,9 +67,9 @@ public class RouteService {
                 if (!instructions.isEmpty()) {
                     Route route = new Route(
                             false, // status
-                            fromReader, // StartingPoint
+                            fromReader, // startingPoint
                             toReader, // destination
-                            fromReader, // CurrentPoint (initially the same as StartingPoint)
+                            fromReader, // currentPoint (initially the same as startingPoint)
                             LocalDateTime.now(), // timestamp
                             instructions // instructions
                     );

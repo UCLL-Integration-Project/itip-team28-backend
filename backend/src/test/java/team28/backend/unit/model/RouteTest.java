@@ -32,13 +32,13 @@ public class RouteTest {
     public void givenValidValues_whenCreatingRouter_thenRouterIsCreatedWithThoseValues() {
         boolean status = false;
         Coordinate coordinate = new Coordinate(10, 60);
-        Reader StartingPoint = new Reader("macaddress", "name1", coordinate);
+        Reader startingPoint = new Reader("macaddress", "name1", coordinate);
         Reader destination = new Reader("macaddress2", "name2", coordinate);
-        Reader CurrentPoint = new Reader("macaddress", "name1", coordinate);
+        Reader currentPoint = new Reader("macaddress", "name1", coordinate);
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
         List<String> instructions = List.of("Step 1", "Step 2");
 
-        Route route = new Route(status, StartingPoint, destination, CurrentPoint,
+        Route route = new Route(status, startingPoint, destination, currentPoint,
                 timestamp, instructions);
 
         assertEquals(false, route.isStatus());
@@ -49,16 +49,16 @@ public class RouteTest {
     }
 
     @Test
-    public void givenEmptyStartingPoint_whenCreatingRoute_thenThrowExecption() {
+    public void givenEmptystartingPoint_whenCreatingRoute_thenThrowExecption() {
         boolean status = false;
-        Reader StartingPoint = null;
+        Reader startingPoint = null;
         Coordinate coordinate = new Coordinate(10, 60);
         Reader destination = new Reader("macaddress2", "name2", coordinate);
-        Reader CurrentPoint = new Reader("macaddress", "name1", coordinate);
+        Reader currentPoint = new Reader("macaddress", "name1", coordinate);
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
         List<String> instructions = List.of("Step 1", "Step 2");
 
-        Route route = new Route(status, StartingPoint, destination, CurrentPoint,
+        Route route = new Route(status, startingPoint, destination, currentPoint,
                 timestamp, instructions);
 
         Set<ConstraintViolation<Route>> violations = validator.validate(route);
@@ -72,13 +72,13 @@ public class RouteTest {
     public void givenEmptyDestination_whenCreatingRoute_thenThrowExecption() {
         boolean status = false;
         Coordinate coordinate = new Coordinate(10, 60);
-        Reader StartingPoint = new Reader("macaddress", "name1", coordinate);
+        Reader startingPoint = new Reader("macaddress", "name1", coordinate);
         Reader destination = null;
-        Reader CurrentPoint = new Reader("macaddress", "name1", coordinate);
+        Reader currentPoint = new Reader("macaddress", "name1", coordinate);
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
         List<String> instructions = List.of("Step 1", "Step 2");
 
-        Route route = new Route(status, StartingPoint, destination, CurrentPoint,
+        Route route = new Route(status, startingPoint, destination, currentPoint,
                 timestamp, instructions);
 
         Set<ConstraintViolation<Route>> violations = validator.validate(route);
@@ -89,16 +89,16 @@ public class RouteTest {
     }
 
     @Test
-    public void givenEmptyCurrentPoint_whenCreatingRoute_thenThrowExecption() {
+    public void givenEmptycurrentPoint_whenCreatingRoute_thenThrowExecption() {
         boolean status = false;
         Coordinate coordinate = new Coordinate(10, 60);
-        Reader StartingPoint = new Reader("macaddress", "name1", coordinate);
+        Reader startingPoint = new Reader("macaddress", "name1", coordinate);
         Reader destination = new Reader("macaddress2", "name2", coordinate);
-        Reader CurrentPoint = null;
+        Reader currentPoint = null;
         LocalDateTime timestamp = LocalDateTime.of(2025, 5, 1, 9, 15);
         List<String> instructions = List.of("Step 1", "Step 2");
 
-        Route route = new Route(status, StartingPoint, destination, CurrentPoint,
+        Route route = new Route(status, startingPoint, destination, currentPoint,
                 timestamp, instructions);
 
         Set<ConstraintViolation<Route>> violations = validator.validate(route);
@@ -112,13 +112,13 @@ public class RouteTest {
     public void givenEmptyTimestamp_whenCreatingRoute_thenThrowExecption() {
         boolean status = false;
         Coordinate coordinate = new Coordinate(10, 60);
-        Reader StartingPoint = new Reader("macaddress", "name1", coordinate);
+        Reader startingPoint = new Reader("macaddress", "name1", coordinate);
         Reader destination = new Reader("macaddress2", "name2", coordinate);
-        Reader CurrentPoint = new Reader("macaddress", "name1", coordinate);
+        Reader currentPoint = new Reader("macaddress", "name1", coordinate);
         LocalDateTime timestamp = null;
         List<String> instructions = List.of("Step 1", "Step 2");
 
-        Route route = new Route(status, StartingPoint, destination, CurrentPoint,
+        Route route = new Route(status, startingPoint, destination, currentPoint,
                 timestamp, instructions);
 
         Set<ConstraintViolation<Route>> violations = validator.validate(route);
