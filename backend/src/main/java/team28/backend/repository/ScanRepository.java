@@ -76,4 +76,35 @@ public class ScanRepository {
 
         return scans;
     }
+
+    public Scan findLatest() {
+        String flux = String.format("""
+                    from(bucket: "%s")
+                    |> range(start: -30d)
+                    |> filter(fn: (r) => r._measurement == "halt")
+                    |> sort(columns: ["_time"], desc: true)
+                    |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")
+                    |> limit(n: 1)
+                """, bucket);
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+        List<FluxTable> tables = queryApi.query(flux, org);
+
+        for (FluxTable table : tables) {
+            for (FluxRecord record : table.getRecords()) {
+                String carId = (String) record.getValues().get("car_id");
+                String readerId = (String) record.getValues().get("reader_id");
+
+                Car car = CarRepository.findByName(carId);
+                Reader reader = ReaderRepository.findByMacAddress(readerId);
+
+                LocalDateTime timestamp = record.getTime().atOffset(ZoneOffset.UTC).toLocalDateTime();
+
+                return new Scan(car, reader, timestamp);
+            }
+        }
+
+        return null;
+    }
+
 }
