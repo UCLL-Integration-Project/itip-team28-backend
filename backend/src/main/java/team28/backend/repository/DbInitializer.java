@@ -4,7 +4,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
-
 import team28.backend.model.Role;
 import team28.backend.model.User;
 import team28.backend.service.StockService;
@@ -19,7 +18,7 @@ public class DbInitializer {
     private final RouteRepository RouteRepository;
     private final ItemRepository ItemRepository;
     private final StockRepository StockRepository;
-    private final StockService StockService;
+    private final GridRepository GridRepository;
 
     public DbInitializer(PasswordEncoder PasswordEncoder, UserRepository UserRepository,
             ReaderRepository ReaderRepository, CarRepository CarRepository,
@@ -27,7 +26,7 @@ public class DbInitializer {
             RouteRepository RouteRepository,
             ItemRepository ItemRepository,
             StockRepository StockRepository,
-            StockService StockService) {
+            StockService StockService, GridRepository GridRepository) {
         this.ItemRepository = ItemRepository;
         this.StockRepository = StockRepository;
         this.PasswordEncoder = PasswordEncoder;
@@ -36,7 +35,7 @@ public class DbInitializer {
         this.CarRepository = CarRepository;
         this.CoordinateRepository = CoordinateRepository;
         this.RouteRepository = RouteRepository;
-        this.StockService = StockService;
+        this.GridRepository = GridRepository;
     }
 
     public void clearAll() {
@@ -47,17 +46,20 @@ public class DbInitializer {
         UserRepository.deleteAll();
         ItemRepository.deleteAll();
         CoordinateRepository.deleteAll();
+        GridRepository.deleteAll();
     }
 
     @PostConstruct
     public void init() {
+        clearAll();
+
+        // ➕ Users
         @SuppressWarnings("unused")
         final var user = UserRepository
                 .save(new User("test", "test@example.com", PasswordEncoder.encode("test"), Role.USER));
         @SuppressWarnings("unused")
         final var user2 = UserRepository
                 .save(new User("test2", "test@example.com", PasswordEncoder.encode("test"), Role.MANAGER));
-
     }
 
 }
