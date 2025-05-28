@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
+import team28.backend.model.Item;
 import team28.backend.model.Role;
 import team28.backend.model.User;
 import team28.backend.service.StockService;
@@ -60,6 +61,9 @@ public class DbInitializer {
         @SuppressWarnings("unused")
         final var user2 = UserRepository
                 .save(new User("test2", "test@example.com", PasswordEncoder.encode("test"), Role.MANAGER));
+
+        final var item = ItemRepository.save(new Item("Batterij AA"));
+
     }
 
 }
