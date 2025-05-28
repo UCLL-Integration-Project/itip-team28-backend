@@ -72,7 +72,7 @@ public class Coordinate {
 
     @Override
     public int hashCode() {
-        return Long.hashCode(id);
+        return Long.hashCode(id);   
     }
 
     @Override
