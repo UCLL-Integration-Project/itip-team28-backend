@@ -83,9 +83,9 @@ public class StockService {
         StockTransferRequest request = new StockTransferRequest(car, reader, item, quantity, LocalDateTime.now());
         request.setDirection(TransferDirection.PICKUP);
 
-        Reader currentLocation = ScanRepository.findLatest().getReader();
-        Route route = RouteRepository.findByStartingPointAndCurrentPoint(currentLocation, reader);
-        sendRouteToExternalService(route.getInstructions());
+        // Reader currentLocation = ScanRepository.findLatest().getReader();
+        // Route route = RouteRepository.findByStartingPointAndCurrentPoint(currentLocation, reader);
+        // sendRouteToExternalService(route.getInstructions());
 
         return StockTransferRequestRepository.save(request);
     }
@@ -112,9 +112,9 @@ public class StockService {
         StockTransferRequest request = new StockTransferRequest(car, reader, item, quantity, LocalDateTime.now());
         request.setDirection(TransferDirection.DELIVERY);
 
-        Reader currentLocation = ScanRepository.findLatest().getReader();
-        Route route = RouteRepository.findByStartingPointAndCurrentPoint(currentLocation, reader);
-        sendRouteToExternalService(route.getInstructions());
+        // Reader currentLocation = ScanRepository.findLatest().getReader();
+        // Route route = RouteRepository.findByStartingPointAndCurrentPoint(currentLocation, reader);
+        // sendRouteToExternalService(route.getInstructions());
 
         return StockTransferRequestRepository.save(request);
     }
