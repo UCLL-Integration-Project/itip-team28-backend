@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,20 +36,20 @@ public class Reader implements StockHolderInt {
     @NotNull(message = "Coordinates cannot be empty.")
     private Coordinate coordinate;
 
-    @OneToMany(mappedBy = "reader")
-    @JsonBackReference
+    @OneToMany(mappedBy = "reader", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference(value = "reader-scans")
     private List<Scan> scans = new ArrayList<Scan>();
 
-    @OneToMany(mappedBy = "startingPoint")
-    @JsonBackReference
+    @OneToMany(mappedBy = "startingPoint", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference(value = "reader-startingPoint")
     private List<Route> startingPoint = new ArrayList<Route>();
 
-    @OneToMany(mappedBy = "destination")
-    @JsonBackReference
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference(value = "reader-destination")
     private List<Route> destination = new ArrayList<Route>();
 
-    @OneToMany(mappedBy = "currentPoint")
-    @JsonBackReference
+    @OneToMany(mappedBy = "currentPoint", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference(value = "reader-currentPoint")
     private List<Route> currentPoint = new ArrayList<Route>();
 
     @OneToMany(mappedBy = "holder")

@@ -59,12 +59,22 @@ public class ReaderController {
         return ReaderService.UpdateReader(reader);
     }
 
-    @Operation(summary = "Delete reader")
+/*     @Operation(summary = "Delete reader")
     @ApiResponse(responseCode = "200", description = "Reader was successfully deleted")
     @DeleteMapping
     public String DeleteReader(@RequestBody Reader reader) {
         ReaderService.DeleteReader(reader.getId());
         return "Reader deleted";
+    } */
+
+    @Operation(summary = "Delete reader by id")
+    @ApiResponse(responseCode = "200", description = "Reader was successfully deleted")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> DeleteReader(@PathVariable Long id) {
+        ReaderService.DeleteReader(id);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Reader succesvol verwijderd");
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Get stocks for reader")

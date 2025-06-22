@@ -3,7 +3,11 @@ package team28.backend.service;
 import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 
 import team28.backend.model.Role;
@@ -72,5 +76,38 @@ public class UserService {
                 Role.USER);
 
         return UserRepository.save(user);
+    }
+
+    public User getCurrentUser(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return UserRepository.findByUsername(username)
+                .orElseThrow(() -> new ServiceException("User not found"));
+    }
+
+    @Transactional
+    public void changePassword(String currentPassword, String newPassword, String confirmPassword) {
+         if (currentPassword == null || currentPassword.trim().isEmpty()) {
+            throw new ServiceException("Current password cannot be empty");
+        }
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            throw new ServiceException("New password cannot be empty");
+        }
+        if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
+            throw new ServiceException("Confirm password cannot be empty");
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            throw new ServiceException("New password and confirmation do not match");
+        }
+
+        User user = getCurrentUser();
+
+        if (currentPassword != null && !currentPassword.isEmpty()){
+            if (!PasswordEncoder.matches(currentPassword, user.getPassword())) {
+                throw new ServiceException("Current password is incorrect");
+            }
+        }
+
+        user.setPassword(PasswordEncoder.encode(newPassword));
+        UserRepository.save(user);
     }
 }

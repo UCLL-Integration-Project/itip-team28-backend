@@ -43,15 +43,25 @@ public class ReaderService {
         return ReaderRepository.findAll();
     }
 
+    @Transactional
     public void DeleteReader(Long id) {
-        boolean ExistingReader = ReaderRepository.existsById(id);
-
-        if (!ExistingReader) {
-            throw new ServiceException("Reader not found");
+        try {
+            Reader reader = ReaderRepository.findById(id)
+                    .orElseThrow(() -> new ServiceException("Reader not found"));
+            Coordinate coordinate = reader.getCoordinates();
+            if (coordinate != null) {
+                coordinate.setReader(null); 
+                CoordinateRepository.save(coordinate);
+            }
+            ReaderRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to delete reader: " + e.getMessage());
         }
-
-        ReaderRepository.deleteById(id);
-        RouteService.generateRoutes();
+        try {
+            RouteService.generateRoutes();
+        } catch (Exception e) {
+            System.err.println("Failed to generate routes after deletion: " + e.getMessage());
+        }
     }
 
     @Transactional
@@ -63,17 +73,22 @@ public class ReaderService {
         Coordinate coordinates = CoordinateRepository.findByLongitudeAndLatitude(
                 readerInput.coordinates().longitude(),
                 readerInput.coordinates().latitude())
-                .orElseThrow(() -> new ServiceException("Given coordinates do not exist."));
+                .orElseGet(() -> {
+                    Coordinate newCoord = new Coordinate(
+                            readerInput.coordinates().longitude(),
+                            readerInput.coordinates().latitude());
+                    return CoordinateRepository.save(newCoord);
+                });
 
-        Grid grid = GridRepository.findFirstByOrderByIdAsc()
-                .orElseThrow(() -> new ServiceException("No grid found"));
+        // Grid grid = GridRepository.findFirstByOrderByIdAsc()
+        //         .orElseThrow(() -> new ServiceException("No grid found"));
 
-        boolean coordinateBelongsToGrid = grid.getCoordinates().stream()
-                .anyMatch(c -> c.getId() == coordinates.getId());
+        // boolean coordinateBelongsToGrid = grid.getCoordinates().stream()
+        //         .anyMatch(c -> c.getId() == coordinates.getId());
 
-        if (!coordinateBelongsToGrid) {
-            throw new ServiceException("Grid must contain the reader coordinate");
-        }
+        // if (!coordinateBelongsToGrid) {
+        //     throw new ServiceException("Grid must contain the reader coordinate");
+        // }
 
         Reader reader = new Reader(readerInput.macAddress(), readerInput.name(), coordinates);
         coordinates.setReader(reader);

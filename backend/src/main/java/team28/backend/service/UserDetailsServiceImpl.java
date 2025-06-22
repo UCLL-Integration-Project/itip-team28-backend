@@ -19,7 +19,8 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsPa
 
     @Override
     public UserDetails loadUserByUsername(String username) throws ServiceException {
-        User user = UserRepository.findByUsername(username);
+        User user = UserRepository.findByUsername(username)
+            .orElseThrow(() -> new ServiceException("User not found"));;
         if (user == null) {
             throw new ServiceException("Username not found");
         }

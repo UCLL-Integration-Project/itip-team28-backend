@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Coordinate;
 import team28.backend.model.Grid;
 import team28.backend.model.Reader;
 import team28.backend.model.Route;
 import team28.backend.repository.GridRepository;
+import team28.backend.repository.ReaderRepository;
 import team28.backend.repository.RouteRepository;
 
 @Service
@@ -21,30 +23,40 @@ public class RouteService {
     private final GridRepository GridRepository;
     private final RouteRepository RouteRepository;
     private final PathfindingService PathfindingService;
+    private final ReaderRepository ReaderRepository;
 
     public RouteService(RouteRepository RouteRepository, GridRepository GridRepository,
-            PathfindingService PathfindingService, GridRepository gridRepository) {
+            PathfindingService PathfindingService, GridRepository gridRepository, ReaderRepository ReaderRepository) {
         this.RouteRepository = RouteRepository;
         this.GridRepository = GridRepository;
         this.PathfindingService = PathfindingService;
+        this.ReaderRepository = ReaderRepository;
     }
 
     public List<Route> GetAllRoutes() {
         return RouteRepository.findAll();
     }
 
+    @Transactional
     public List<Route> generateRoutes() {
         RouteRepository.deleteAll();
+
+        List<Route> routes = new ArrayList<>();
+
         Grid grid = GridRepository.findFirstByOrderByIdAsc()
-                .orElseThrow(() -> new ServiceException("No grid found"));
+                .orElse(null);
+
+        if (grid == null) {
+            System.out.println("Grid not found. Please create a grid first.");
+            return routes;
+        }
 
         List<Coordinate> allCoordinates = grid.getCoordinates();
 
         List<Coordinate> readerCoordinates = allCoordinates.stream()
-                .filter(c -> c.getReader() != null)
+                .filter(c -> c.getReader() != null && ReaderRepository.existsById(c.getReader().getId()))
                 .collect(Collectors.toList());
 
-        List<Route> routes = new ArrayList<>();
 
         if (readerCoordinates.size() < 2) {
             System.out.println("At least two reader coordinates are required to generate routes.");

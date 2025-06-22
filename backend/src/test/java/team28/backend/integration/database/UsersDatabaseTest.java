@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import team28.backend.exceptions.ServiceException;
 import team28.backend.model.Role;
 import team28.backend.model.User;
 import team28.backend.repository.UserRepository;
@@ -51,7 +52,8 @@ public class UsersDatabaseTest {
     @Test
     public void givenExistingUsername_whenSearchingForUser_thenReturnUser() {
         String username = "Test";
-        User existingUser = UserRepository.findByUsername(username);
+        User existingUser = UserRepository.findByUsername(username)
+            .orElseThrow(() -> new ServiceException("User not found"));;
 
         assertNotNull(existingUser);
     }
@@ -59,7 +61,8 @@ public class UsersDatabaseTest {
     @Test
     public void givenNonExistingUsername_whenSearchingForUser_thenReturnUser() {
         String username = "Meow";
-        User existingUser = UserRepository.findByUsername(username);
+        User existingUser = UserRepository.findByUsername(username)
+            .orElseThrow(() -> new ServiceException("User not found"));;
 
         assertNull(existingUser);
     }

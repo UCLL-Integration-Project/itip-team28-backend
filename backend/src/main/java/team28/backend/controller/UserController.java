@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import team28.backend.controller.dto.AuthenticationRequest;
 import team28.backend.controller.dto.AuthenticationResponse;
+import team28.backend.controller.dto.ChangePasswordRequest;
 import team28.backend.controller.dto.UserInput;
 import team28.backend.exceptions.ServiceException;
 import team28.backend.model.User;
 import team28.backend.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -40,6 +43,13 @@ public class UserController {
     @GetMapping
     public List<User> GetAllUsers() {
         return UserService.GetAllUsers();
+    }
+
+    @Operation(summary = "Get current user information")
+    @ApiResponse(responseCode = "200", description = "Current user information returned successfully")
+    @GetMapping("/me")
+    public User GetCurrentUser() {
+        return UserService.getCurrentUser();
     }
 
     @Operation(summary = "Delete a user")
@@ -65,6 +75,16 @@ public class UserController {
     @PostMapping("/signup")
     public User Signup(@Valid @RequestBody UserInput UserInput) {
         return UserService.Signup(UserInput);
+    }
+
+    @Operation(summary = "Change user password")
+    @ApiResponse(responseCode = "200", description = "Password changed successfully")
+    @PutMapping("/changePassword")
+    public ResponseEntity<Map<String, String>> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        UserService.changePassword(request.oldPassword(), request.newPassword(), request.confirmNewPassword());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Password changed successfully");
+        return ResponseEntity.ok(response);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
